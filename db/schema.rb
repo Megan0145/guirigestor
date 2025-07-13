@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_02_004719) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_13_194056) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -62,6 +62,41 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_02_004719) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "invoice_line_items", force: :cascade do |t|
+    t.integer "invoice_id", null: false
+    t.string "description"
+    t.decimal "rate"
+    t.integer "quantity"
+    t.decimal "total"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_invoice_line_items_on_invoice_id"
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "frequency"
+    t.decimal "monthly_rate"
+    t.string "recipient_company_name"
+    t.string "recipient_vat_number"
+    t.text "recipient_address"
+    t.string "recipient_email"
+    t.string "sender_company_name"
+    t.string "sender_tax_number"
+    t.text "sender_address"
+    t.date "issued_on"
+    t.date "due_on"
+    t.decimal "total_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "invoice_number"
+    t.decimal "tax_rate", precision: 5, scale: 2
+    t.text "terms"
+    t.text "bank_details"
+    t.text "notes"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
   create_table "message_templates", force: :cascade do |t|
     t.text "identifier"
     t.text "subject"
@@ -93,4 +128,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_02_004719) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "invoice_line_items", "invoices"
+  add_foreign_key "invoices", "users"
 end

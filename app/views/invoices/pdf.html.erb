@@ -1,0 +1,214 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: 'Open Sans', sans-serif;
+        margin: 0 auto;
+        padding: 40px;
+        color: #3d3b3a;
+        width: 750px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .logo-circle {
+        width: 80px;
+        height: 80px;
+        background-color: #e3dcd4;
+        border-radius: 50%;
+        display: inline-block;
+        line-height: 80px;
+        font-size: 36px;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+        margin: 5px 0;
+      }
+
+      .subtitle {
+        font-style: italic;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      .from-to {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .from-to > div {
+        flex: 1;
+      }
+
+      .invoice-details {
+        text-align: right;
+        font-size: 12px;
+      }
+
+      .label {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 13px;
+      }
+
+      thead {
+        background-color: #e3dcd4;
+        color: #3d3b3a;
+        border-radius: 4px;
+        
+      }
+
+      #totals-table th,
+      #totals-table td {
+        text-align: left;
+        border-bottom: none;
+        padding: 10px;
+      }
+
+      .totals {
+        margin-top: 20px;
+        font-size: 13px;
+      }
+
+      .totals .right {
+        text-align: right;
+      }
+
+      .notes {
+        font-size: 12px;
+        margin-top: 40px;
+      }
+
+      .signature {
+        text-align: right;
+        margin-top: 60px;
+        font-family: 'Cursive';
+      }
+
+      .thank-you {
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <%# TODO: Fix this %>
+      <% if @invoice.company_logo.attached? %>
+        <% logo_data = Base64.strict_encode64(@invoice.company_logo.download) %>
+        <img src="data:image/png;base64,<%= logo_data %>" style="height: 80px; width: 80px; border-radius: 50%; margin-bottom: 10px;" alt="Company Logo">
+      <% else %>
+        <div class="logo-circle">
+          <%= @invoice.sender_company_name[0].upcase %>
+        </div>
+      <% end %>
+      <h1><%= @invoice.sender_company_name %></h1>
+      <div class="subtitle">Full Stack Software Engineer</div>
+    </div>
+
+    <table style="width: 100%; margin-bottom: 20px;">
+      <tr>
+        <td style="vertical-align: top; width: 50%;">
+          <div style="font-size: 16px" class="label">FROM:</div>
+          <div style="font-size: 16px"><%= @invoice.sender_company_name %></div>
+          <div style="font-size: 16px"><%= simple_format(@invoice.sender_address) %></div>
+          <div style="font-size: 16px">Tax Number: <%= @invoice.sender_tax_number %></div>
+        </td>
+        <td style="vertical-align: top; text-align: right; width: 50%;">
+          <div style="font-size: 16px"><strong>INVOICE NO:</strong> <%= @invoice.invoice_number %></div>
+          <div style="font-size: 16px"><strong>DATE:</strong> <%= @invoice.issued_on.strftime('%d.%m.%Y') %></div>
+          <div style="font-size: 16px"><strong>DUE DATE:</strong> <%= @invoice.due_on.strftime('%d.%m.%Y') %></div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="section">
+      <div class="label">BILL TO:</div>
+      <div><%= @invoice.recipient_company_name %></div>
+      <div><%= simple_format(@invoice.recipient_address) %></div>
+      <div>VAT: <%= @invoice.recipient_vat_number %></div>
+    </div>
+
+    <table id="totals-table">
+      <thead>
+        <tr>
+          <th style="padding-left: 20px">DESCRIPTION</th>
+          <th>UNIT PRICE</th>
+          <th>QTY</th>
+          <th style="text-align: right;">TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @invoice.invoice_line_items.each do |item| %>
+          <tr style="font-size: 14px;">
+            <td style="padding-left: 40px"><%= item.description %></td>
+            <td><%= number_to_currency(item.rate) %></td>
+            <td><%= item.quantity %></td>
+            <td style="text-align: right;"><%= number_to_currency(item.total) %></td>
+          </tr>
+        <% end %>
+        <tr style="font-weight: bold">
+          <td style="padding-left: 40px;"> SUBTOTAL</td>
+          <td></td>
+          <td></td>
+          <td style="text-align: right;"><%= number_to_currency(@invoice.subtotal_amount) %></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td style="text-align: right;">
+            Tax <%= @invoice.tax_rate.to_f.round(2) %>%
+          </td>
+        </tr>
+        <tr style="background-color: #e3dcd4; font-weight: bold;">
+          <td></td>
+          <td></td>
+          <td colspan="2" style="text-align: right;">
+            <span style="margin-right: 20px">TOTAL</span> <%= number_to_currency(@invoice.total_amount) %> 
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="notes">
+      <div class="label">NOTES</div>
+      <div>
+        <%=simple_format(@invoice.notes)%>
+      </div>
+
+      <div class="label" style="margin-top: 15px;">TERMS</div>
+      <div>
+        <%=simple_format(@invoice.terms) %>
+      </div>
+
+      <div class="label" style="margin-top: 15px;">BANK DETAILS</div>
+      <div>
+        <%=simple_format(@invoice.bank_details) %>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  frequency: MyString
+  monthly_rate: 9.99
+  recipient_company_name: MyString
+  recipient_vat_number: MyString
+  recipient_address: MyText
+  recipient_email: MyString
+  sender_company_name: MyString
+  sender_tax_number: MyString
+  sender_address: MyText
+  description: MyText
+  issued_on: 2025-07-13
+  due_on: 2025-07-13
+  total_amount: 9.99
+
+two:
+  user: two
+  frequency: MyString
+  monthly_rate: 9.99
+  recipient_company_name: MyString
+  recipient_vat_number: MyString
+  recipient_address: MyText
+  recipient_email: MyString
+  sender_company_name: MyString
+  sender_tax_number: MyString
+  sender_address: MyText
+  description: MyText
+  issued_on: 2025-07-13
+  due_on: 2025-07-13
+  total_amount: 9.99

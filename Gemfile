@@ -39,3 +39,10 @@ gem "importmap-rails", "~> 2.1"
 
 gem "stimulus-rails", "~> 1.3"
 gem 'nio4r', '~> 2.5.9'
+
+# PDF generation
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+
+# Optional OCR for receipts
+gem 'rtesseract'
