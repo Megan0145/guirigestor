@@ -42,7 +42,8 @@ gem 'nio4r', '~> 2.5.9'
 
 # PDF generation
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-binary', '~> 0.12.6', group: [:development, :test]
+gem 'wkhtmltopdf-heroku', '~> 2.12.6', group: [:production]
 
 # Optional OCR for receipts
 gem 'rtesseract'
