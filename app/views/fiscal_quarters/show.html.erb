@@ -1,25 +1,40 @@
 <!-- Passcode Modal -->
 <div id="passcode-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" style="display: none;">
   <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <!-- Language Selector in Modal -->
+    <div class="flex justify-end mb-4">
+      <div class="relative inline-block">
+        <select id="modal-language-selector" onchange="changeLanguage(this.value)" 
+                class="appearance-none bg-white border border-gray-300 rounded-md pl-3 pr-8 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer">
+          <option value="en" <%= 'selected' if I18n.locale == :en %>><%= t('fiscal_quarter.language.english') %></option>
+          <option value="es" <%= 'selected' if I18n.locale == :es %>><%= t('fiscal_quarter.language.spanish') %></option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+          <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
     <div class="mt-3 text-center">
       <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
         <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
         </svg>
       </div>
-      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Enter Passcode</h3>
-      <p class="text-sm text-gray-500 mb-4">Please enter the passcode to access this fiscal quarter.</p>
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2"><%= t('fiscal_quarter.passcode.title') %></h3>
+      <p class="text-sm text-gray-500 mb-4"><%= t('fiscal_quarter.passcode.description') %></p>
       
       <form id="passcode-form" class="mt-4">
         <div class="mb-4">
-          <input type="password" id="passcode-input" placeholder="Enter passcode" 
+          <input type="password" id="passcode-input" placeholder="<%= t('fiscal_quarter.passcode.placeholder') %>" 
                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         </div>
         <div id="error-message" class="text-red-600 text-sm mb-4" style="display: none;"></div>
         <div class="flex justify-center space-x-3">
           <button type="button" id="verify-btn" 
                   class="px-4 py-2 bg-blue-600 cursor-pointer text-white text-base font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-            <span class="verify-text">Verify</span>
+            <span class="verify-text"><%= t('fiscal_quarter.passcode.verify') %></span>
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white loading-spinner" style="display: none;" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -34,21 +49,54 @@
 <!-- Main Content -->
 <div id="auth-content" class="min-h-screen bg-gray-50 py-8" style="display: none;">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Language Selector -->
+    <div class="flex justify-end mb-6">
+      <div class="relative inline-block">
+        <select id="language-selector" onchange="changeLanguage(this.value)" 
+                class="appearance-none bg-white border border-gray-300 rounded-md pl-4 pr-10 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer">
+          <option value="en" <%= 'selected' if I18n.locale == :en %>><%= t('fiscal_quarter.language.english') %></option>
+          <option value="es" <%= 'selected' if I18n.locale == :es %>><%= t('fiscal_quarter.language.spanish') %></option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Confidential Warning -->
+    <div class="bg-red-100 border border-red-200 rounded-lg p-4 mb-6">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-red-800 font-medium">
+            <%= t('fiscal_quarter.warning') %>
+          </p>
+        </div>
+      </div>
+    </div>
+    
     <!-- Header -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-3xl font-bold text-gray-900"><%= @fiscal_quarter.name %></h1>
           <p class="text-gray-600 mt-1">
-            <%= @fiscal_quarter.start_date.strftime("%B %d, %Y") %> - 
-            <%= @fiscal_quarter.end_date.strftime("%B %d, %Y") %>
+            <%= l(@fiscal_quarter.start_date, format: :fiscal_quarter) %> - 
+            <%= l(@fiscal_quarter.end_date, format: :fiscal_quarter) %>
           </p>
         </div>
         <div class="flex items-center space-x-4">
           <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= @fiscal_quarter.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
-            <%= @fiscal_quarter.status.titleize %>
+            <%= t("fiscal_quarter.status.#{@fiscal_quarter.status}") %>
           </span>
-          <span class="text-sm text-gray-500">ID: <%= @fiscal_quarter.identifier %></span>
+         
         </div>
       </div>
       <% if @fiscal_quarter.notes.present? %>
@@ -68,7 +116,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Invoices</p>
+            <p class="text-sm font-medium text-gray-600"><%= t('fiscal_quarter.summary.invoices') %></p>
             <p class="text-2xl font-bold text-gray-900"><%= @invoices.count %></p>
           </div>
         </div>
@@ -78,11 +126,11 @@
         <div class="flex items-center">
           <div class="p-2 bg-green-100 rounded-lg">
             <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Autonomo Payments</p>
+            <p class="text-sm font-medium text-gray-600"><%= t('fiscal_quarter.summary.autonomo_payments') %></p>
             <p class="text-2xl font-bold text-gray-900"><%= @autonomo_payments.count %></p>
           </div>
         </div>
@@ -96,7 +144,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Outgoing Receipts</p>
+            <p class="text-sm font-medium text-gray-600"><%= t('fiscal_quarter.summary.outgoing_receipts') %></p>
             <p class="text-2xl font-bold text-gray-900"><%= @outgoing_receipts.count %></p>
           </div>
         </div>
@@ -106,19 +154,19 @@
     <!-- Invoices Section -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
       <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-900">Invoices</h2>
+        <h2 class="text-xl font-semibold text-gray-900"><%= t('fiscal_quarter.sections.invoices') %></h2>
       </div>
       <div class="overflow-x-auto">
         <% if @invoices.any? %>
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipient</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issued</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.invoice_number') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.recipient') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.amount') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.issued') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.due') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.actions') %></th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -137,10 +185,10 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <%= invoice.issued_on&.strftime("%b %d, %Y") %>
+                    <%= invoice.issued_on ? l(invoice.issued_on, format: :table_date) : '-' %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <%= invoice.due_on&.strftime("%b %d, %Y") %>
+                    <%= invoice.due_on ? l(invoice.due_on, format: :table_date) : '-' %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <a href="/<%= @fiscal_quarter.identifier %>/invoices/<%= invoice.id %>/download.pdf" 
@@ -149,7 +197,7 @@
                       <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                       </svg>
-                      Download PDF
+                      <%= t('fiscal_quarter.actions.download_pdf') %>
                     </a>
                   </td>
                 </tr>
@@ -161,8 +209,8 @@
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No invoices</h3>
-            <p class="mt-1 text-sm text-gray-500">No invoices have been created for this fiscal quarter yet.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t('fiscal_quarter.empty_states.no_invoices') %></h3>
+            <p class="mt-1 text-sm text-gray-500"><%= t('fiscal_quarter.empty_states.no_invoices_desc') %></p>
           </div>
         <% end %>
       </div>
@@ -171,17 +219,17 @@
     <!-- Autonomo Payments Section -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
       <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-900">Autonomo Payments</h2>
+        <h2 class="text-xl font-semibold text-gray-900"><%= t('fiscal_quarter.sections.autonomo_payments') %></h2>
       </div>
       <div class="overflow-x-auto">
         <% if @autonomo_payments.any? %>
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Uploaded</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.status') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.uploaded') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.notes') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.actions') %></th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -195,11 +243,11 @@
                           when 'rejected' then 'bg-red-100 text-red-800'
                           else 'bg-gray-100 text-gray-800'
                           end %>">
-                      <%= payment.status.titleize %>
+                      <%= t("fiscal_quarter.payment_status.#{payment.status}") %>
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <%= payment.uploaded_on&.strftime("%b %d, %Y at %I:%M %p") %>
+                    <%= payment.uploaded_on ? l(payment.uploaded_on, format: :table_date) : '-' %>
                   </td>
                   <td class="px-6 py-4">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
@@ -214,10 +262,10 @@
                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        Download
+                        <%= t('fiscal_quarter.actions.download') %>
                       </a>
                     <% else %>
-                      <span class="text-sm text-gray-400">No file</span>
+                      <span class="text-sm text-gray-400"><%= t('fiscal_quarter.empty_states.no_file') %></span>
                     <% end %>
                   </td>
                 </tr>
@@ -229,8 +277,8 @@
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No autonomo payments</h3>
-            <p class="mt-1 text-sm text-gray-500">No autonomo payments have been recorded for this fiscal quarter yet.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t('fiscal_quarter.empty_states.no_autonomo_payments') %></h3>
+            <p class="mt-1 text-sm text-gray-500"><%= t('fiscal_quarter.empty_states.no_autonomo_payments_desc') %></p>
           </div>
         <% end %>
       </div>
@@ -239,17 +287,17 @@
     <!-- Outgoing Receipts Section -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
       <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-900">Outgoing Receipts</h2>
+        <h2 class="text-xl font-semibold text-gray-900"><%= t('fiscal_quarter.sections.outgoing_receipts') %></h2>
       </div>
       <div class="overflow-x-auto">
         <% if @outgoing_receipts.any? %>
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Uploaded</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.status') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.uploaded') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.notes') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.actions') %></th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -263,11 +311,11 @@
                           when 'rejected' then 'bg-red-100 text-red-800'
                           else 'bg-gray-100 text-gray-800'
                           end %>">
-                      <%= receipt.status.titleize %>
+                      <%= t("fiscal_quarter.payment_status.#{receipt.status}") %>
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <%= receipt.uploaded_on&.strftime("%b %d, %Y at %I:%M %p") %>
+                    <%= receipt.uploaded_on ? l(receipt.uploaded_on, format: :table_date) : '-' %>
                   </td>
                   <td class="px-6 py-4">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
@@ -282,10 +330,10 @@
                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        Download
+                        <%= t('fiscal_quarter.actions.download') %>
                       </a>
                     <% else %>
-                      <span class="text-sm text-gray-400">No file</span>
+                      <span class="text-sm text-gray-400"><%= t('fiscal_quarter.empty_states.no_file') %></span>
                     <% end %>
                   </td>
                 </tr>
@@ -297,8 +345,8 @@
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"></path>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No outgoing receipts</h3>
-            <p class="mt-1 text-sm text-gray-500">No outgoing receipts have been recorded for this fiscal quarter yet.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t('fiscal_quarter.empty_states.no_outgoing_receipts') %></h3>
+            <p class="mt-1 text-sm text-gray-500"><%= t('fiscal_quarter.empty_states.no_outgoing_receipts_desc') %></p>
           </div>
         <% end %>
       </div>
@@ -318,6 +366,32 @@ document.addEventListener('DOMContentLoaded', function() {
   const verifyBtn = document.getElementById('verify-btn');
   const verifyText = verifyBtn.querySelector('.verify-text');
   const loadingSpinner = verifyBtn.querySelector('.loading-spinner');
+
+  // Translation messages
+  const translations = {
+    en: {
+      required: '<%= I18n.with_locale(:en) { t("fiscal_quarter.passcode.required") } %>',
+      invalid: '<%= I18n.with_locale(:en) { t("fiscal_quarter.passcode.invalid") } %>',
+      error: '<%= I18n.with_locale(:en) { t("fiscal_quarter.passcode.error") } %>'
+    },
+    es: {
+      required: '<%= I18n.with_locale(:es) { t("fiscal_quarter.passcode.required") } %>',
+      invalid: '<%= I18n.with_locale(:es) { t("fiscal_quarter.passcode.invalid") } %>',
+      error: '<%= I18n.with_locale(:es) { t("fiscal_quarter.passcode.error") } %>'
+    }
+  };
+
+  // Get current locale from URL or default to 'en'
+  function getCurrentLocale() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('locale') || 'en';
+  }
+
+  // Get translated message
+  function t(key) {
+    const locale = getCurrentLocale();
+    return translations[locale] && translations[locale][key] ? translations[locale][key] : translations['en'][key];
+  }
 
   // Check if user has access
   function checkAccess() {
@@ -373,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const passcode = passcodeInput.value.trim();
     if (!passcode) {
-      showError('Please enter a passcode');
+      showError(t('required'));
       return;
     }
 
@@ -403,14 +477,14 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem(storageKey, 'granted');
         showMainContent();
       } else {
-        showError(data.error || 'Invalid passcode. Please try again.');
+        showError(data.error);
         passcodeInput.value = '';
         passcodeInput.focus();
       }
     })
     .catch(error => {
       setLoading(false);
-      showError('An error occurred. Please try again.');
+      showError(t('error'));
       console.error('Error:', error);
     });
   }
@@ -443,4 +517,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize
   checkAccess();
 });
+
+// Language switching function
+function changeLanguage(locale) {
+  const currentUrl = new URL(window.location);
+  currentUrl.searchParams.set('locale', locale);
+  window.location.href = currentUrl.toString();
+}
 </script>

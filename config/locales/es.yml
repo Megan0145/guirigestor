@@ -1,0 +1,67 @@
+es:
+  hello: "Hola mundo"
+  
+  date:
+    formats:
+      fiscal_quarter: "%d de %B de %Y"
+      table_date: "%d %b %Y"
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
+    abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+  
+  time:
+    formats:
+      table_date: "%d %b %Y"
+    am: "am"
+    pm: "pm"
+  
+  fiscal_quarter:
+    title: "Trimestre Fiscal"
+    warning: "Este software ha sido construido exclusivamente para el uso de Megan Ennis y Balcells International y contiene información altamente confidencial. No comparta la contraseña con nadie."
+    status:
+      active: "Activo"
+      inactive: "Inactivo"
+    summary:
+      invoices: "Facturas"
+      autonomo_payments: "Pagos de Autónomo"
+      outgoing_receipts: "Recibos de Salida"
+    sections:
+      invoices: "Facturas"
+      autonomo_payments: "Pagos de Autónomo"
+      outgoing_receipts: "Recibos de Salida"
+    table_headers:
+      invoice_number: "Factura #"
+      recipient: "Destinatario"
+      amount: "Cantidad"
+      issued: "Emitida"
+      due: "Vencimiento"
+      actions: "Acciones"
+      status: "Estado"
+      uploaded: "Subido"
+      notes: "Notas"
+    actions:
+      download_pdf: "Descargar PDF"
+      download: "Descargar"
+    empty_states:
+      no_invoices: "Sin facturas"
+      no_invoices_desc: "Aún no se han creado facturas para este trimestre fiscal."
+      no_autonomo_payments: "Sin pagos de autónomo"
+      no_autonomo_payments_desc: "Aún no se han registrado pagos de autónomo para este trimestre fiscal."
+      no_outgoing_receipts: "Sin recibos de salida"
+      no_outgoing_receipts_desc: "Aún no se han registrado recibos de salida para este trimestre fiscal."
+      no_file: "Sin archivo"
+    language:
+      select_language: "Seleccionar Idioma"
+      english: "🇮🇪 English"
+      spanish: "🇪🇸 Español"
+    passcode:
+      title: "Ingrese la Contraseña"
+      description: "Por favor ingrese la contraseña para acceder a este trimestre fiscal."
+      placeholder: "Ingrese la contraseña"
+      verify: "Verificar"
+      invalid: "Contraseña inválida. Por favor intente de nuevo."
+      error: "Ocurrió un error. Por favor intente de nuevo."
+      required: "Por favor ingrese una contraseña"
+    payment_status:
+      paid: "Pagado"
+      pending: "Pendiente"
+      rejected: "Rechazado"

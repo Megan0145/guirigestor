@@ -31,3 +31,64 @@
 
 en:
   hello: "Hello world"
+  
+  date:
+    formats:
+      fiscal_quarter: "%B %d, %Y"
+      table_date: "%b %d, %Y"
+  
+  time:
+    formats:
+      table_date: "%b %d, %Y"
+  
+  fiscal_quarter:
+    title: "Fiscal Quarter"
+    warning: "This software has been solely built for the use of Megan Ennis and Balcells International and contains highly confidential information. Do not share the passcode with anyone."
+    status:
+      active: "Active"
+      inactive: "Inactive"
+    summary:
+      invoices: "Invoices"
+      autonomo_payments: "Autonomo Payments"
+      outgoing_receipts: "Outgoing Receipts"
+    sections:
+      invoices: "Invoices"
+      autonomo_payments: "Autonomo Payments"
+      outgoing_receipts: "Outgoing Receipts"
+    table_headers:
+      invoice_number: "Invoice #"
+      recipient: "Recipient"
+      amount: "Amount"
+      issued: "Issued"
+      due: "Due"
+      actions: "Actions"
+      status: "Status"
+      uploaded: "Uploaded"
+      notes: "Notes"
+    actions:
+      download_pdf: "Download PDF"
+      download: "Download"
+    empty_states:
+      no_invoices: "No invoices"
+      no_invoices_desc: "No invoices have been created for this fiscal quarter yet."
+      no_autonomo_payments: "No autonomo payments"
+      no_autonomo_payments_desc: "No autonomo payments have been recorded for this fiscal quarter yet."
+      no_outgoing_receipts: "No outgoing receipts"
+      no_outgoing_receipts_desc: "No outgoing receipts have been recorded for this fiscal quarter yet."
+      no_file: "No file"
+    language:
+      select_language: "Select Language"
+      english: "🇮🇪 English"
+      spanish: "🇪🇸 Español"
+    passcode:
+      title: "Enter Passcode"
+      description: "Please enter the passcode to access this fiscal quarter."
+      placeholder: "Enter passcode"
+      verify: "Verify"
+      invalid: "Invalid passcode. Please try again."
+      error: "An error occurred. Please try again."
+      required: "Please enter a passcode"
+    payment_status:
+      paid: "Paid"
+      pending: "Pending"
+      rejected: "Rejected"

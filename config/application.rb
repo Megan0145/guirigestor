@@ -33,5 +33,9 @@ module TonicRails
     config.action_mailer.postmark_settings = {
       api_token: ENV.fetch('POSTMARK_API_PRODUCTION_KEY')
     }
+
+    # Internationalization configuration
+    config.i18n.available_locales = [:en, :es]
+    config.i18n.default_locale = :en
   end
 end

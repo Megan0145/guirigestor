@@ -3,3 +3,7 @@ body {
   --ui-button-border-width: 1px;
 }
 
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
+}

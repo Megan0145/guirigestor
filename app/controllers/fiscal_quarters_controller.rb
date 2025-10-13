@@ -1,5 +1,6 @@
 class FiscalQuartersController < ApplicationController
   before_action :set_fiscal_quarter, only: [:show, :verify_passcode, :download_invoice, :download_autonomo_payment, :download_outgoing_receipt]
+  before_action :set_locale
   skip_before_action :verify_authenticity_token, only: [:verify_passcode]
 
   def show
@@ -14,7 +15,7 @@ class FiscalQuartersController < ApplicationController
         if params[:passcode] == @fiscal_quarter.passcode
           render json: { success: true }
         else
-          render json: { success: false, error: 'Invalid passcode' }
+          render json: { success: false, error: t('fiscal_quarter.passcode.invalid') }
         end
       end
     end
@@ -55,6 +56,15 @@ class FiscalQuartersController < ApplicationController
   end
 
   private
+
+  def set_locale
+    if params[:locale] && I18n.available_locales.include?(params[:locale].to_sym)
+      I18n.locale = params[:locale]
+      session[:locale] = params[:locale]
+    elsif session[:locale]
+      I18n.locale = session[:locale]
+    end
+  end
 
   def set_fiscal_quarter
     @fiscal_quarter = FiscalQuarter.find_by!(identifier: params[:identifier])
