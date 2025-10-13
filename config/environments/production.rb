@@ -107,5 +107,6 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV.fetch('BASE_HOST_URL', "guirigestor.com") }
 
   config.active_storage.service = :r2
+  config.force_ssl = true
 
 end
