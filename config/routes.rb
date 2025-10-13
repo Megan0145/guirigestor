@@ -23,4 +23,10 @@ Rails.application.routes.draw do
     as: 'fiscal_quarter',
     constraints: { identifier: /[a-z0-9]{5}/ }
 
+  # Fiscal Quarter passcode verification
+  post '/:identifier/verify-passcode', 
+    to: 'fiscal_quarters#verify_passcode', 
+    as: 'verify_passcode_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
 end
