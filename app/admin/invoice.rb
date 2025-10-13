@@ -60,6 +60,7 @@ ActiveAdmin.register Invoice do
     invoices = Invoice.where(id: selection)
     invoices.each do |invoice|
       cloned_invoice = invoice.dup
+      cloned_invoice.fiscal_quarter_id = invoice&.fiscal_quarter_id
       cloned_invoice.invoice_number = invoice&.invoice_number&.to_i + 1
       cloned_invoice.issued_on = Date.today
       cloned_invoice.due_on = Date.today
@@ -77,6 +78,13 @@ ActiveAdmin.register Invoice do
       end
     end
     redirect_to admin_invoices_path, notice: "Cloned #{invoices.count} invoices successfully."
+  end
+
+  batch_action :assign_fiscal_quarter do |ids|
+    current_quarter = ENV['CURRENT_QUARTER']
+    fq = FiscalQuarter.find_by(name: current_quarter)
+    Invoice.where(id: ids).update_all(fiscal_quarter_id: fq.id)
+    redirect_to collection_path, notice: "Assigned #{ids.size} invoices to #{current_quarter}."
   end
 
   index do

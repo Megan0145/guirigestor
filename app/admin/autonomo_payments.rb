@@ -7,6 +7,13 @@ ActiveAdmin.register AutonomoPayment do
   filter :notes
   filter :fiscal_quarter
 
+  batch_action :assign_fiscal_quarter do |ids|
+    current_quarter = ENV['CURRENT_QUARTER']
+    fq = FiscalQuarter.find_by(name: current_quarter)
+    AutonomoPayment.where(id: ids).update_all(fiscal_quarter_id: fq.id)
+    redirect_to collection_path, notice: "Assigned #{ids.size} autonomo payments to #{current_quarter}."
+  end
+  
   index do
     selectable_column
     id_column

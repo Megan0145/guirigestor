@@ -1,6 +1,5 @@
 ActiveAdmin.register OutgoingReceipt do
   permit_params :user_id, :status, :uploaded_on, :notes, :payment_file, :fiscal_quarter_id
-
   
   filter :user
   filter :status
@@ -9,6 +8,13 @@ ActiveAdmin.register OutgoingReceipt do
   filter :fiscal_quarter
   filter :created_at
   filter :updated_at
+
+  batch_action :assign_fiscal_quarter do |ids|
+    current_quarter = ENV['CURRENT_QUARTER']
+    fq = FiscalQuarter.find_by(name: current_quarter)
+    OutgoingReceipt.where(id: ids).update_all(fiscal_quarter_id: fq.id)
+    redirect_to collection_path, notice: "Assigned #{ids.size} outgoing receipts to #{current_quarter}."
+  end
 
   index do
     selectable_column
