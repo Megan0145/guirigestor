@@ -5,6 +5,7 @@ ruby '3.1.2'
 gem 'rails', '~> 7.0.3'
 gem "pg", "~> 1.1", group: [:production]
 gem 'sqlite3'
+gem 'concurrent-ruby', '1.3.4'
 
 gem "sprockets-rails"
 gem "turbo-rails"
