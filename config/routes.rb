@@ -17,4 +17,10 @@ Rails.application.routes.draw do
     passwords:      'users/passwords',
   }
 
+  # Fiscal Quarter public view
+  get '/:identifier', 
+    to: 'fiscal_quarters#show', 
+    as: 'fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
 end

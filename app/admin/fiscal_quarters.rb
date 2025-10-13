@@ -12,7 +12,7 @@ ActiveAdmin.register FiscalQuarter do
   filter :passcode
   filter :created_at
   filter :updated_at
-
+  
   index do
     selectable_column
     id_column
@@ -34,7 +34,9 @@ ActiveAdmin.register FiscalQuarter do
     end
     column :created_at
     column :updated_at
-    actions
+    actions defaults: true do |fiscal_quarter|
+      item "Accountant View", fiscal_quarter_path(fiscal_quarter.identifier), target: "_blank", class: "member_link"
+    end
   end
 
   form do |f|
