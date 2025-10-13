@@ -306,7 +306,6 @@ GEM
       activesupport
       ostruct
     wkhtmltopdf-binary (0.12.6.10)
-    wkhtmltopdf-heroku (2.12.6.0)
     zeitwerk (2.6.18)
 
 PLATFORMS
@@ -350,7 +349,6 @@ DEPENDENCIES
   tzinfo-data
   wicked_pdf
   wkhtmltopdf-binary (~> 0.12.6)
-  wkhtmltopdf-heroku (~> 2.12.6)
 
 RUBY VERSION
    ruby 3.1.2p20
