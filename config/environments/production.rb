@@ -104,7 +104,7 @@ Rails.application.configure do
   
   config.action_mailer.delivery_method = :postmark
   config.action_mailer.postmark_settings = { :api_token => ENV.fetch('POSTMARK_API_PRODUCTION_KEY') }
-  config.action_mailer.default_url_options = { host: ENV.fetch('BASE_HOST_URL, "guirigestor.com"') }
+  config.action_mailer.default_url_options = { host: ENV.fetch('BASE_HOST_URL', "guirigestor.com") }
 
   config.active_storage.service = :r2
 
