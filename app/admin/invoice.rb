@@ -19,7 +19,11 @@ ActiveAdmin.register Invoice do
   filter :updated_at
 
   action_item :download_pdf, only: :show do
-    link_to "Download PDF", pdf_admin_invoice_path(resource), target: "_blank"
+    link_to "Download PDF", pdf_admin_invoice_path(resource), target: "_blank", class: "action-item-button"
+  end
+
+  action_item :preview_invoice, only: :show do
+    link_to "Preview Invoice", preview_admin_invoice_path(resource), target: "_blank", class: "action-item-button"
   end
   
   member_action :pdf, method: :get, as: :pdf do
@@ -34,14 +38,6 @@ ActiveAdmin.register Invoice do
     @invoice = Invoice.find(params[:id])
     render template: 'invoices/pdf', layout: 'pdf'
   end
-
-  # action_item :email_invoice, only: :show do
-  #   link_to "Email Invoice", email_admin_invoice_path(invoice), method: :post
-  # end
-
-  # action_item :clone_invoice, only: :show do
-  #   link_to "Clone Invoice", clone_admin_invoice_path(invoice), method: :post
-  # end
 
   member_action :clone_invoice, method: :post, as: :clone do
     invoice = Invoice.find(params[:id])
@@ -118,8 +114,8 @@ ActiveAdmin.register Invoice do
       f.input :notes
       f.input :terms
       f.input :bank_details
-      f.input :issued_on, as: :datepicker
-      f.input :due_on, as: :datepicker
+      f.input :issued_on
+      f.input :due_on
     end
 
     f.inputs "Sender Info" do
