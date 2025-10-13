@@ -1,11 +1,14 @@
 ActiveAdmin.register OutgoingReceipt do
-  permit_params :user_id, :status, :uploaded_on, :notes, :payment_file
+  permit_params :user_id, :status, :uploaded_on, :notes, :payment_file, :fiscal_quarter_id
 
   
   filter :user
   filter :status
   filter :uploaded_on
   filter :notes
+  filter :fiscal_quarter
+  filter :created_at
+  filter :updated_at
 
   index do
     selectable_column
@@ -28,6 +31,7 @@ ActiveAdmin.register OutgoingReceipt do
       end
     end
     column :uploaded_on
+    column :fiscal_quarter
     column :created_at
     column :updated_at
     actions
@@ -36,6 +40,7 @@ ActiveAdmin.register OutgoingReceipt do
   form do |f|
     f.inputs "Outgoing Receipt" do
       f.input :user
+      f.input :fiscal_quarter, as: :select, collection: FiscalQuarter.all.map { |fq| ["#{fq.name} - #{fq.user.name} - #{fq.start_date} to #{fq.end_date}", fq.id] }
       f.input :status, as: :select, collection: OutgoingReceipt.statuses.keys
       f.input :uploaded_on
       f.input :notes, as: :text, input_html: { rows: 3 }
@@ -49,6 +54,7 @@ ActiveAdmin.register OutgoingReceipt do
   show do
     attributes_table do
       row :user
+      row :fiscal_quarter
       row :status do |outgoing_receipt|
         case outgoing_receipt.status
         when 'paid'

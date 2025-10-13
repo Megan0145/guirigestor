@@ -11,10 +11,10 @@ class User < ApplicationRecord
                     format: { with: URI::MailTo::EMAIL_REGEXP, message: 'must be a valid email address' }
   validate :email_validity
 
-  has_many :categories
-  accepts_nested_attributes_for :categories
-  has_many :user_devices, dependent: :destroy
-  has_many :notifications, dependent: :destroy
+  has_many :fiscal_quarters, dependent: :destroy
+  has_many :autonomo_payments, dependent: :destroy
+  has_many :outgoing_receipts, dependent: :destroy
+  has_many :invoices, dependent: :destroy
   
   def name 
     "#{first_name} #{last_name}"

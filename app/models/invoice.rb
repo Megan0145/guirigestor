@@ -1,5 +1,6 @@
 class Invoice < ApplicationRecord
   belongs_to :user
+  belongs_to :fiscal_quarter, optional: true
   has_many :invoice_line_items, dependent: :destroy
   has_one_attached :company_logo
   accepts_nested_attributes_for :invoice_line_items, allow_destroy: true
@@ -54,6 +55,7 @@ class Invoice < ApplicationRecord
       "tax_rate",
       "issued_on",
       "due_on",
+      "fiscal_quarter_id"
     ]
   end
 

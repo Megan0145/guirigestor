@@ -1,7 +1,8 @@
 ActiveAdmin.register User do
   permit_params :email, :password, :password_confirmation, :first_name, :last_name
 
-  menu label: -> { inline_svg_tag('heroicons/users.svg',class:"w-4 h-4 mr-1") + 'Users' }
+  menu parent: 'Settings'
+  
   index do
     selectable_column
     id_column

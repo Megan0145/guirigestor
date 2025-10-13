@@ -3,7 +3,7 @@ ActiveAdmin.register Invoice do
                 :recipient_company_name, :recipient_vat_number,
                 :recipient_address, :recipient_email,
                 :sender_company_name, :sender_tax_number,
-                :sender_address, :notes, :terms, :bank_details, :tax_rate, :issued_on, :due_on,
+                :sender_address, :notes, :terms, :bank_details, :tax_rate, :issued_on, :due_on, :fiscal_quarter_id,
                 invoice_line_items_attributes: [:id, :description, :rate, :quantity, :total, :_destroy]
 
   includes :user, :invoice_line_items
@@ -15,6 +15,7 @@ ActiveAdmin.register Invoice do
   filter :tax_rate
   filter :issued_on
   filter :due_on
+  filter :fiscal_quarter
   filter :created_at
   filter :updated_at
 
@@ -92,6 +93,7 @@ ActiveAdmin.register Invoice do
     end
     column :issued_on
     column :due_on
+    column :fiscal_quarter
     column :created_at
     actions defaults: true do |invoice|
       item "Preview", preview_admin_invoice_path(invoice), target: "_blank", class: "member_link"
@@ -103,6 +105,7 @@ ActiveAdmin.register Invoice do
 
   form do |f|
     f.semantic_errors
+    f.input :fiscal_quarter, as: :select, collection: FiscalQuarter.all.map { |fq| ["#{fq.name} - #{fq.user.name} - #{fq.start_date} to #{fq.end_date}", fq.id] }
     f.inputs "Invoice Details" do
       f.input :company_logo, as: :file, hint: f.object.company_logo.attached? ? image_tag(url_for(f.object.company_logo), height: '50') : content_tag(:span, "No logo yet")
       f.input :invoice_number
@@ -147,6 +150,7 @@ ActiveAdmin.register Invoice do
       row :id
       row :invoice_number
       row :user
+      row :fiscal_quarter
       row :frequency do |invoice|
         invoice.frequency.humanize
       end

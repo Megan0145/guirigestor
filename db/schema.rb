@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_13_200117) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_13_200840) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -60,6 +60,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_13_200117) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "fiscal_quarter_id"
+    t.index ["fiscal_quarter_id"], name: "index_autonomo_payments_on_fiscal_quarter_id"
     t.index ["user_id"], name: "index_autonomo_payments_on_user_id"
   end
 
@@ -70,6 +72,20 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_13_200117) do
     t.boolean "is_draft"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "fiscal_quarters", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name"
+    t.date "start_date"
+    t.date "end_date"
+    t.string "status", default: "active"
+    t.text "notes"
+    t.string "identifier"
+    t.string "passcode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_fiscal_quarters_on_user_id"
   end
 
   create_table "invoice_line_items", force: :cascade do |t|
@@ -105,6 +121,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_13_200117) do
     t.text "bank_details"
     t.text "notes"
     t.string "currency", default: "EUR", null: false
+    t.integer "fiscal_quarter_id"
+    t.index ["fiscal_quarter_id"], name: "index_invoices_on_fiscal_quarter_id"
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
@@ -123,6 +141,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_13_200117) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "fiscal_quarter_id"
+    t.index ["fiscal_quarter_id"], name: "index_outgoing_receipts_on_fiscal_quarter_id"
     t.index ["user_id"], name: "index_outgoing_receipts_on_user_id"
   end
 
@@ -149,8 +169,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_13_200117) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "autonomo_payments", "fiscal_quarters"
   add_foreign_key "autonomo_payments", "users"
+  add_foreign_key "fiscal_quarters", "users"
   add_foreign_key "invoice_line_items", "invoices"
+  add_foreign_key "invoices", "fiscal_quarters"
   add_foreign_key "invoices", "users"
+  add_foreign_key "outgoing_receipts", "fiscal_quarters"
   add_foreign_key "outgoing_receipts", "users"
 end

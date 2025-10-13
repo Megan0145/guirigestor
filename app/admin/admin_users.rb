@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
   permit_params :email, :password, :password_confirmation, :first_name, :last_name, :avatar
-  menu label: -> { inline_svg_tag('heroicons/user-group.svg',class:"w-4 h-4 mr-1") + 'Admin Users' }
+  menu parent: 'Settings'
 
   index do
     selectable_column
