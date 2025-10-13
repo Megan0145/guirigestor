@@ -15,6 +15,14 @@ class Invoice < ApplicationRecord
     invoice_line_items.sum(&:total)
   end
 
+  def logo_url
+    if company_logo.attached?
+      Rails.env.development? ? "data:image/png;base64,#{Base64.strict_encode64(company_logo.download)}" : url_for(company_logo)
+    else
+      nil
+    end
+  end
+
   # Tax value based on tax_rate column (e.g. 21 for 21%)
   def tax_amount
     return 0 unless tax_rate.present?
