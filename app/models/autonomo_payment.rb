@@ -1,0 +1,18 @@
+class AutonomoPayment < ApplicationRecord
+  belongs_to :user
+  has_one_attached :payment_file
+
+  enum status: {
+    paid: 'paid',
+    pending: 'pending',
+    rejected: 'rejected'
+  }
+  
+  def self.ransackable_attributes(auth_object = nil)
+    ["id", "user_id", "status", "uploaded_on", "notes"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["user"]
+  end
+end
