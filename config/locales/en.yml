@@ -68,6 +68,7 @@ en:
     actions:
       download_pdf: "Download PDF"
       download: "Download"
+      view: "View"
     empty_states:
       no_invoices: "No invoices"
       no_invoices_desc: "No invoices have been created for this fiscal quarter yet."

@@ -45,4 +45,20 @@ Rails.application.routes.draw do
     as: 'download_outgoing_receipt_fiscal_quarter',
     constraints: { identifier: /[a-z0-9]{5}/ }
 
+  # Fiscal Quarter view actions
+  get '/:identifier/invoices/:invoice_id/view', 
+    to: 'fiscal_quarters#view_invoice', 
+    as: 'view_invoice_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
+  get '/:identifier/autonomo-payments/:payment_id/view', 
+    to: 'fiscal_quarters#view_autonomo_payment', 
+    as: 'view_autonomo_payment_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
+  get '/:identifier/outgoing-receipts/:receipt_id/view', 
+    to: 'fiscal_quarters#view_outgoing_receipt', 
+    as: 'view_outgoing_receipt_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
 end

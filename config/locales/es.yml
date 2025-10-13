@@ -41,6 +41,7 @@ es:
     actions:
       download_pdf: "Descargar PDF"
       download: "Descargar"
+      view: "Ver"
     empty_states:
       no_invoices: "Sin facturas"
       no_invoices_desc: "Aún no se han creado facturas para este trimestre fiscal."
