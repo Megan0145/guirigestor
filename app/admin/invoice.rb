@@ -1,4 +1,6 @@
 ActiveAdmin.register Invoice do
+  menu parent: 'Accounting'
+  
   permit_params :company_logo, :user_id, :invoice_number, :currency, :frequency, :rate,
                 :recipient_company_name, :recipient_vat_number,
                 :recipient_address, :recipient_email,

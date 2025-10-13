@@ -1,4 +1,6 @@
 ActiveAdmin.register AutonomoPayment do
+  menu parent: 'Accounting'
+
   permit_params :user_id, :status, :uploaded_on, :notes, :payment_file, :fiscal_quarter_id
 
   filter :user
