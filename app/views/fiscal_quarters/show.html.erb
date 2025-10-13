@@ -17,8 +17,8 @@
         </div>
         <div id="error-message" class="text-red-600 text-sm mb-4" style="display: none;"></div>
         <div class="flex justify-center space-x-3">
-          <button type="submit" id="verify-btn" 
-                  class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+          <button type="button" id="verify-btn" 
+                  class="px-4 py-2 bg-blue-600 cursor-pointer text-white text-base font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
             <span class="verify-text">Verify</span>
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white loading-spinner" style="display: none;" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -327,9 +327,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function showPasscodeModal() {
     console.log('Showing passcode modal');
-    console.log('Showing passcode modal');
-    console.log(passcodeModal);
-    console.log(mainContent);
     passcodeModal.style.display = 'block';
     mainContent.style.display = 'none';
     passcodeInput.focus();
@@ -339,6 +336,8 @@ document.addEventListener('DOMContentLoaded', function() {
     errorMessage.textContent = message;
     errorMessage.style.display = 'block';
     passcodeInput.classList.add('border-red-500');
+    // Ensure modal stays visible when showing error
+    showPasscodeModal();
   }
 
   function hideError() {
@@ -358,9 +357,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Handle form submission
-  passcodeForm.addEventListener('submit', function(e) {
-    e.preventDefault();
+  // Function to handle passcode verification
+  function verifyPasscode() {
+    console.log('verifyPasscode function called');
     hideError();
     
     const passcode = passcodeInput.value.trim();
@@ -376,11 +375,17 @@ document.addEventListener('DOMContentLoaded', function() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        'Accept': 'application/json'
       },
       body: JSON.stringify({ passcode: passcode })
     })
-    .then(response => response.json())
+    .then(response => {
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
       setLoading(false);
       
@@ -389,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem(storageKey, 'granted');
         showMainContent();
       } else {
-        showError('Invalid passcode. Please try again.');
+        showError(data.error || 'Invalid passcode. Please try again.');
         passcodeInput.value = '';
         passcodeInput.focus();
       }
@@ -399,12 +404,30 @@ document.addEventListener('DOMContentLoaded', function() {
       showError('An error occurred. Please try again.');
       console.error('Error:', error);
     });
+  }
+
+  // Handle form submission
+  passcodeForm.addEventListener('submit', function(e) {
+    console.log('Form submit event triggered');
+    e.preventDefault();
+    e.stopPropagation();
+    verifyPasscode();
+  });
+
+  // Handle button click
+  verifyBtn.addEventListener('click', function(e) {
+    console.log('Button click event triggered');
+    e.preventDefault();
+    e.stopPropagation();
+    verifyPasscode();
   });
 
   // Allow Enter key to submit
   passcodeInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
-      passcodeForm.dispatchEvent(new Event('submit'));
+      console.log('Enter key pressed');
+      e.preventDefault();
+      verifyPasscode();
     }
   });
 

@@ -1,11 +1,11 @@
 module H1Helper
 
   def page_title
-    @page_title ||= "H1 Rails"
+    @page_title ||= "GuiriGestor"
   end
 
   def page_description
-    "The greatest app on the internet"
+    ""
   end
 
   def cache_buster 

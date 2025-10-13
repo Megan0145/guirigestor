@@ -1,5 +1,6 @@
 class FiscalQuartersController < ApplicationController
   before_action :set_fiscal_quarter, only: [:show, :verify_passcode]
+  skip_before_action :verify_authenticity_token, only: [:verify_passcode]
 
   def show
     @invoices = @fiscal_quarter.invoices.includes(:invoice_line_items)
@@ -8,10 +9,14 @@ class FiscalQuartersController < ApplicationController
   end
 
   def verify_passcode
-    if params[:passcode] == @fiscal_quarter.passcode
-      render json: { success: true }
-    else
-      render json: { success: false, error: 'Invalid passcode' }
+    respond_to do |format|
+      format.json do
+        if params[:passcode] == @fiscal_quarter.passcode
+          render json: { success: true }
+        else
+          render json: { success: false, error: 'Invalid passcode' }
+        end
+      end
     end
   end
 
