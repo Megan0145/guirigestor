@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_13_192135) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_13_200117) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -116,6 +116,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_13_192135) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "outgoing_receipts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "status", default: "paid"
+    t.datetime "uploaded_on"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_outgoing_receipts_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -142,4 +152,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_13_192135) do
   add_foreign_key "autonomo_payments", "users"
   add_foreign_key "invoice_line_items", "invoices"
   add_foreign_key "invoices", "users"
+  add_foreign_key "outgoing_receipts", "users"
 end
