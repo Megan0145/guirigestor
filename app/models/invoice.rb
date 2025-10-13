@@ -25,4 +25,31 @@ class Invoice < ApplicationRecord
   def total_amount
     (subtotal_amount + tax_amount).round(2)
   end
+  def self.ransackable_attributes(auth_object = nil)
+    [
+      "id",
+      "user_id",
+      "invoice_number",
+      "currency",
+      "frequency",
+      "rate",
+      "recipient_company_name",
+      "recipient_vat_number",
+      "recipient_address",
+      "recipient_email",
+      "sender_company_name",
+      "sender_tax_number",
+      "sender_address",
+      "notes",
+      "terms",
+      "bank_details",
+      "tax_rate",
+      "issued_on",
+      "due_on",
+    ]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["invoice_line_items", "user"]
+  end
 end

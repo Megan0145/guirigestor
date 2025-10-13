@@ -8,6 +8,16 @@ ActiveAdmin.register Invoice do
 
   includes :user, :invoice_line_items
 
+  filter :user
+  filter :invoice_number
+  filter :frequency
+  filter :rate
+  filter :tax_rate
+  filter :issued_on
+  filter :due_on
+  filter :created_at
+  filter :updated_at
+
   action_item :download_pdf, only: :show do
     link_to "Download PDF", pdf_admin_invoice_path(resource), target: "_blank"
   end
