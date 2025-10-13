@@ -10,8 +10,22 @@
 
 WickedPdf.configure do |config|
   # Use the binary from the gem for cross-platform compatibility
-  gem_path = Gem.loaded_specs['wkhtmltopdf-binary'].full_gem_path
-  config.exe_path = File.join(gem_path, 'bin', 'wkhtmltopdf')
+  begin
+    require 'wkhtmltopdf-binary'
+    gem_spec = Gem.loaded_specs['wkhtmltopdf-binary']
+    if gem_spec
+      gem_path = gem_spec.full_gem_path
+      config.exe_path = File.join(gem_path, 'bin', 'wkhtmltopdf')
+    else
+      # Fallback to trying the gem bin path method
+      config.exe_path = `which wkhtmltopdf`.strip
+      config.exe_path = '/usr/bin/wkhtmltopdf' if config.exe_path.empty?
+    end
+  rescue LoadError
+    # If gem is not available, try system binary
+    config.exe_path = `which wkhtmltopdf`.strip
+    config.exe_path = '/usr/bin/wkhtmltopdf' if config.exe_path.empty?
+  end
   
   # Enable local file access for assets
   config.enable_local_file_access = true
