@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_13_194056) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_30_164905) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -76,7 +76,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_13_194056) do
   create_table "invoices", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "frequency"
-    t.decimal "monthly_rate"
+    t.decimal "rate"
     t.string "recipient_company_name"
     t.string "recipient_vat_number"
     t.text "recipient_address"
@@ -94,6 +94,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_13_194056) do
     t.text "terms"
     t.text "bank_details"
     t.text "notes"
+    t.string "currency", default: "EUR", null: false
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
