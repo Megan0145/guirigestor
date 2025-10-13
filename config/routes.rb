@@ -29,4 +29,20 @@ Rails.application.routes.draw do
     as: 'verify_passcode_fiscal_quarter',
     constraints: { identifier: /[a-z0-9]{5}/ }
 
+  # Fiscal Quarter download actions
+  get '/:identifier/invoices/:invoice_id/download', 
+    to: 'fiscal_quarters#download_invoice', 
+    as: 'download_invoice_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
+  get '/:identifier/autonomo-payments/:payment_id/download', 
+    to: 'fiscal_quarters#download_autonomo_payment', 
+    as: 'download_autonomo_payment_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
+  get '/:identifier/outgoing-receipts/:receipt_id/download', 
+    to: 'fiscal_quarters#download_outgoing_receipt', 
+    as: 'download_outgoing_receipt_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
 end

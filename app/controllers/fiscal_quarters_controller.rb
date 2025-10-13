@@ -1,5 +1,5 @@
 class FiscalQuartersController < ApplicationController
-  before_action :set_fiscal_quarter, only: [:show, :verify_passcode]
+  before_action :set_fiscal_quarter, only: [:show, :verify_passcode, :download_invoice, :download_autonomo_payment, :download_outgoing_receipt]
   skip_before_action :verify_authenticity_token, only: [:verify_passcode]
 
   def show
@@ -17,6 +17,40 @@ class FiscalQuartersController < ApplicationController
           render json: { success: false, error: 'Invalid passcode' }
         end
       end
+    end
+  end
+
+  def download_invoice
+    @invoice = @fiscal_quarter.invoices.find(params[:invoice_id])
+    
+    respond_to do |format|
+      format.pdf do
+        render pdf: "invoice_#{@invoice.invoice_number}",
+               template: 'invoices/pdf',
+               layout: 'pdf',
+               formats: [:html],
+               disposition: 'attachment'
+      end
+    end
+  end
+
+  def download_autonomo_payment
+    @payment = @fiscal_quarter.autonomo_payments.find(params[:payment_id])
+    
+    if @payment.payment_file.attached?
+      redirect_to rails_blob_path(@payment.payment_file, disposition: "attachment")
+    else
+      redirect_to fiscal_quarter_path(@fiscal_quarter.identifier), alert: 'No file attached to this payment.'
+    end
+  end
+
+  def download_outgoing_receipt
+    @receipt = @fiscal_quarter.outgoing_receipts.find(params[:receipt_id])
+    
+    if @receipt.receipt_file.attached?
+      redirect_to rails_blob_path(@receipt.receipt_file, disposition: "attachment")
+    else
+      redirect_to fiscal_quarter_path(@fiscal_quarter.identifier), alert: 'No file attached to this receipt.'
     end
   end
 
