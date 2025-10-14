@@ -116,13 +116,9 @@
 
   <body>
     <div class="header">
-      <% if @invoice.company_logo.attached? %>
-        <img src="<%= @invoice&.logo_url %>" style="height: 80px; width: 80px; border-radius: 50%; margin-bottom: 10px;" alt="Company Logo">
-      <% else %>
-        <div class="logo-circle">
-          <%= @invoice.sender_company_name[0].upcase %>
-        </div>
-      <% end %>
+      <div class="logo-circle">
+        <%= @invoice.sender_company_name[0].upcase %>
+      </div>
       <h1><%= @invoice.sender_company_name %></h1>
       <div class="subtitle">Full Stack Software Engineer</div>
     </div>
