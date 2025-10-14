@@ -30,6 +30,11 @@ Rails.application.routes.draw do
     constraints: { identifier: /[a-z0-9]{5}/ }
 
   # Fiscal Quarter download actions
+  get '/:identifier/invoices/download-all', 
+    to: 'fiscal_quarters#download_all_invoices', 
+    as: 'download_all_invoices_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
   get '/:identifier/invoices/:invoice_id/download', 
     to: 'fiscal_quarters#download_invoice', 
     as: 'download_invoice_fiscal_quarter',

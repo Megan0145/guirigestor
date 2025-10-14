@@ -70,6 +70,10 @@ ActiveAdmin.register FiscalQuarter do
           div class: "status-tag", data: { status: :yes } do
             fiscal_quarter.status.humanize
           end
+        when 'ready_for_submission'
+          div class: "status-tag", data: { status: :yes } do
+            fiscal_quarter.status.humanize
+          end
         when 'inactive'
           div class: "status-tag", data: { status: :no } do
             fiscal_quarter.status.humanize

@@ -26,6 +26,7 @@ es:
     status:
       active: "Activo"
       inactive: "Inactivo"
+      ready_for_submission: "Listo para su envío"
     summary:
       invoices: "Facturas"
       autonomo_payments: "Pagos de Autónomo"
@@ -42,12 +43,14 @@ es:
       due: "Vencimiento"
       actions: "Acciones"
       status: "Estado"
+      service: "Servicio"
       uploaded: "Subido"
       notes: "Notas"
     actions:
       download_pdf: "Descargar PDF"
       download: "Descargar"
       view: "Ver"
+      download_all_zip: "Descargar Todo como ZIP"
     empty_states:
       no_invoices: "Sin facturas"
       no_invoices_desc: "Aún no se han creado facturas para este trimestre fiscal."

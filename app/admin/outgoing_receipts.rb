@@ -1,10 +1,12 @@
 ActiveAdmin.register OutgoingReceipt do
   menu parent: 'Accounting'
 
-  permit_params :user_id, :status, :uploaded_on, :notes, :payment_file, :fiscal_quarter_id
+  permit_params :user_id, :status, :uploaded_on, :notes, :fiscal_quarter_id, :service, :amount, :receipt_file
   
   filter :user
   filter :status
+  filter :service
+  filter :amount
   filter :uploaded_on
   filter :notes
   filter :fiscal_quarter
@@ -38,6 +40,8 @@ ActiveAdmin.register OutgoingReceipt do
         end
       end
     end
+    column :service
+    column :amount
     column :uploaded_on
     column :fiscal_quarter
     column :created_at
@@ -50,6 +54,8 @@ ActiveAdmin.register OutgoingReceipt do
       f.input :user
       f.input :fiscal_quarter, as: :select, collection: FiscalQuarter.all.map { |fq| ["#{fq.name} - #{fq.user.name} - #{fq.start_date} to #{fq.end_date}", fq.id] }
       f.input :status, as: :select, collection: OutgoingReceipt.statuses.keys
+      f.input :service
+      f.input :amount
       f.input :uploaded_on
       f.input :notes, as: :text, input_html: { rows: 3 }
     end
@@ -79,6 +85,8 @@ ActiveAdmin.register OutgoingReceipt do
           end
         end
       end
+      row :service
+      row :amount
       row :uploaded_on
       row :notes
       row :receipt_file do |outgoing_receipt|

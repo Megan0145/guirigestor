@@ -53,6 +53,7 @@ en:
     status:
       active: "Active"
       inactive: "Inactive"
+      ready_for_submission: "Ready for Submission"
     summary:
       invoices: "Invoices"
       autonomo_payments: "Autonomo Payments"
@@ -69,12 +70,14 @@ en:
       due: "Due"
       actions: "Actions"
       status: "Status"
+      service: "Service"
       uploaded: "Uploaded"
       notes: "Notes"
     actions:
       download_pdf: "Download PDF"
       download: "Download"
       view: "View"
+      download_all_zip: "Download All as ZIP"
     empty_states:
       no_invoices: "No invoices"
       no_invoices_desc: "No invoices have been created for this fiscal quarter yet."

@@ -1,5 +1,5 @@
 class FiscalQuartersController < ApplicationController
-  before_action :set_fiscal_quarter, only: [:show, :verify_passcode, :download_invoice, :download_autonomo_payment, :download_outgoing_receipt, :view_invoice, :view_autonomo_payment, :view_outgoing_receipt]
+  before_action :set_fiscal_quarter, only: [:show, :verify_passcode, :download_invoice, :download_autonomo_payment, :download_outgoing_receipt, :view_invoice, :view_autonomo_payment, :view_outgoing_receipt, :download_all_invoices]
   before_action :set_locale
   skip_before_action :verify_authenticity_token, only: [:verify_passcode]
 
@@ -87,6 +87,12 @@ class FiscalQuartersController < ApplicationController
     else
       redirect_to fiscal_quarter_path(@fiscal_quarter.identifier), alert: 'No file attached to this receipt.'
     end
+  end
+
+  def download_all_invoices
+    # For now, redirect to a simple message until ZIP functionality is working
+    redirect_to fiscal_quarter_path(@fiscal_quarter.identifier), 
+                notice: "ZIP download functionality is being implemented. Please download invoices individually for now."
   end
 
   private

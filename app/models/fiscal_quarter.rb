@@ -13,6 +13,7 @@ class FiscalQuarter < ApplicationRecord
 
   enum status: {
     active: 'active',
+    ready_for_submission: 'ready_for_submission',
     inactive: 'inactive'
   }
 
