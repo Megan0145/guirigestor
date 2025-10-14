@@ -4,12 +4,6 @@ class Invoice < ApplicationRecord
   has_many :invoice_line_items, dependent: :destroy
   has_one_attached :company_logo
   accepts_nested_attributes_for :invoice_line_items, allow_destroy: true
-
-  # options for currency
-  CURRENCIES = {
-    'EUR' => '€',
-    'USD' => '$',
-  }.freeze
   
   # Calculates subtotal (sum of all line items)
   def subtotal_amount

@@ -376,17 +376,17 @@
                   </td>
                   <td class="px-6 py-4">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
-                      <%= receipt.notes.present? ? receipt.notes : '-' %>
+                      <%= receipt&.display_notes || '-' %>
                     </div>
                   </td>
                   <td class="px-6 py-4">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
-                      <%= receipt.service.present? ? receipt.service : '-' %>
+                      <%= receipt.service.present? ? receipt.service&.name : '-' %>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
-                      <%= receipt.amount.present? ? number_to_currency(receipt.amount, unit: OutgoingReceipt::CURRENCIES[receipt.currency]) : '-' %>
+                      <%= receipt&.display_amount || '-' %>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">

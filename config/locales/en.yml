@@ -104,4 +104,5 @@ en:
     payment_status:
       paid: "Paid"
       pending: "Pending"
+      unsubmitted: "Unsubmitted"
       rejected: "Rejected"

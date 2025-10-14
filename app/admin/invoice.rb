@@ -96,7 +96,7 @@ ActiveAdmin.register Invoice do
     column :recipient_company_name
     column :invoice_number
     column :amount do |invoice|
-      number_to_currency(invoice.rate, unit: Invoice::CURRENCIES[invoice.currency])
+      number_to_currency(invoice.rate, unit: available_currencies[invoice.currency])
     end 
     column :frequency do |invoice|
       invoice.frequency.humanize
@@ -119,7 +119,7 @@ ActiveAdmin.register Invoice do
     f.inputs "Invoice Details" do
       f.input :company_logo, as: :file, hint: f.object.company_logo.attached? ? image_tag(url_for(f.object.company_logo), height: '50') : content_tag(:span, "No logo yet")
       f.input :invoice_number
-      f.input :currency, as: :select, collection: Invoice::CURRENCIES.keys, include_blank: false
+      f.input :currency, as: :select, collection: available_currencies.keys, include_blank: false
       f.input :user
       f.input :frequency, as: :select, collection: ["bi-weekly", "monthly"]
       f.input :rate
@@ -165,7 +165,7 @@ ActiveAdmin.register Invoice do
         invoice.frequency.humanize
       end
       row :amount do |invoice|
-        number_to_currency(invoice.rate, unit: Invoice::CURRENCIES[invoice.currency])
+        number_to_currency(invoice.rate, unit: available_currencies[invoice.currency])
       end
       row :description
       row :issued_on

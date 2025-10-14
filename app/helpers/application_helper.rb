@@ -7,4 +7,11 @@ module ApplicationHelper
       "https://html-first.com"
     end
   end 
+
+  def available_currencies 
+    {
+      'EUR' => '€',
+      'USD' => '$',
+    }
+  end
 end

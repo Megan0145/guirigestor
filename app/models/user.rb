@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :autonomo_payments, dependent: :destroy
   has_many :outgoing_receipts, dependent: :destroy
   has_many :invoices, dependent: :destroy
+  has_many :services, dependent: :destroy
   
   def name 
     "#{first_name} #{last_name}"

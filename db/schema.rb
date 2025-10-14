@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_14_102255) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_14_192727) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -147,8 +147,22 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_14_102255) do
     t.string "service"
     t.decimal "amount", precision: 10, scale: 2
     t.string "currency", default: "EUR"
+    t.integer "service_id"
     t.index ["fiscal_quarter_id"], name: "index_outgoing_receipts_on_fiscal_quarter_id"
     t.index ["user_id"], name: "index_outgoing_receipts_on_user_id"
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name"
+    t.string "description"
+    t.decimal "amount", precision: 10, scale: 2
+    t.string "currency", default: "EUR"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "variable_amount", default: false
+    t.boolean "active", default: true
+    t.index ["user_id"], name: "index_services_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -182,4 +196,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_14_102255) do
   add_foreign_key "invoices", "users"
   add_foreign_key "outgoing_receipts", "fiscal_quarters"
   add_foreign_key "outgoing_receipts", "users"
+  add_foreign_key "services", "users"
 end

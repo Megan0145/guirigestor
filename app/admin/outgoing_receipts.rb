@@ -1,7 +1,7 @@
 ActiveAdmin.register OutgoingReceipt do
   menu parent: 'Accounting'
 
-  permit_params :user_id, :status, :uploaded_on, :notes, :fiscal_quarter_id, :service, :amount, :receipt_file, :currency
+  permit_params :user_id, :status, :uploaded_on, :notes, :fiscal_quarter_id, :service, :amount, :receipt_file, :currency, :service_id
   
   filter :user
   filter :status
@@ -42,7 +42,7 @@ ActiveAdmin.register OutgoingReceipt do
     end
     column :service
     column :amount do |outgoing_receipt|
-      number_to_currency(outgoing_receipt.amount, unit: OutgoingReceipt::CURRENCIES[outgoing_receipt.currency])
+      outgoing_receipt.display_amount
     end
     column :uploaded_on
     column :fiscal_quarter
@@ -58,7 +58,7 @@ ActiveAdmin.register OutgoingReceipt do
       f.input :status, as: :select, collection: OutgoingReceipt.statuses.keys
       f.input :service
       f.input :amount
-      f.input :currency, as: :select, collection: OutgoingReceipt::CURRENCIES.keys
+      f.input :currency, as: :select, collection: available_currencies.keys
       f.input :uploaded_on
       f.input :notes, as: :text, input_html: { rows: 3 }
     end
@@ -90,7 +90,7 @@ ActiveAdmin.register OutgoingReceipt do
       end
       row :service
       row :amount do |outgoing_receipt|
-        number_to_currency(outgoing_receipt.amount, unit: OutgoingReceipt::CURRENCIES[outgoing_receipt.currency])
+        number_to_currency(outgoing_receipt.amount, unit: available_currencies[outgoing_receipt.currency])
       end
       row :uploaded_on
       row :notes

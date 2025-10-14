@@ -140,7 +140,7 @@ ActiveAdmin.register FiscalQuarter do
         column :issued_on
         column :due_on
         column :total_amount do |invoice|
-          number_to_currency(invoice.total_amount, unit: Invoice::CURRENCIES[invoice.currency])
+          number_to_currency(invoice.total_amount, unit: available_currencies[invoice.currency])
         end
         column :actions do |invoice|
           div do

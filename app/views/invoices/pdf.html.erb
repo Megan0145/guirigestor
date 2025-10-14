@@ -159,9 +159,9 @@
         <% @invoice.invoice_line_items.each do |item| %>
           <tr style="font-size: 14px;">
             <td style="padding-left: 40px"><%= item.description %></td>
-            <td><%= number_to_currency(item.rate, unit: Invoice::CURRENCIES[@invoice.currency]) %></td>
+            <td><%= number_to_currency(item.rate, unit: available_currencies[@invoice.currency]) %></td>
             <td><%= item.quantity %></td>
-            <td style="text-align: right;"><%= number_to_currency(item.total, unit: Invoice::CURRENCIES[@invoice.currency]) %></td>
+            <td style="text-align: right;"><%= number_to_currency(item.total, unit: available_currencies[@invoice.currency]) %></td>
           </tr>
         <% end %>
         <tr style="font-weight: bold">
@@ -169,7 +169,7 @@
           <td></td>
           <td></td>
           <td style="text-align: right;">
-            <%= number_to_currency(@invoice.subtotal_amount, unit: Invoice::CURRENCIES[@invoice.currency]) %>
+            <%= number_to_currency(@invoice.subtotal_amount, unit: available_currencies[@invoice.currency]) %>
           </td>
         </tr>
         <tr>
@@ -184,7 +184,7 @@
           <td></td>
           <td></td>
           <td colspan="2" style="text-align: right;">
-            <span style="margin-right: 20px">TOTAL</span> <%= number_to_currency(@invoice.total_amount, unit: Invoice::CURRENCIES[@invoice.currency]) %> 
+            <span style="margin-right: 20px">TOTAL</span> <%= number_to_currency(@invoice.total_amount, unit: available_currencies[@invoice.currency]) %> 
           </td>
         </tr>
       </tbody>

@@ -77,4 +77,5 @@ es:
     payment_status:
       paid: "Pagado"
       pending: "Pendiente"
+      unsubmitted: "No Enviado"
       rejected: "Rechazado"
