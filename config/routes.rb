@@ -45,6 +45,11 @@ Rails.application.routes.draw do
     as: 'download_autonomo_payment_fiscal_quarter',
     constraints: { identifier: /[a-z0-9]{5}/ }
 
+  post '/:identifier/outgoing-receipts/download-selected', 
+    to: 'fiscal_quarters#download_selected_receipts', 
+    as: 'download_selected_receipts_fiscal_quarter',
+    constraints: { identifier: /[a-z0-9]{5}/ }
+
   get '/:identifier/outgoing-receipts/:receipt_id/download', 
     to: 'fiscal_quarters#download_outgoing_receipt', 
     as: 'download_outgoing_receipt_fiscal_quarter',

@@ -261,7 +261,6 @@ GEM
       actionpack (>= 7.0)
       railties (>= 7.0)
     rtesseract (3.1.4)
-    rubyzip (3.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -337,7 +336,6 @@ DEPENDENCIES
   rails (~> 7.0.3)
   redcarpet
   rtesseract
-  rubyzip
   sassc-rails (~> 2.1, >= 2.1.1)
   sprockets-rails
   sqlite3

@@ -1,5 +1,5 @@
 class FiscalQuartersController < ApplicationController
-  before_action :set_fiscal_quarter, only: [:show, :verify_passcode, :download_invoice, :download_autonomo_payment, :download_outgoing_receipt, :view_invoice, :view_autonomo_payment, :view_outgoing_receipt, :download_all_invoices]
+  before_action :set_fiscal_quarter, only: [:show, :verify_passcode, :download_invoice, :download_autonomo_payment, :download_outgoing_receipt, :view_invoice, :view_autonomo_payment, :view_outgoing_receipt, :download_all_invoices, :download_selected_receipts]
   before_action :set_locale
   skip_before_action :verify_authenticity_token, only: [:verify_passcode]
 
@@ -93,6 +93,34 @@ class FiscalQuartersController < ApplicationController
     # For now, redirect to a simple message until ZIP functionality is working
     redirect_to fiscal_quarter_path(@fiscal_quarter.identifier), 
                 notice: "ZIP download functionality is being implemented. Please download invoices individually for now."
+  end
+
+  def download_selected_receipts
+    require 'zip'
+    
+    receipt_ids = params[:receipt_ids] || []
+    receipts = @fiscal_quarter.outgoing_receipts.where(id: receipt_ids)
+    
+    if receipts.empty?
+      redirect_to fiscal_quarter_path(@fiscal_quarter.identifier), alert: 'No receipts selected.'
+      return
+    end
+    
+    # Create ZIP in memory
+    zip_data = Zip::OutputStream.write_buffer do |zip|
+      receipts.each do |receipt|
+        if receipt.receipt_file.attached?
+          zip.put_next_entry("#{receipt.service || 'receipt'}_#{receipt.id}.#{receipt.receipt_file.filename.extension}")
+          zip.write receipt.receipt_file.download
+        end
+      end
+    end
+    
+    zip_data.rewind
+    send_data zip_data.read, 
+              filename: "#{@fiscal_quarter.name.parameterize}-recibos-#{@fiscal_quarter.user&.name&.parameterize}.zip",
+              type: 'application/zip',
+              disposition: 'attachment'
   end
 
   private
