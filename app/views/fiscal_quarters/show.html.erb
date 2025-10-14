@@ -318,8 +318,9 @@
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.status') %></th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.uploaded') %></th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.service') %></th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.notes') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.service') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.amount') %></th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.actions') %></th>
               </tr>
             </thead>
@@ -342,12 +343,17 @@
                   </td>
                   <td class="px-6 py-4">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
-                      <%= receipt.service.present? ? receipt.service : '-' %>
+                      <%= receipt.notes.present? ? receipt.notes : '-' %>
                     </div>
                   </td>
                   <td class="px-6 py-4">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
-                      <%= receipt.notes.present? ? receipt.notes : '-' %>
+                      <%= receipt.service.present? ? receipt.service : '-' %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 max-w-xs truncate">
+                      <%= receipt.amount.present? ? number_to_currency(receipt.amount, unit: '€') : '-' %>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
