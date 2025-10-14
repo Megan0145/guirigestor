@@ -46,6 +46,20 @@ en:
       long: "%B %d, %Y at %I:%M %p"
       default: "%m/%d/%Y %I:%M %p"
       short: "%b %d %I:%M %p"
+
+  months:
+    january: "January"
+    february: "February"
+    march: "March"
+    april: "April"
+    may: "May"
+    june: "June"
+    july: "July"
+    august: "August"
+    september: "September"
+    october: "October"
+    november: "November"
+    december: "December"
   
   fiscal_quarter:
     title: "Fiscal Quarter"
@@ -73,6 +87,7 @@ en:
       service: "Service"
       uploaded: "Uploaded"
       notes: "Notes"
+      date: "Date"
     actions:
       download_pdf: "Download PDF"
       download: "Download"

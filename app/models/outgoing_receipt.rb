@@ -17,11 +17,28 @@ class OutgoingReceipt < ApplicationRecord
   before_validation :set_defaults
 
   def self.ransackable_attributes(auth_object = nil)
-    ["id", "user_id", "status", "uploaded_on", "notes", "fiscal_quarter_id", "service", "service_id", "amount", "currency"]
+    ["id", "user_id", "status", "uploaded_on", "notes", "fiscal_quarter_id", "service", "service_id", "amount", "currency", "month", "year"]
   end
 
   def self.ransackable_associations(auth_object = nil)
     ["user"]
+  end
+
+  def display_month
+    if self.month.present?
+      return I18n.t("months.#{months[self.month]&.downcase}") 
+    end
+    return nil
+  end
+
+  def display_year
+    return self.year if self.year.present?
+    return nil
+  end
+
+  def display_month_and_year
+    return "#{self.display_month} #{self.display_year}" if self.month.present? && self.year.present?
+    return "-"
   end
 
   def display_amount

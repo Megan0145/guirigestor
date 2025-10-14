@@ -20,6 +20,20 @@ es:
     am: "am"
     pm: "pm"
   
+  months:
+    january: "enero"
+    february: "febrero"
+    march: "marzo"
+    april: "abril"
+    may: "mayo"
+    june: "junio"
+    july: "julio"
+    august: "agosto"
+    september: "septiembre"
+    october: "octubre"
+    november: "noviembre"
+    december: "diciembre"
+  
   fiscal_quarter:
     title: "Trimestre Fiscal"
     warning: "Este software ha sido construido exclusivamente para el uso de Megan Ennis y Balcells International y contiene información altamente confidencial. No comparta la contraseña con nadie."
@@ -46,6 +60,7 @@ es:
       service: "Servicio"
       uploaded: "Subido"
       notes: "Notas"
+      date: "Fecha"
     actions:
       download_pdf: "Descargar PDF"
       download: "Descargar"

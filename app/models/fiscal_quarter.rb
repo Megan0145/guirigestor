@@ -11,6 +11,8 @@ class FiscalQuarter < ApplicationRecord
   validates :start_date, presence: true
   validates :end_date, presence: true
 
+  after_create :populate_default_outgoing_receipts
+
   enum status: {
     active: 'active',
     ready_for_submission: 'ready_for_submission',
@@ -44,5 +46,40 @@ class FiscalQuarter < ApplicationRecord
     self.name = "#{self.year} - #{self.quarter}" if self.name.blank?
     self.identifier = SecureRandom.alphanumeric(5).downcase if self.identifier.blank?
     self.passcode = SecureRandom.alphanumeric(5).downcase if self.passcode.blank?
+  end
+
+  def months_in_fiscal_quarter
+    (self.start_date.month..self.end_date.month).to_a
+  end
+
+  def populate_default_outgoing_receipts
+    # first get all months belonging to the fiscal quarter
+    months = self.months_in_fiscal_quarter
+    year = self.start_date.year
+
+    # then get all the active services for the user
+    services = self.user.services.where(active: true)
+
+    services.each do |service|
+      months.each do |month|
+        outgoing_receipt = OutgoingReceipt.find_or_initialize_by(
+          user: self.user,
+          fiscal_quarter: self,
+          service: service,
+          month: month,
+          year: year,
+          status: 'unsubmitted',
+        )
+        
+        outgoing_receipt.currency = service.currency
+        outgoing_receipt.amount =  service.variable_amount ? 0.0 : service.amount
+        outgoing_receipt.notes = service.description
+        outgoing_receipt.month = month
+        outgoing_receipt.year = year
+        outgoing_receipt.status = 'unsubmitted'
+        
+        outgoing_receipt.save!
+      end
+    end
   end
 end

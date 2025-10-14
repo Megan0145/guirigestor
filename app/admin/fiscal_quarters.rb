@@ -12,6 +12,14 @@ ActiveAdmin.register FiscalQuarter do
   filter :passcode
   filter :created_at
   filter :updated_at
+
+  # populate default outgoing receipts
+  batch_action :populate_default_outgoing_receipts do |ids|
+    FiscalQuarter.where(id: ids).each do |fiscal_quarter|
+      fiscal_quarter.populate_default_outgoing_receipts
+    end
+    redirect_to collection_path, notice: "Populated default outgoing receipts for #{ids.size} fiscal quarters."
+  end
   
   index do
     selectable_column

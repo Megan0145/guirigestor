@@ -1,7 +1,7 @@
 ActiveAdmin.register OutgoingReceipt do
   menu parent: 'Accounting'
 
-  permit_params :user_id, :status, :uploaded_on, :notes, :fiscal_quarter_id, :service, :amount, :receipt_file, :currency, :service_id
+  permit_params :user_id, :status, :uploaded_on, :notes, :fiscal_quarter_id, :service, :amount, :receipt_file, :currency, :service_id, :month, :year
   
   filter :user
   filter :status
@@ -10,6 +10,8 @@ ActiveAdmin.register OutgoingReceipt do
   filter :uploaded_on
   filter :notes
   filter :fiscal_quarter
+  filter :month
+  filter :year
   filter :created_at
   filter :updated_at
 
@@ -60,6 +62,8 @@ ActiveAdmin.register OutgoingReceipt do
       f.input :amount
       f.input :currency, as: :select, collection: available_currencies.keys
       f.input :uploaded_on
+      f.input :month, as: :select, collection: months.map { |key, value| [value, key] }
+      f.input :year, as: :select, collection: available_years
       f.input :notes, as: :text, input_html: { rows: 3 }
     end
     f.inputs "Receipt File" do
@@ -93,6 +97,8 @@ ActiveAdmin.register OutgoingReceipt do
         number_to_currency(outgoing_receipt.amount, unit: available_currencies[outgoing_receipt.currency])
       end
       row :uploaded_on
+      row :month
+      row :year
       row :notes
       row :receipt_file do |outgoing_receipt|
         if outgoing_receipt.receipt_file.attached?
