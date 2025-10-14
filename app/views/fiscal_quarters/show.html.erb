@@ -353,7 +353,7 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900 max-w-xs truncate">
-                      <%= receipt.amount.present? ? number_to_currency(receipt.amount, unit: '€') : '-' %>
+                      <%= receipt.amount.present? ? number_to_currency(receipt.amount, unit: OutgoingReceipt::CURRENCIES[receipt.currency]) : '-' %>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">

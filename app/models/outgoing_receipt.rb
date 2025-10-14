@@ -9,10 +9,15 @@ class OutgoingReceipt < ApplicationRecord
     rejected: 'rejected'
   }
 
+  CURRENCIES = {
+    'EUR' => '€',
+    'USD' => '$',
+  }.freeze
+
   before_validation :set_defaults
 
   def self.ransackable_attributes(auth_object = nil)
-    ["id", "user_id", "status", "uploaded_on", "notes", "fiscal_quarter_id", "service", "amount"]
+    ["id", "user_id", "status", "uploaded_on", "notes", "fiscal_quarter_id", "service", "amount", "currency"]
   end
 
   def self.ransackable_associations(auth_object = nil)
@@ -21,5 +26,6 @@ class OutgoingReceipt < ApplicationRecord
 
   def set_defaults
     self.uploaded_on = DateTime.now if self.uploaded_on.blank?
+    self.currency = 'EUR' if self.currency.blank?
   end
 end
