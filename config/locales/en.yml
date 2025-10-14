@@ -36,10 +36,16 @@ en:
     formats:
       fiscal_quarter: "%B %d, %Y"
       table_date: "%b %d, %Y"
+      long: "%B %d, %Y"
+      default: "%m/%d/%Y"
+      short: "%b %d"
   
   time:
     formats:
       table_date: "%b %d, %Y"
+      long: "%B %d, %Y at %I:%M %p"
+      default: "%m/%d/%Y %I:%M %p"
+      short: "%b %d %I:%M %p"
   
   fiscal_quarter:
     title: "Fiscal Quarter"

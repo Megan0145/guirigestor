@@ -4,7 +4,7 @@ class FiscalQuartersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:verify_passcode]
 
   def show
-    @invoices = @fiscal_quarter.invoices.includes(:invoice_line_items)
+    @invoices = @fiscal_quarter.invoices.includes(:invoice_line_items).order(invoice_number: :asc)
     @autonomo_payments = @fiscal_quarter.autonomo_payments
     @outgoing_receipts = @fiscal_quarter.outgoing_receipts
   end

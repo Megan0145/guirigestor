@@ -5,12 +5,18 @@ es:
     formats:
       fiscal_quarter: "%d de %B de %Y"
       table_date: "%d %b %Y"
+      long: "%d de %B de %Y"
+      default: "%d/%m/%Y"
+      short: "%d %b"
     month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
     abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
   
   time:
     formats:
       table_date: "%d %b %Y"
+      long: "%d de %B de %Y a las %H:%M"
+      default: "%d/%m/%Y %H:%M"
+      short: "%d %b %H:%M"
     am: "am"
     pm: "pm"
   
