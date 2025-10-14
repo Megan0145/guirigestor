@@ -96,8 +96,6 @@ class FiscalQuartersController < ApplicationController
   end
 
   def download_selected_receipts
-    require 'zip'
-    
     receipt_ids = params[:receipt_ids] || []
     receipts = @fiscal_quarter.outgoing_receipts.where(id: receipt_ids)
     
