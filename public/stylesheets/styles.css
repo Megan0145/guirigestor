@@ -7,3 +7,7 @@ body {
   top: 0px;
   bottom: 0px;
 }
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}

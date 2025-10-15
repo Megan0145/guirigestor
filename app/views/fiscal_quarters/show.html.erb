@@ -360,8 +360,8 @@
                              onchange="updateSelectedCount()">
                     <% end %>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                  <td class="pl-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap 
                       <%= case receipt.status
                           when 'paid' then 'bg-green-100 text-green-800'
                           when 'pending' then 'bg-yellow-100 text-yellow-800'
@@ -385,7 +385,7 @@
                     <%= receipt&.display_month_and_year %>
                   </td>
                   <td class="px-6 py-4">
-                    <div class="text-sm text-gray-900 max-w-xs truncate">
+                    <div class="text-sm text-gray-900 max-w-xs">
                       <%= receipt&.display_notes || '-' %>
                     </div>
                   </td>
@@ -431,6 +431,10 @@
     </div>
   </div>
 </div>
+
+<style>
+ 
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -1,6 +1,5 @@
 class FiscalQuartersController < ApplicationController
   before_action :set_fiscal_quarter, only: [:show, :verify_passcode, :download_invoice, :download_autonomo_payment, :download_outgoing_receipt, :view_invoice, :view_autonomo_payment, :view_outgoing_receipt, :download_all_invoices, :download_selected_receipts]
-  before_action :set_locale
   skip_before_action :verify_authenticity_token, only: [:verify_passcode]
 
   def show
@@ -122,16 +121,6 @@ class FiscalQuartersController < ApplicationController
   end
 
   private
-
-  def set_locale
-    if params[:locale] && I18n.available_locales.include?(params[:locale].to_sym)
-      I18n.locale = params[:locale]
-      session[:locale] = params[:locale]
-    elsif session[:locale]
-      I18n.locale = session[:locale]
-    end
-  end
-
   def set_fiscal_quarter
     @fiscal_quarter = FiscalQuarter.find_by!(identifier: params[:identifier])
   rescue ActiveRecord::RecordNotFound
