@@ -5,7 +5,7 @@ ActiveAdmin.register OutgoingReceipt do
   
   filter :user
   filter :status
-  filter :service
+  filter :service_id, as: :select, collection: Service.all.map { |service| [service.name, service.id] }
   filter :amount
   filter :uploaded_on
   filter :notes
@@ -46,10 +46,10 @@ ActiveAdmin.register OutgoingReceipt do
     column :amount do |outgoing_receipt|
       outgoing_receipt.display_amount
     end
-    column :uploaded_on
+    column :date do |outgoing_receipt|
+      outgoing_receipt.display_month_and_year
+    end
     column :fiscal_quarter
-    column :created_at
-    column :updated_at
     actions
   end
 
