@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You Jack!</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f0f23;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated gradient background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 0, 128, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 191, 255, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 90%, rgba(147, 51, 234, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 70% 20%, rgba(250, 204, 21, 0.2) 0%, transparent 50%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .container {
+      text-align: center;
+      color: white;
+      z-index: 10;
+      padding: 2rem;
+      max-width: 900px;
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Fredoka', cursive;
+      font-size: 6.5rem;
+      font-weight: 700;
+      margin: 0 0 2rem 0;
+      background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0, #ff0080);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient 3s ease infinite, bounce 2s ease-in-out infinite;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.02); }
+    }
+
+    .message {
+      font-size: 1.8rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+      animation: slideInLeft 1.2s ease-out;
+      letter-spacing: 0.02em;
+    }
+
+    .message strong {
+      font-weight: 700;
+      color: #ffd700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .best-wishes {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-top: 3rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 2s ease-in-out infinite, slideInRight 1.4s ease-out;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .team {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 3rem;
+      opacity: 0.95;
+      animation: fadeInUp 2s ease-out;
+      letter-spacing: 0.05em;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 0.95;
+        transform: translateY(0);
+      }
+    }
+
+    .coded-by {
+      font-size: 0.7rem;
+      opacity: 0.5;
+      margin-top: 5rem;
+      animation: fadeIn 4s ease-out;
+      font-style: italic;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 0.5; }
+    }
+
+    /* Floating emoji animations */
+    .emoji {
+      position: fixed;
+      font-size: 3rem;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+
+    .emoji:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+    .emoji:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+    .emoji:nth-child(3) { bottom: 15%; left: 15%; animation-delay: 2s; }
+    .emoji:nth-child(4) { bottom: 25%; right: 10%; animation-delay: 1.5s; }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thank you<br>JACK!</h1>
+    <p class="message">
+      We really appreciate all your <strong>hard work</strong>,<br>
+      <strong>attention to detail</strong> and<br>
+      <strong>incredible work ethic.</strong>
+    </p>
+    <p class="best-wishes">
+      The very best of luck in the future.
+    </p>
+    <p class="team">
+      From the team at RGS/Tonic.
+    </p>
+    <p class="coded-by">
+      Coded by Megan (and a wee touch of AI)
+    </p>
+  </div>
+
+  <script>
+    const colors = ['#ff0080', '#ff8c00', '#40e0d0', '#ffd700', '#ff1493', '#00ffff', '#ff69b4', '#7fff00', '#ff4500', '#da70d6'];
+    
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // Continuous confetti rain from top
+    setInterval(function() {
+      confetti({
+        particleCount: 2,
+        angle: randomInRange(60, 120),
+        spread: randomInRange(50, 100),
+        origin: { x: Math.random(), y: -0.1 },
+        colors: colors,
+        ticks: 400,
+        gravity: 1,
+        scalar: randomInRange(0.8, 1.4),
+        drift: randomInRange(-0.5, 0.5),
+        shapes: ['circle', 'square'],
+        disableForReducedMotion: true
+      });
+    }, 80);
+
+    // Massive initial explosion
+    setTimeout(function() {
+      const count = 200;
+      confetti({
+        particleCount: count,
+        spread: 180,
+        origin: { y: 0.5 },
+        colors: colors,
+        startVelocity: 45,
+        ticks: 400,
+        gravity: 1.2,
+        scalar: 1.4
+      });
+    }, 300);
+
+    // Side cannons
+    function sideCannon(side) {
+      confetti({
+        particleCount: 80,
+        angle: side === 'left' ? 60 : 120,
+        spread: 70,
+        origin: { x: side === 'left' ? 0 : 1, y: 0.6 },
+        colors: colors,
+        startVelocity: 55,
+        gravity: 1,
+        scalar: 1.3
+      });
+    }
+
+    setTimeout(() => sideCannon('left'), 600);
+    setTimeout(() => sideCannon('right'), 800);
+    setTimeout(() => sideCannon('left'), 1400);
+    setTimeout(() => sideCannon('right'), 1600);
+
+    // Random bursts
+    function randomBurst() {
+      confetti({
+        particleCount: randomInRange(50, 100),
+        spread: randomInRange(80, 120),
+        origin: { x: randomInRange(0.2, 0.8), y: randomInRange(0.3, 0.7) },
+        colors: colors,
+        startVelocity: randomInRange(20, 40),
+        scalar: randomInRange(1, 1.5)
+      });
+    }
+
+    setTimeout(randomBurst, 2000);
+    setTimeout(randomBurst, 2500);
+    setTimeout(randomBurst, 3200);
+    
+    // Keep the party going with periodic bursts
+    setInterval(function() {
+      if (Math.random() > 0.7) {
+        randomBurst();
+      }
+    }, 3000);
+
+    // Firework effect
+    setInterval(function() {
+      if (Math.random() > 0.85) {
+        const x = Math.random();
+        const y = Math.random() * 0.5;
+        confetti({
+          particleCount: 50,
+          spread: 360,
+          origin: { x, y },
+          colors: colors,
+          startVelocity: 25,
+          ticks: 300,
+          gravity: 0.8
+        });
+      }
+    }, 1500);
+  </script>
+</body>
+</html>

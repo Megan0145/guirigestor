@@ -51,7 +51,7 @@ class FiscalQuarter < ApplicationRecord
 
   def expected_total_tax_submitted
     # should be 20% of the total profit
-    (total_profit * 0.20).round(2)
+    (total_amount_invoiced * 0.20) - total_amount_outgoing_receipts
   end
 
   def needs_clarification_from_accountant?

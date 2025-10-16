@@ -17,6 +17,10 @@ Rails.application.routes.draw do
     passwords:      'users/passwords',
   }
 
+  get '/thank-you-jack',
+    to: 'misc#thank_you_jack',
+    as: 'thank_you_jack'
+
   # Fiscal Quarter public view
   get '/:identifier', 
     to: 'fiscal_quarters#show', 
