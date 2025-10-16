@@ -64,6 +64,11 @@ en:
   fiscal_quarter:
     title: "Fiscal Quarter"
     warning: "This software has been solely built for the use of Megan Ennis and Balcells International and contains highly confidential information. Do not share the passcode with anyone."
+    tax_submitted: "Total Tax Submitted"
+    high_tax_warning: "The Total Tax Submitted for this Fiscal Quarter is abnormally high. This needs clarification from Balcells."
+    high_tax_list_items:
+      total_submitted: "Total Submitted"
+      total_expected: "Expected Total"
     status:
       active: "Active"
       inactive: "Inactive"

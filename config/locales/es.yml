@@ -37,6 +37,11 @@ es:
   fiscal_quarter:
     title: "Trimestre Fiscal"
     warning: "Este software ha sido construido exclusivamente para el uso de Megan Ennis y Balcells International y contiene información altamente confidencial. No comparta la contraseña con nadie."
+    tax_submitted: "Total de Impuestos Presentados"
+    high_tax_warning: "El Total de Impuestos Presentados para este Trimestre Fiscal es anormalmente alto. Esto necesita aclaración de Balcells."
+    high_tax_list_items:
+      total_submitted: "Total Enviado"
+      total_expected: "Total Previsto"
     status:
       active: "Activo"
       inactive: "Inactivo"

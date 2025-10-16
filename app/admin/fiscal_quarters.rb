@@ -1,7 +1,7 @@
 ActiveAdmin.register FiscalQuarter do
   menu parent: 'Accounting'
 
-  permit_params :name, :start_date, :end_date, :status, :notes, :identifier, :passcode, :year, :quarter, :user_id
+  permit_params :name, :start_date, :end_date, :status, :notes, :identifier, :passcode, :year, :quarter, :user_id, :total_tax_submitted
 
   filter :name
   filter :year
@@ -19,6 +19,10 @@ ActiveAdmin.register FiscalQuarter do
       fiscal_quarter.populate_default_outgoing_receipts
     end
     redirect_to collection_path, notice: "Populated default outgoing receipts for #{ids.size} fiscal quarters."
+  end
+
+  action_item :accountant_view, only: :show do
+    link_to "Accountant View", fiscal_quarter_path(resource.identifier), target: "_blank", class: "action-item-button"
   end
   
   index do
@@ -40,8 +44,9 @@ ActiveAdmin.register FiscalQuarter do
         end
       end
     end
-    column :created_at
-    column :updated_at
+    column :total_tax_submitted do |fiscal_quarter|
+      number_to_currency(fiscal_quarter.total_tax_submitted, unit: available_currencies['EUR'])
+    end
     actions defaults: true do |fiscal_quarter|
       item "Accountant View", fiscal_quarter_path(fiscal_quarter.identifier), target: "_blank", class: "member_link"
     end
@@ -59,7 +64,7 @@ ActiveAdmin.register FiscalQuarter do
       f.input :notes, as: :text, input_html: { rows: 3 }
       f.input :identifier
       f.input :passcode
-
+      f.input :total_tax_submitted, as: :number, input_html: { step: 0.01 }
       f.actions
     end
   end
@@ -87,6 +92,9 @@ ActiveAdmin.register FiscalQuarter do
             fiscal_quarter.status.humanize
           end
         end
+      end
+      row :total_tax_submitted do |fiscal_quarter|
+        number_to_currency(fiscal_quarter.total_tax_submitted, unit: available_currencies['EUR'])
       end
       row :notes
       row :identifier

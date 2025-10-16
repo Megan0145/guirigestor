@@ -15,16 +15,47 @@ class FiscalQuarter < ApplicationRecord
 
   enum status: {
     active: 'active',
+    inactive: 'inactive',
     ready_for_submission: 'ready_for_submission',
-    inactive: 'inactive'
+    submitted: 'submitted',
+    paid: 'paid',
   }
 
   def self.ransackable_attributes(auth_object = nil)
-    ["id", "user_id", "name", "start_date", "end_date", "status", "notes", "identifier", "passcode", "year", "quarter"]
+    ["id", "user_id", "name", "start_date", "end_date", "status", "notes", "identifier", "passcode", "year", "quarter", "total_tax_submitted"]
   end
 
   def self.ransackable_associations(auth_object = nil)
     ["user"]
+  end
+
+  def total_amount_invoiced
+    self.invoices.sum(:rate)
+  end
+
+  def total_amount_outgoing_receipts
+    # get the total amount of outgoing receipts in eur
+    eur_outgoing_receipts = self.outgoing_receipts.where(currency: 'EUR').sum(:amount)
+    
+    # convert the total amount of usd outgoing receipts to eur
+    usd_outgoing_receipts = self.outgoing_receipts.where(currency: 'USD').sum(:amount) || 0
+    usd_to_eur_rate = fetch_usd_to_eur_rate
+    usd_outgoing_receipts_eur = usd_outgoing_receipts * usd_to_eur_rate
+
+    return eur_outgoing_receipts + usd_outgoing_receipts_eur
+  end 
+
+  def total_profit
+    total_amount_invoiced - total_amount_outgoing_receipts
+  end
+
+  def expected_total_tax_submitted
+    # should be 20% of the total profit
+    (total_profit * 0.20).round(2)
+  end
+
+  def needs_clarification_from_accountant?
+    total_tax_submitted >= 3650
   end
 
   def calculate_quarter
@@ -80,6 +111,24 @@ class FiscalQuarter < ApplicationRecord
         
         outgoing_receipt.save!
       end
+    end
+  end
+
+  private
+
+  def fetch_usd_to_eur_rate
+    # Use exchangerate-api.com free API (no auth required)
+    # Returns USD to EUR rate
+    begin
+      response = HTTParty.get('https://api.exchangerate-api.com/v4/latest/USD')
+      if response.success? && response['rates'] && response['rates']['EUR']
+        response['rates']['EUR']
+      else
+        1.10 # Fallback to default rate if API fails
+      end
+    rescue StandardError => e
+      Rails.logger.error("Failed to fetch USD to EUR rate: #{e.message}")
+      1.10 # Fallback to default rate on error
     end
   end
 end
