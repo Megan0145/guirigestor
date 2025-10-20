@@ -46,6 +46,8 @@ es:
       active: "Activo"
       inactive: "Inactivo"
       ready_for_submission: "Listo para su envío"
+      paid: "Pagado"
+      submitted: "Enviado"
     summary:
       invoices: "Facturas"
       autonomo_payments: "Pagos de Autónomo"

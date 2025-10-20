@@ -71,8 +71,10 @@ en:
       total_expected: "Expected Total"
     status:
       active: "Active"
+      paid: "Paid"
       inactive: "Inactive"
       ready_for_submission: "Ready for Submission"
+      submitted: "Submitted"
     summary:
       invoices: "Invoices"
       autonomo_payments: "Autonomo Payments"

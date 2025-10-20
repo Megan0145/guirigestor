@@ -33,15 +33,8 @@ ActiveAdmin.register FiscalQuarter do
     column :start_date
     column :end_date
     column :status do |fiscal_quarter|
-      case fiscal_quarter.status
-      when 'active'
-        div class: "status-tag", data: { status: :yes } do
-          fiscal_quarter.status.humanize
-        end
-      when 'inactive'
-        div class: "status-tag", data: { status: :no } do
-          fiscal_quarter.status.humanize
-        end
+      div class: "px-3 py-1 rounded-full text-xs whitespace-nowrap font-medium inline-block #{status_css_helper(fiscal_quarter.status)}" do
+        fiscal_quarter.status.humanize
       end
     end
     column :total_tax_submitted do |fiscal_quarter|
@@ -78,19 +71,8 @@ ActiveAdmin.register FiscalQuarter do
       row :start_date
       row :end_date
       row :status do |fiscal_quarter|
-        case fiscal_quarter.status
-        when 'active'
-          div class: "status-tag", data: { status: :yes } do
-            fiscal_quarter.status.humanize
-          end
-        when 'ready_for_submission'
-          div class: "status-tag", data: { status: :yes } do
-            fiscal_quarter.status.humanize
-          end
-        when 'inactive'
-          div class: "status-tag", data: { status: :no } do
-            fiscal_quarter.status.humanize
-          end
+        div class: "px-3 py-1 rounded-full text-sm font-medium inline-block #{status_css_helper(fiscal_quarter.status)}" do
+          fiscal_quarter.status.humanize
         end
       end
       row :total_tax_submitted do |fiscal_quarter|
