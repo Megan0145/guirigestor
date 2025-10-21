@@ -2,11 +2,21 @@ class OutgoingReceipt < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include ApplicationHelper
   
+  attr_accessor :part_of_bulk_upload
+  
   belongs_to :user
   belongs_to :fiscal_quarter, optional: true
   belongs_to :service, optional: true
   has_one_attached :receipt_file
+  
+  # Conditional validations - skip when part of bulk upload
+  validates :service, presence: true, unless: :part_of_bulk_upload
+  validates :status, presence: true, unless: :part_of_bulk_upload
+  validates :fiscal_quarter, presence: true, unless: :part_of_bulk_upload
 
+  scope :assigned, -> { where(assigned: true) }
+  scope :unassigned, -> { where(assigned: false) }
+  
   enum status: {
     paid: 'paid',
     unsubmitted: 'unsubmitted',
@@ -17,7 +27,7 @@ class OutgoingReceipt < ApplicationRecord
   before_validation :set_defaults
 
   def self.ransackable_attributes(auth_object = nil)
-    ["id", "user_id", "status", "uploaded_on", "notes", "fiscal_quarter_id", "service", "service_id", "amount", "currency", "month", "year"]
+    ["id", "user_id", "status", "uploaded_on", "notes", "fiscal_quarter_id", "service", "service_id", "amount", "currency", "month", "year", "part_of_bulk_upload", "assigned"]
   end
 
   def self.ransackable_associations(auth_object = nil)

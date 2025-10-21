@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_16_100421) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_21_135303) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -151,6 +151,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_16_100421) do
     t.integer "service_id"
     t.integer "month"
     t.integer "year"
+    t.boolean "assigned", default: false, null: false
     t.index ["fiscal_quarter_id"], name: "index_outgoing_receipts_on_fiscal_quarter_id"
     t.index ["user_id"], name: "index_outgoing_receipts_on_user_id"
   end

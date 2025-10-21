@@ -1,10 +1,16 @@
 ActiveAdmin.register OutgoingReceipt do
   menu parent: 'Accounting'
 
-  permit_params :user_id, :status, :uploaded_on, :notes, :fiscal_quarter_id, :service, :amount, :receipt_file, :currency, :service_id, :month, :year
+  permit_params :user_id, :status, :uploaded_on, :notes, :fiscal_quarter_id, :service, :amount, :receipt_file, :currency, :service_id, :month, :year, :assigned
+  
+  # Scopes for assigned/unassigned
+  scope :all, default: true
+  scope :assigned
+  scope :unassigned
   
   filter :user
   filter :status
+  filter :assigned
   filter :service_id, as: :select, collection: Service.all.map { |service| [service.name, service.id] }
   filter :amount
   filter :uploaded_on
@@ -20,6 +26,16 @@ ActiveAdmin.register OutgoingReceipt do
     fq = FiscalQuarter.find_by(name: current_quarter)
     OutgoingReceipt.where(id: ids).update_all(fiscal_quarter_id: fq.id)
     redirect_to collection_path, notice: "Assigned #{ids.size} outgoing receipts to #{current_quarter}."
+  end
+
+  batch_action :mark_as_assigned do |ids|
+    OutgoingReceipt.where(id: ids).update_all(assigned: true)
+    redirect_to collection_path, notice: "Marked #{ids.size} outgoing receipts as assigned."
+  end
+
+  batch_action :mark_as_unassigned do |ids|
+    OutgoingReceipt.where(id: ids).update_all(assigned: false)
+    redirect_to collection_path, notice: "Marked #{ids.size} outgoing receipts as unassigned."
   end
 
   index do

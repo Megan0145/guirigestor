@@ -2,6 +2,17 @@ Rails.application.routes.draw do
   
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+  
+  # Bulk upload receipts endpoint
+  namespace :admin do
+    post 'bulk_upload_receipts/upload', to: 'bulk_upload_receipts#upload'
+    
+    # Process receipts endpoints
+    get 'process_receipts/:id/edit', to: 'process_receipts#edit'
+    post 'process_receipts/:id/update', to: 'process_receipts#update'
+    get 'process_receipts/:id/preview', to: 'process_receipts#preview'
+    post 'process_receipts/:id/mark_assigned', to: 'process_receipts#mark_assigned'
+  end
 
   root to: "app#index"
 
