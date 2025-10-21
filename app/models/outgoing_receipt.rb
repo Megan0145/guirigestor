@@ -66,5 +66,6 @@ class OutgoingReceipt < ApplicationRecord
   def set_defaults
     self.uploaded_on = DateTime.now if self.uploaded_on.blank?
     self.currency = 'EUR' if self.currency.blank?
+    self.notes = self.service.description if self.notes.blank? && self.service.present? && self.service.description.present?
   end
 end

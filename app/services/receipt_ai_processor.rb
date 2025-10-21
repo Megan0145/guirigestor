@@ -8,7 +8,7 @@ class ReceiptAiProcessor
   end
 
   def extract_details
-    # Extract text from PDF using rtesseract (already in Gemfile)
+    # Extract text from PDF using rtesseract
     receipt_text = extract_text_from_file
     
     if receipt_text.blank?
@@ -110,7 +110,7 @@ class ReceiptAiProcessor
         "month": number (1-12, extract from the receipt/invoice date),
         "year": number (4-digit year from the date),
         "status": "paid" or "pending",
-        "notes": "brief description of what this expense is for",
+        "notes": "brief description of what this expense is for based on the service name eg. for Cursor 'AI tool used for coding'",
         "confidence": "high", "medium", or "low"
       }
 
