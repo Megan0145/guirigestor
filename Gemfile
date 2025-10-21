@@ -49,5 +49,8 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6', group: [:development, :test]
 # ZIP file generation
 gem 'rubyzip', require: 'zip'
 
+# PDF text extraction for AI
+gem 'pdf-reader'
+
 # Optional OCR for receipts
 gem 'rtesseract'

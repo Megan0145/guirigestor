@@ -1,7 +1,26 @@
 <div style="max-width: 600px;">
-  <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem; font-weight: 600;">
-    Edit Receipt #<%= @receipt.id %>
-  </h3>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h3 style="margin: 0; font-size: 1.3rem; font-weight: 600;">
+      Edit Receipt #<%= @receipt.id %>
+    </h3>
+    <% if @receipt.notes.present? && @receipt.notes.start_with?('[AI:') %>
+      <% confidence = @receipt.notes.match(/\[AI: (\w+)\]/)[1] rescue 'unknown' %>
+      <span style="
+        padding: 0.25rem 0.75rem; 
+        border-radius: 12px; 
+        font-size: 0.75rem; 
+        font-weight: 600;
+        <%= case confidence
+            when 'high' then 'background: #d4edda; color: #155724;'
+            when 'medium' then 'background: #fff3cd; color: #856404;'
+            when 'low' then 'background: #f8d7da; color: #721c24;'
+            else 'background: #e2e3e5; color: #383d41;'
+            end %>
+      ">
+        🤖 AI: <%= confidence.upcase %>
+      </span>
+    <% end %>
+  </div>
 
   <% if defined?(@errors) && @errors.present? %>
     <div style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
@@ -34,7 +53,12 @@
     </div>
 
     <div class="form-group">
-      <label for="service_id">Service *</label>
+      <label for="service_id">
+        Service *
+        <% if @receipt.service_id.present? && @receipt.notes.to_s.include?('[AI:') %>
+          <span style="font-size: 0.7rem; color: #5b9bd5; font-weight: normal;">✨ AI suggested</span>
+        <% end %>
+      </label>
       <select name="outgoing_receipt[service_id]" id="service_id">
         <option value="">Select Service</option>
         <% Service.where(active: true).order(:name).each do |service| %>
@@ -116,16 +140,23 @@
 
   <script>
     // Auto-fill amount and currency when service is selected
+    // BUT only if amount field is empty (don't override AI-extracted amounts)
     document.getElementById('service_id').addEventListener('change', function(e) {
       const selectedOption = e.target.options[e.target.selectedIndex];
       const amount = selectedOption.dataset.amount;
       const currency = selectedOption.dataset.currency;
       
-      if (amount) {
-        document.getElementById('amount').value = amount;
+      const amountField = document.getElementById('amount');
+      const currencyField = document.getElementById('currency');
+      
+      // Only auto-fill if the amount field is empty or zero
+      if (amount && (!amountField.value || parseFloat(amountField.value) === 0)) {
+        amountField.value = amount;
       }
-      if (currency) {
-        document.getElementById('currency').value = currency;
+      
+      // Only auto-fill currency if it's not already set
+      if (currency && !currencyField.value) {
+        currencyField.value = currency;
       }
     });
   </script>

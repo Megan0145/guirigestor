@@ -11,6 +11,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (2.0.1)
     actioncable (7.0.8.7)
       actionpack (= 7.0.8.7)
       activesupport (= 7.0.8.7)
@@ -85,6 +86,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    afm (1.0.0)
     arbre (2.2.1)
       activesupport (>= 7.0)
     aws-eventstream (1.3.0)
@@ -105,6 +107,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
     bcrypt (3.1.19)
+    bigdecimal (3.3.1)
     bootsnap (1.13.0)
       msgpack (~> 1.2)
     builder (3.3.0)
@@ -139,6 +142,7 @@ GEM
     has_scope (0.9.0)
       actionpack (>= 7.0)
       activesupport (>= 7.0)
+    hashery (2.1.2)
     httparty (0.20.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
@@ -204,6 +208,12 @@ GEM
     passenger (6.0.18)
       rack
       rake (>= 0.8.1)
+    pdf-reader (2.15.0)
+      Ascii85 (>= 1.0, < 3.0, != 2.0.0)
+      afm (>= 0.2.1, < 2)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     pg (1.6.2-arm64-darwin)
     pg (1.6.2-x86_64-darwin)
     pg (1.6.2-x86_64-linux)
@@ -261,6 +271,7 @@ GEM
       actionpack (>= 7.0)
       railties (>= 7.0)
     rtesseract (3.1.4)
+    ruby-rc4 (0.1.5)
     rubyzip (3.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -285,6 +296,8 @@ GEM
     thor (1.4.0)
     tilt (2.0.11)
     timeout (0.4.3)
+    ttfunk (1.8.0)
+      bigdecimal (~> 3.1)
     turbo-rails (1.1.1)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -330,6 +343,7 @@ DEPENDENCIES
   liquid
   nio4r (~> 2.5.9)
   passenger
+  pdf-reader
   pg (~> 1.1)
   postmark-rails
   pry-rails

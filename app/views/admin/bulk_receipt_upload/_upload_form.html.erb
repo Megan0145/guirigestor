@@ -199,26 +199,35 @@
             body: formData
           });
 
-          if (response.ok) {
+          const result = await response.json();
+          
+          if (response.ok && result.success) {
             successCount++;
+            if (result.ai_processed) {
+              console.log(`Receipt processed with ${result.confidence} confidence`);
+            }
           } else {
             failCount++;
           }
         } catch (error) {
           failCount++;
+          console.error('Upload error:', error);
         }
 
         // Update progress
         const progress = ((i + 1) / selectedFiles.length) * 100;
         progressBar.style.width = progress + '%';
-        progressText.textContent = `Uploading: ${i + 1} of ${selectedFiles.length}`;
+        progressText.textContent = `Processing with AI: ${i + 1} of ${selectedFiles.length}`;
       }
 
       // Show results
       uploadResults.innerHTML = `
         <div style="padding: 1rem; background: ${failCount > 0 ? '#fff3cd' : '#d4edda'}; border-radius: 4px; margin-top: 1rem;">
           <strong>Upload Complete!</strong><br>
-          ${successCount} files uploaded successfully${failCount > 0 ? `, ${failCount} failed` : ''}
+          ${successCount} files uploaded and processed with AI${failCount > 0 ? `, ${failCount} failed` : ''}<br>
+          <a href="/admin/processreceipts" style="color: #0066cc; text-decoration: underline; margin-top: 0.5rem; display: inline-block;">
+            → Go to Process Receipts to review AI suggestions
+          </a>
         </div>
       `;
 
