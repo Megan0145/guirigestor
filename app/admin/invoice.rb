@@ -25,6 +25,19 @@ ActiveAdmin.register Invoice do
     link_to "Download PDF", pdf_admin_invoice_path(resource), target: "_blank", class: "action-item-button"
   end
 
+  action_item :submit_airtable_form, only: :show do
+    airtable_form_url = ENV['AIRTABLE_FORM_URL']
+    params = {
+      "prefill_Invoice Number/Identifier" => resource.invoice_number,
+      "prefill_Amount" => resource.total_amount,
+      "prefill_Currency" => 1,
+    }
+
+    prefill_query = params.compact.to_query
+
+    link_to "Render Airtable Form", "#{airtable_form_url}?#{prefill_query}", target: "_blank", class: "action-item-button"
+  end
+
   action_item :preview_invoice, only: :show do
     link_to "Preview Invoice", preview_admin_invoice_path(resource), target: "_blank", class: "action-item-button"
   end
