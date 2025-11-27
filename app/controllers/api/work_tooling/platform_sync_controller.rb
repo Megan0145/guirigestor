@@ -3,11 +3,13 @@ class Api::WorkTooling::PlatformSyncController < ApplicationController
   before_action :authenticate, only: [:sync_notion_task_to_asana_task]
 
   def sync_notion_task_to_asana_task
+    Rails.logger.info("Syncing notion task to asana task")
     asana_access_token = ENV['ASANA_ACCESS_TOKEN']
     asana_workspace_id = ENV['ASANA_WORKSPACE_ID']
     asana_project_id = ENV['ASANA_PROJECT_ID']
     asana_task_name = params["data"]["properties"]["Task"]["title"][0]["plain_text"]
     asana_task_description = params["data"]["url"]
+
   
     endpoint = "https://app.asana.com/api/1.0/tasks"
     headers = {
@@ -35,14 +37,17 @@ class Api::WorkTooling::PlatformSyncController < ApplicationController
     # check the request header for the authorization token
     authorization_header = request.headers['Authorization']
     if authorization_header.blank?
+      Rails.logger.error("Authorization token is required")
       render json: { success: false, message: "Authorization token is required" }, status: :unauthorized
       return
     else 
       # check the authorization token against the environment variable
       if authorization_header != ENV['WORK_TOOLING_NOTION_API_KEY']
+        Rails.logger.error("Invalid authorization token")
         render json: { success: false, message: "Invalid authorization token" }, status: :unauthorized
         return
       else
+        Rails.logger.info("Authorization token is valid")
         return
       end
     end
