@@ -472,6 +472,19 @@
                   </td>
                 </tr>
               <% end %>
+              <tr class="bg-gray-50 border-t-2 border-gray-300">
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4">
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right">
+                  <span class="text-sm font-semibold text-gray-700">Total:</span>
+                  <span class="text-sm font-bold text-gray-900">€<%= number_with_precision(@fiscal_quarter.total_amount_outgoing_receipts, precision: 2, delimiter: ',') %></span>
+                </td>
+              </tr>
             </tbody>
           </table>
         <% else %>

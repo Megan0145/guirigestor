@@ -40,6 +40,9 @@ ActiveAdmin.register FiscalQuarter do
     column :total_tax_submitted do |fiscal_quarter|
       number_to_currency(fiscal_quarter.total_tax_submitted, unit: available_currencies['EUR'])
     end
+    column :total_outgoing_receipts do |fiscal_quarter|
+      number_to_currency(fiscal_quarter&.total_amount_outgoing_receipts, unit: available_currencies['EUR'])
+    end
     actions defaults: true do |fiscal_quarter|
       item "Accountant View", fiscal_quarter_path(fiscal_quarter.identifier), target: "_blank", class: "member_link"
     end
