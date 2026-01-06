@@ -3,7 +3,19 @@ class DeveloperCalendarController < ApplicationController
   
   def index
     @developers = TonicDeveloper.all.order(:name)
-    @leaves = DeveloperLeave.for_month(@current_date).includes(:tonic_developer)
+    @projects = TonicDeveloper.pluck(:project).uniq.compact.sort
+    
+    # Filter by selected projects (params[:projects] comes as array from checkboxes)
+    if params[:projects].present?
+      @selected_projects = Array(params[:projects])
+    else
+      @selected_projects = @projects
+    end
+    
+    filtered_developer_ids = TonicDeveloper.where(project: @selected_projects).pluck(:id)
+    @leaves = DeveloperLeave.for_month(@current_date)
+                            .where(tonic_developer_id: filtered_developer_ids)
+                            .includes(:tonic_developer)
   end
   
   def add_leave

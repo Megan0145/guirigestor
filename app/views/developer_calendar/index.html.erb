@@ -14,7 +14,7 @@
       
       <!-- Month Navigation -->
       <div class="flex items-center gap-2 rounded-lg p-1" style="background: rgba(51, 65, 85, 0.5); border: 1px solid #475569;">
-        <%= link_to developer_calendar_path(month: @current_date.prev_month.month, year: @current_date.prev_month.year), 
+        <%= link_to developer_calendar_path(month: @current_date.prev_month.month, year: @current_date.prev_month.year, projects: @selected_projects), 
             class: "p-2 rounded", style: "color: #cbd5e1; cursor: pointer;" do %>
           <%= inline_svg_tag("heroicons/chevron-left.svg", class: "w-5 h-5") %>
         <% end %>
@@ -23,14 +23,31 @@
             Today
           </span>
         <% else %>
-          <%= link_to developer_calendar_path(month: Date.today.month, year: Date.today.year), 
+          <%= link_to developer_calendar_path(month: Date.today.month, year: Date.today.year, projects: @selected_projects), 
               class: "px-4 py-2 rounded text-sm font-medium", style: "color: #cbd5e1; cursor: pointer;" do %>
             <%= @current_date.strftime("%B") %>
           <% end %>
         <% end %>
-        <%= link_to developer_calendar_path(month: @current_date.next_month.month, year: @current_date.next_month.year), 
+        <%= link_to developer_calendar_path(month: @current_date.next_month.month, year: @current_date.next_month.year, projects: @selected_projects), 
             class: "p-2 rounded", style: "color: #cbd5e1; cursor: pointer;" do %>
           <%= inline_svg_tag("heroicons/chevron-right.svg", class: "w-5 h-5") %>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Project Filter -->
+    <div class="mb-6 p-4 rounded-xl" style="background: rgba(51, 65, 85, 0.5); border: 1px solid #475569;">
+      <div class="flex items-center gap-4 flex-wrap">
+        <span style="color: #94a3b8; font-size: 14px; font-weight: 500;">Filter by Project:</span>
+        <% @projects.each do |project| %>
+          <label class="flex items-center gap-2" style="cursor: pointer;">
+            <input type="checkbox" 
+                   class="project-filter-checkbox"
+                   value="<%= project %>"
+                   <%= @selected_projects.include?(project) ? 'checked' : '' %>
+                   style="width: 16px; height: 16px; accent-color: #10b981; cursor: pointer;">
+            <span style="color: #cbd5e1; font-size: 14px;"><%= project %></span>
+          </label>
         <% end %>
       </div>
     </div>
@@ -168,7 +185,14 @@
     <% end %>
     
     <!-- Upcoming Leaves List -->
-    <% upcoming_leaves = DeveloperLeave.where("end_date >= ?", Date.today).includes(:tonic_developer).order(:start_date).limit(10) %>
+    <% 
+      filtered_developer_ids = TonicDeveloper.where(project: @selected_projects).pluck(:id)
+      upcoming_leaves = DeveloperLeave.where("end_date >= ?", Date.today)
+                                      .where(tonic_developer_id: filtered_developer_ids)
+                                      .includes(:tonic_developer)
+                                      .order(:start_date)
+                                      .limit(10) 
+    %>
     <% if upcoming_leaves.any? %>
       <div class="mt-8">
         <h3 style="color: white; font-size: 18px; font-weight: 600; margin-bottom: 16px;">Upcoming Leave</h3>
@@ -334,4 +358,31 @@
       closeLeaveModal();
     }
   });
+  
+  // Project filter functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.project-filter-checkbox');
+    
+    checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        applyProjectFilter();
+      });
+    });
+  });
+  
+  function applyProjectFilter() {
+    const checkboxes = document.querySelectorAll('.project-filter-checkbox:checked');
+    const selectedProjects = Array.from(checkboxes).map(cb => cb.value);
+    
+    // Build URL with current month/year and selected projects
+    const url = new URL(window.location.href);
+    url.searchParams.delete('projects[]');
+    
+    selectedProjects.forEach(project => {
+      url.searchParams.append('projects[]', project);
+    });
+    
+    // Navigate to filtered URL
+    window.location.href = url.toString();
+  }
 </script>
