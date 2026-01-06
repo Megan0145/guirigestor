@@ -3,6 +3,26 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   
+  # Developer Calendar
+  get '/developer-calendar',
+    to: 'developer_calendar#index',
+    as: 'developer_calendar'
+  
+  match '/developer-calendar/add-leave',
+    to: 'developer_calendar#add_leave',
+    as: 'add_developer_leave',
+    via: [:get, :post]
+  
+  match '/developer-calendar/leave/:id',
+    to: 'developer_calendar#delete_leave',
+    as: 'delete_developer_leave',
+    via: [:post, :delete]
+  
+  # Landing page
+  get '/landing', 
+    to: 'landing#index', 
+    as: 'landing'
+  
   # Bulk upload receipts endpoint
   namespace :admin do
     post 'bulk_upload_receipts/upload', to: 'bulk_upload_receipts#upload'
@@ -86,27 +106,27 @@ Rails.application.routes.draw do
     as: 'view_outgoing_receipt_fiscal_quarter',
     constraints: { identifier: /[a-z0-9]{5}/ }
 
-  # get '/truelayer/connect',
-  #   to: 'truelayer#connect',
-  #   as: 'truelayer_connect'
+  get '/truelayer/connect',
+    to: 'truelayer#connect',
+    as: 'truelayer_connect'
 
-  # get '/truelayer/callback',
-  #   to: 'truelayer#callback',
-  #   as: 'truelayer_callback'
+  get '/truelayer/callback',
+    to: 'truelayer#callback',
+    as: 'truelayer_callback'
 
   # Cursor invoice automation
   namespace :api do
-    # post '/invoices/cursor',
-    #   to: 'cursor_invoices#create',
-    #   as: 'cursor_invoice_upload'
+    post '/invoices/cursor',
+      to: 'cursor_invoices#create',
+      as: 'cursor_invoice_upload'
     
-    # post '/invoices/cursor/download',
-    #   to: 'cursor_invoices#download_all',
-    #   as: 'cursor_invoice_download'
+    post '/invoices/cursor/download',
+      to: 'cursor_invoices#download_all',
+      as: 'cursor_invoice_download'
     
-    # get '/service_accounts/:service_name',
-    #   to: 'service_accounts#show',
-    #   as: 'service_account'
+    get '/service_accounts/:service_name',
+      to: 'service_accounts#show',
+      as: 'service_account'
     
     namespace :work_tooling do
       post '/platform-sync/notion-task-to-asana-task',

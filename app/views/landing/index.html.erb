@@ -1,0 +1,1372 @@
+<!-- Landing Page - GuiriGestor Finance Automation -->
+<style>
+  /* Custom fonts - Using distinctive typography */
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@300;400;500;600;700&display=swap');
+  
+  :root {
+    --landing-bg: #0a0a0b;
+    --landing-surface: #141416;
+    --landing-surface-light: #1c1c1f;
+    --landing-border: rgba(255,255,255,0.08);
+    --landing-text: #ffffff;
+    --landing-text-muted: #8b8b8d;
+    --landing-accent: #10b981;
+    --landing-accent-light: #34d399;
+    --landing-accent-glow: rgba(16, 185, 129, 0.15);
+    --landing-gradient-1: #10b981;
+    --landing-gradient-2: #06b6d4;
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'Sora', system-ui, sans-serif;
+  }
+  
+  .landing-page {
+    font-family: var(--font-body);
+    background: var(--landing-bg);
+    color: var(--landing-text);
+    overflow-x: hidden;
+  }
+  
+  .landing-page * {
+    box-sizing: border-box;
+  }
+  
+  /* Typography */
+  .landing-headline {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  
+  .landing-subhead {
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--landing-text-muted);
+  }
+  
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animate-slide-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animate-slide-right {
+    animation: slideInRight 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.6s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+  .delay-400 { animation-delay: 0.4s; }
+  .delay-500 { animation-delay: 0.5s; }
+  .delay-600 { animation-delay: 0.6s; }
+  .delay-700 { animation-delay: 0.7s; }
+  .delay-800 { animation-delay: 0.8s; }
+  
+  /* Scroll reveal */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .scroll-reveal-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .scroll-reveal-left.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .scroll-reveal-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .scroll-reveal-right.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  /* Hero Background */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  
+  .hero-gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+  }
+  
+  .hero-gradient-orb-1 {
+    width: 600px;
+    height: 600px;
+    background: var(--landing-gradient-1);
+    top: -200px;
+    right: -100px;
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .hero-gradient-orb-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--landing-gradient-2);
+    bottom: -100px;
+    left: -100px;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+  
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 70%, transparent 100%);
+  }
+  
+  /* Buttons */
+  .landing-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--landing-gradient-1), var(--landing-gradient-2));
+    background-size: 200% 200%;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    animation: gradientMove 4s ease infinite;
+  }
+  
+  .landing-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
+  }
+  
+  .landing-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--landing-text);
+    font-weight: 500;
+    font-size: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--landing-border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .landing-btn-secondary:hover {
+    background: var(--landing-surface);
+    border-color: var(--landing-accent);
+  }
+  
+  /* Cards */
+  .landing-card {
+    background: var(--landing-surface);
+    border: 1px solid var(--landing-border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .landing-card:hover {
+    border-color: rgba(16, 185, 129, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  
+  /* Feature icon */
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--landing-accent-glow);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .feature-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--landing-accent);
+  }
+  
+  /* Pricing cards */
+  .pricing-card {
+    background: var(--landing-surface);
+    border: 1px solid var(--landing-border);
+    border-radius: 20px;
+    padding: 40px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .pricing-card.featured {
+    border-color: var(--landing-accent);
+    background: linear-gradient(180deg, var(--landing-surface) 0%, rgba(16, 185, 129, 0.05) 100%);
+  }
+  
+  .pricing-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--landing-gradient-1), var(--landing-gradient-2));
+  }
+  
+  .pricing-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  }
+  
+  /* FAQ Accordion */
+  .faq-item {
+    border-bottom: 1px solid var(--landing-border);
+  }
+  
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 18px;
+    transition: color 0.3s ease;
+  }
+  
+  .faq-question:hover {
+    color: var(--landing-accent);
+  }
+  
+  .faq-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+  }
+  
+  .faq-item.open .faq-icon {
+    transform: rotate(45deg);
+  }
+  
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    color: var(--landing-text-muted);
+    line-height: 1.7;
+  }
+  
+  .faq-item.open .faq-answer {
+    max-height: 300px;
+    padding-bottom: 24px;
+  }
+  
+  /* Pain points */
+  .pain-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--landing-border);
+  }
+  
+  .pain-point:last-child {
+    border-bottom: none;
+  }
+  
+  .pain-icon {
+    width: 24px;
+    height: 24px;
+    color: #ef4444;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  /* Solution checkmarks */
+  .solution-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .solution-check {
+    width: 28px;
+    height: 28px;
+    background: var(--landing-accent-glow);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .solution-check svg {
+    width: 16px;
+    height: 16px;
+    color: var(--landing-accent);
+  }
+  
+  /* Testimonials */
+  .testimonial-card {
+    background: var(--landing-surface);
+    border: 1px solid var(--landing-border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+  }
+  
+  .testimonial-quote {
+    position: absolute;
+    top: 24px;
+    left: 28px;
+    font-size: 48px;
+    color: var(--landing-accent);
+    opacity: 0.3;
+    font-family: var(--font-display);
+    line-height: 1;
+  }
+  
+  /* Navigation */
+  .landing-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(10, 10, 11, 0.8);
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .landing-nav.scrolled {
+    border-bottom-color: var(--landing-border);
+    padding: 16px 40px;
+  }
+  
+  .landing-logo {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-style: italic;
+    color: var(--landing-text);
+    text-decoration: none;
+  }
+  
+  .landing-nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  
+  .landing-nav-link {
+    color: var(--landing-text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .landing-nav-link:hover {
+    color: var(--landing-text);
+  }
+  
+  /* Section container */
+  .landing-section {
+    padding: 120px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .landing-section-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  
+  /* Pricing list */
+  .pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0;
+  }
+  
+  .pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    color: var(--landing-text-muted);
+    font-size: 15px;
+  }
+  
+  .pricing-features li svg {
+    width: 18px;
+    height: 18px;
+    color: var(--landing-accent);
+    flex-shrink: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .landing-section {
+      padding: 80px 20px;
+    }
+    
+    .landing-nav {
+      padding: 16px 20px;
+    }
+    
+    .landing-nav-links {
+      display: none;
+    }
+    
+    .hero-gradient-orb-1 {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .hero-gradient-orb-2 {
+      width: 200px;
+      height: 200px;
+    }
+  }
+  
+  /* Feature tabs */
+  .feature-tab {
+    padding: 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+  
+  .feature-tab:hover {
+    background: var(--landing-surface);
+  }
+  
+  .feature-tab.active {
+    background: var(--landing-surface);
+    border-color: var(--landing-accent);
+  }
+  
+  /* Badge */
+  .landing-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--landing-accent-glow);
+    color: var(--landing-accent);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  
+  /* Animated border */
+  .animated-border {
+    position: relative;
+    background: var(--landing-surface);
+    border-radius: 16px;
+  }
+  
+  .animated-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(90deg, var(--landing-gradient-1), var(--landing-gradient-2), var(--landing-gradient-1));
+    background-size: 200% 100%;
+    border-radius: 18px;
+    z-index: -1;
+    animation: shimmer 3s linear infinite;
+  }
+</style>
+
+<div class="landing-page">
+  <!-- Navigation -->
+  <nav class="landing-nav" id="landing-nav">
+    <a href="#" class="landing-logo">GuiriGestor</a>
+    <div class="landing-nav-links">
+      <a href="#features" class="landing-nav-link">Features</a>
+      <a href="#pricing" class="landing-nav-link">Pricing</a>
+      <a href="#faq" class="landing-nav-link">FAQ</a>
+      <a href="<%= new_user_session_path %>" class="landing-btn-secondary" style="padding: 10px 20px; font-size: 14px;">
+        Log in
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center" style="padding-top: 100px;">
+    <div class="hero-bg">
+      <div class="hero-gradient-orb hero-gradient-orb-1"></div>
+      <div class="hero-gradient-orb hero-gradient-orb-2"></div>
+      <div class="hero-grid"></div>
+    </div>
+    
+    <div class="relative z-10 text-center px-5" style="max-width: 900px;">
+      <div class="landing-badge animate-fade-in">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        Built by a freelancer, for freelancers
+      </div>
+      
+      <h1 class="landing-headline animate-fade-in-up delay-100" style="font-size: clamp(3rem, 8vw, 5.5rem); margin-bottom: 24px;">
+        Your freelancer finances —<br>
+        <span style="font-style: italic; background: linear-gradient(135deg, var(--landing-gradient-1), var(--landing-gradient-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">fully automated.</span>
+      </h1>
+      
+      <p class="landing-subhead animate-fade-in-up delay-200" style="font-size: 20px; max-width: 700px; margin: 0 auto 48px;">
+        Invoices, autónomo payments, receipts, and quarterly reports — all in one place. Upload anything. AI extracts everything. Your accountant gets a clean, organized portal every quarter.
+      </p>
+      
+      <div class="flex flex-wrap justify-center gap-4 animate-fade-in-up delay-300">
+        <a href="#" class="landing-btn-primary">
+          Start Free
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+        <a href="#features" class="landing-btn-secondary">
+          See how it works
+        </a>
+      </div>
+      
+      <p class="animate-fade-in delay-400" style="margin-top: 20px; font-size: 14px; color: var(--landing-text-muted);">
+        No credit card required
+      </p>
+      
+      <!-- Social proof -->
+      <div class="animate-fade-in-up delay-500" style="margin-top: 80px; padding: 24px 32px; background: var(--landing-surface); border: 1px solid var(--landing-border); border-radius: 16px; display: inline-block;">
+        <p style="font-style: italic; color: var(--landing-text); font-size: 16px; margin-bottom: 8px;">
+          "Saves me 6–8 hours every month. Finally, everything is in one place."
+        </p>
+        <p style="font-size: 13px; color: var(--landing-text-muted);">
+          — Sarah M., Freelance Developer, Beta User
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section class="landing-section" style="background: var(--landing-surface);">
+    <div class="landing-section-header scroll-reveal">
+      <h2 class="landing-headline" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">
+        Being a freelancer shouldn't mean <span style="font-style: italic; color: var(--landing-accent);">this</span>
+      </h2>
+      <p class="landing-subhead" style="font-size: 18px;">
+        Sound familiar? You're not alone.
+      </p>
+    </div>
+    
+    <div style="max-width: 700px; margin: 0 auto;">
+      <div class="pain-point scroll-reveal" style="transition-delay: 0.1s;">
+        <svg class="pain-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <div>
+          <p style="font-size: 17px; font-weight: 500; margin-bottom: 4px;">Forgetting to send invoices to your accountant</p>
+          <p style="font-size: 14px; color: var(--landing-text-muted);">Until they chase you at the last minute before a deadline</p>
+        </div>
+      </div>
+      
+      <div class="pain-point scroll-reveal" style="transition-delay: 0.15s;">
+        <svg class="pain-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <div>
+          <p style="font-size: 17px; font-weight: 500; margin-bottom: 4px;">Digging through emails for monthly autónomo payments</p>
+          <p style="font-size: 14px; color: var(--landing-text-muted);">Where did that PDF go again?</p>
+        </div>
+      </div>
+      
+      <div class="pain-point scroll-reveal" style="transition-delay: 0.2s;">
+        <svg class="pain-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <div>
+          <p style="font-size: 17px; font-weight: 500; margin-bottom: 4px;">Downloading receipts from 15 different services</p>
+          <p style="font-size: 14px; color: var(--landing-text-muted);">ChatGPT, Canva, Notion, Figma, hosting, domains...</p>
+        </div>
+      </div>
+      
+      <div class="pain-point scroll-reveal" style="transition-delay: 0.25s;">
+        <svg class="pain-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <div>
+          <p style="font-size: 17px; font-weight: 500; margin-bottom: 4px;">Manually typing totals into spreadsheets</p>
+          <p style="font-size: 14px; color: var(--landing-text-muted);">And hoping you didn't make any errors</p>
+        </div>
+      </div>
+      
+      <div class="pain-point scroll-reveal" style="transition-delay: 0.3s;">
+        <svg class="pain-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <div>
+          <p style="font-size: 17px; font-weight: 500; margin-bottom: 4px;">Juggling 5+ tools just to stay compliant</p>
+          <p style="font-size: 14px; color: var(--landing-text-muted);">Spreadsheets, email, cloud storage, invoice software, banking...</p>
+        </div>
+      </div>
+      
+      <div class="scroll-reveal" style="text-align: center; margin-top: 48px; padding: 32px; background: rgba(239, 68, 68, 0.1); border-radius: 16px; border: 1px solid rgba(239, 68, 68, 0.2); transition-delay: 0.35s;">
+        <p style="font-size: 18px; font-weight: 500; color: #fca5a5;">
+          It's exhausting, error-prone, and wastes hours every month.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section id="features" class="landing-section">
+    <div class="landing-section-header scroll-reveal">
+      <div class="landing-badge">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        The Solution
+      </div>
+      <h2 class="landing-headline" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">
+        Meet the automated finance hub<br>
+        <span style="font-style: italic;">for freelancers</span>
+      </h2>
+      <p class="landing-subhead" style="font-size: 18px; max-width: 600px; margin: 0 auto;">
+        Everything you need to stay organised, compliant, and connected to your accountant.
+      </p>
+    </div>
+    
+    <div class="grid gap-8" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+      <div class="solution-item scroll-reveal-left" style="transition-delay: 0.1s;">
+        <div class="solution-check">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">AI-powered receipt extraction</h3>
+          <p style="color: var(--landing-text-muted); line-height: 1.6;">
+            Bulk upload receipts → AI extracts date, vendor, amount, tax, and category instantly.
+          </p>
+        </div>
+      </div>
+      
+      <div class="solution-item scroll-reveal-right" style="transition-delay: 0.15s;">
+        <div class="solution-check">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Invoice generator with auto-sending</h3>
+          <p style="color: var(--landing-text-muted); line-height: 1.6;">
+            Create invoices inside the platform → automatically email to clients AND your accountant.
+          </p>
+        </div>
+      </div>
+      
+      <div class="solution-item scroll-reveal-left" style="transition-delay: 0.2s;">
+        <div class="solution-check">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Autónomo/Social Security upload</h3>
+          <p style="color: var(--landing-text-muted); line-height: 1.6;">
+            Drag & drop your monthly payment PDFs → automatically added to your quarterly summary.
+          </p>
+        </div>
+      </div>
+      
+      <div class="solution-item scroll-reveal-right" style="transition-delay: 0.25s;">
+        <div class="solution-check">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Unified quarterly accountant portal</h3>
+          <p style="color: var(--landing-text-muted); line-height: 1.6;">
+            Every quarter generates a secure, password-protected page with all invoices, payments, expenses, totals & breakdowns.
+          </p>
+        </div>
+      </div>
+      
+      <div class="solution-item scroll-reveal-left" style="transition-delay: 0.3s;">
+        <div class="solution-check">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Hosted documents for everyone</h3>
+          <p style="color: var(--landing-text-muted); line-height: 1.6;">
+            Your clients, your accountant, and you all see the same source of truth — with permissions.
+          </p>
+        </div>
+      </div>
+      
+      <div class="solution-item scroll-reveal-right" style="transition-delay: 0.35s;">
+        <div class="solution-check">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Automation that prevents "I forgot"</h3>
+          <p style="color: var(--landing-text-muted); line-height: 1.6;">
+            Everything you generate lives in the same system → you never have to remember again.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Deep Dive -->
+  <section class="landing-section" style="background: var(--landing-surface);">
+    <div class="landing-section-header scroll-reveal">
+      <h2 class="landing-headline" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">
+        Everything you need,<br>
+        <span style="font-style: italic;">nothing you don't</span>
+      </h2>
+    </div>
+    
+    <div class="grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <!-- AI Expenses -->
+      <div class="landing-card scroll-reveal" style="transition-delay: 0.1s;">
+        <div class="feature-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 12px;">AI Expenses</h3>
+        <ul style="list-style: none; padding: 0; color: var(--landing-text-muted); font-size: 15px; line-height: 2;">
+          <li>• Drop in 1 or 100 receipts</li>
+          <li>• AI parses totals, VAT, date, vendor</li>
+          <li>• Quick approval workflow</li>
+          <li>• Ideal for recurring SaaS invoices</li>
+        </ul>
+      </div>
+      
+      <!-- Invoices -->
+      <div class="landing-card scroll-reveal" style="transition-delay: 0.15s;">
+        <div class="feature-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 12px;">Invoices</h3>
+        <ul style="list-style: none; padding: 0; color: var(--landing-text-muted); font-size: 15px; line-height: 2;">
+          <li>• Create and send invoices directly</li>
+          <li>• Hosted invoice pages (no attachments)</li>
+          <li>• Automatically shared with accountant</li>
+          <li>• Monthly + quarterly totals</li>
+        </ul>
+      </div>
+      
+      <!-- Autónomo Payments -->
+      <div class="landing-card scroll-reveal" style="transition-delay: 0.2s;">
+        <div class="feature-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 12px;">Autónomo Payments</h3>
+        <ul style="list-style: none; padding: 0; color: var(--landing-text-muted); font-size: 15px; line-height: 2;">
+          <li>• Upload PDFs from your bank</li>
+          <li>• Attached to correct quarter</li>
+          <li>• Included in accountant view</li>
+          <li>• True monthly cost visibility</li>
+        </ul>
+      </div>
+      
+      <!-- Accountant Portal -->
+      <div class="landing-card scroll-reveal" style="transition-delay: 0.25s;">
+        <div class="feature-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 12px;">Accountant Portal</h3>
+        <ul style="list-style: none; padding: 0; color: var(--landing-text-muted); font-size: 15px; line-height: 2;">
+          <li>• One secure quarterly link</li>
+          <li>• Unified table of everything</li>
+          <li>• Export-ready summaries</li>
+          <li>• Reduces their workload</li>
+        </ul>
+      </div>
+      
+      <!-- Quarterly Overview -->
+      <div class="landing-card scroll-reveal" style="transition-delay: 0.3s;">
+        <div class="feature-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 12px;">Quarterly Overview</h3>
+        <ul style="list-style: none; padding: 0; color: var(--landing-text-muted); font-size: 15px; line-height: 2;">
+          <li>• Total taxable income</li>
+          <li>• Total deductible expenses</li>
+          <li>• Net profit calculations</li>
+          <li>• Perfect for Modelo 130</li>
+        </ul>
+      </div>
+      
+      <!-- Zero Email -->
+      <div class="landing-card scroll-reveal" style="transition-delay: 0.35s;">
+        <div class="feature-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 12px;">Zero Email Chaos</h3>
+        <ul style="list-style: none; padding: 0; color: var(--landing-text-muted); font-size: 15px; line-height: 2;">
+          <li>• No more emailing documents</li>
+          <li>• No missing attachments</li>
+          <li>• No version confusion</li>
+          <li>• Single source of truth</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof Section -->
+  <section class="landing-section">
+    <div class="landing-section-header scroll-reveal">
+      <h2 class="landing-headline" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">
+        Loved by freelancers<br>
+        <span style="font-style: italic;">and their accountants</span>
+      </h2>
+    </div>
+    
+    <div class="grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+      <div class="testimonial-card scroll-reveal" style="transition-delay: 0.1s;">
+        <div class="testimonial-quote">"</div>
+        <p style="font-size: 17px; line-height: 1.7; margin-bottom: 24px; padding-top: 20px; position: relative; z-index: 1;">
+          This replaced 6 tools for me. And my accountant finally gets everything on time.
+        </p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--landing-gradient-1), var(--landing-gradient-2)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+            M
+          </div>
+          <div>
+            <p style="font-weight: 600; font-size: 15px;">Miguel R.</p>
+            <p style="font-size: 13px; color: var(--landing-text-muted);">Freelance Developer</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card scroll-reveal" style="transition-delay: 0.2s;">
+        <div class="testimonial-quote">"</div>
+        <p style="font-size: 17px; line-height: 1.7; margin-bottom: 24px; padding-top: 20px; position: relative; z-index: 1;">
+          I saved at least 12 hours this quarter. The bulk upload is insane.
+        </p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #06b6d4, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+            L
+          </div>
+          <div>
+            <p style="font-weight: 600; font-size: 15px;">Laura S.</p>
+            <p style="font-size: 13px; color: var(--landing-text-muted);">Marketing Consultant</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card scroll-reveal" style="transition-delay: 0.3s;">
+        <div class="testimonial-quote">"</div>
+        <p style="font-size: 17px; line-height: 1.7; margin-bottom: 24px; padding-top: 20px; position: relative; z-index: 1;">
+          As an accountant, this is a dream. Clients always forget receipts — not anymore.
+        </p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #f59e0b, #ef4444); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+            C
+          </div>
+          <div>
+            <p style="font-weight: 600; font-size: 15px;">Carlos M.</p>
+            <p style="font-size: 13px; color: var(--landing-text-muted);">Accountant, Beta Tester</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="landing-section" style="background: var(--landing-surface);">
+    <div class="landing-section-header scroll-reveal">
+      <h2 class="landing-headline" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">
+        Simple, transparent pricing
+      </h2>
+      <p class="landing-subhead" style="font-size: 18px;">
+        Start free. Upgrade when you need more.
+      </p>
+    </div>
+    
+    <div class="grid gap-8" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 1000px; margin: 0 auto;">
+      <!-- Starter -->
+      <div class="pricing-card scroll-reveal" style="transition-delay: 0.1s;">
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 22px; font-weight: 600; margin-bottom: 8px;">Starter</h3>
+          <p style="color: var(--landing-text-muted); font-size: 14px;">Perfect for freelancers & autónomos</p>
+        </div>
+        <div style="margin-bottom: 24px;">
+          <span style="font-size: 48px; font-weight: 700;">€19</span>
+          <span style="color: var(--landing-text-muted);">/month</span>
+        </div>
+        <ul class="pricing-features">
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            50 receipts/month
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Unlimited invoices
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Quarterly accountant portal
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Autónomo uploads
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Exports
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Email support
+          </li>
+        </ul>
+        <a href="#" class="landing-btn-secondary" style="width: 100%; justify-content: center;">
+          Get Started
+        </a>
+      </div>
+      
+      <!-- Pro -->
+      <div class="pricing-card featured scroll-reveal" style="transition-delay: 0.2s;">
+        <div style="position: absolute; top: 16px; right: 16px;">
+          <span style="background: var(--landing-accent); color: white; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 600;">
+            Most Popular
+          </span>
+        </div>
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 22px; font-weight: 600; margin-bottom: 8px;">Pro</h3>
+          <p style="color: var(--landing-text-muted); font-size: 14px;">For busy freelancers & contractors</p>
+        </div>
+        <div style="margin-bottom: 24px;">
+          <span style="font-size: 48px; font-weight: 700;">€39</span>
+          <span style="color: var(--landing-text-muted);">/month</span>
+        </div>
+        <ul class="pricing-features">
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <strong>Unlimited</strong> receipts
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Bulk upload (drag-and-drop)
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            AI categorisation rules
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Custom branding on invoices
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Recurring invoices
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Priority support
+          </li>
+        </ul>
+        <a href="#" class="landing-btn-primary" style="width: 100%; justify-content: center;">
+          Start Free Trial
+        </a>
+      </div>
+      
+      <!-- Accountant -->
+      <div class="pricing-card scroll-reveal" style="transition-delay: 0.3s;">
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 22px; font-weight: 600; margin-bottom: 8px;">Accountant</h3>
+          <p style="color: var(--landing-text-muted); font-size: 14px;">For accountants & bookkeepers</p>
+        </div>
+        <div style="margin-bottom: 24px;">
+          <span style="font-size: 48px; font-weight: 700;">€99</span>
+          <span style="color: var(--landing-text-muted);">/month</span>
+        </div>
+        <ul class="pricing-features">
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Manage up to 15 clients
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Automated quarterly portals
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Bulk export tools
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Faster AI processing
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Shared workspace
+          </li>
+          <li>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Dedicated support
+          </li>
+        </ul>
+        <a href="#" class="landing-btn-secondary" style="width: 100%; justify-content: center;">
+          Contact Sales
+        </a>
+      </div>
+    </div>
+    
+    <div class="scroll-reveal" style="text-align: center; margin-top: 48px; color: var(--landing-text-muted); font-size: 14px; transition-delay: 0.4s;">
+      <p>Add-ons: Extra accountant clients €4/month each • Additional storage €5/month per 10GB</p>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="landing-section">
+    <div class="landing-section-header scroll-reveal">
+      <h2 class="landing-headline" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">
+        Frequently asked questions
+      </h2>
+    </div>
+    
+    <div style="max-width: 700px; margin: 0 auto;">
+      <div class="faq-item scroll-reveal" style="transition-delay: 0.1s;">
+        <div class="faq-question">
+          Does my accountant need to learn a new system?
+          <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          No. They receive a simple, secure webpage with everything organized for the quarter. No login required, no new software to learn. Just a clean, browsable portal.
+        </div>
+      </div>
+      
+      <div class="faq-item scroll-reveal" style="transition-delay: 0.15s;">
+        <div class="faq-question">
+          Is my data secure?
+          <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Yes — all data is encrypted at rest and in transit. Hosted in the EU. Fully GDPR-compliant. We take your financial data seriously.
+        </div>
+      </div>
+      
+      <div class="faq-item scroll-reveal" style="transition-delay: 0.2s;">
+        <div class="faq-question">
+          Can I use this if I'm not in Spain?
+          <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Absolutely! While we started with Spain's autónomo system, the platform works for freelancers anywhere. UK self-assessment, Ireland Form 11, German VAT — we've got you covered.
+        </div>
+      </div>
+      
+      <div class="faq-item scroll-reveal" style="transition-delay: 0.25s;">
+        <div class="faq-question">
+          Does the AI make mistakes?
+          <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Occasionally, yes. That's why you approve entries before saving. The AI does the heavy lifting, you do a quick review. It's still 10x faster than manual entry.
+        </div>
+      </div>
+      
+      <div class="faq-item scroll-reveal" style="transition-delay: 0.3s;">
+        <div class="faq-question">
+          Do my clients see anything?
+          <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Only the invoices you choose to send them. They get a clean, hosted invoice page — no access to your other financial data.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="landing-section" style="text-align: center;">
+    <div class="scroll-reveal">
+      <h2 class="landing-headline" style="font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 24px;">
+        Ready to automate your<br>
+        <span style="font-style: italic; background: linear-gradient(135deg, var(--landing-gradient-1), var(--landing-gradient-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">freelancer finances?</span>
+      </h2>
+      <p class="landing-subhead" style="font-size: 18px; max-width: 500px; margin: 0 auto 40px;">
+        Join hundreds of freelancers who've reclaimed their time.
+      </p>
+      <a href="#" class="landing-btn-primary" style="font-size: 18px; padding: 20px 40px;">
+        Start Free Today
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+      <p style="margin-top: 16px; font-size: 14px; color: var(--landing-text-muted);">
+        No credit card required • Free 14-day trial
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding: 60px 40px; border-top: 1px solid var(--landing-border);">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+      <div>
+        <a href="#" class="landing-logo">GuiriGestor</a>
+        <p style="color: var(--landing-text-muted); font-size: 14px; margin-top: 8px;">
+          Freelancer finances, fully automated.
+        </p>
+      </div>
+      <div style="display: flex; gap: 32px;">
+        <a href="#" style="color: var(--landing-text-muted); font-size: 14px; text-decoration: none; transition: color 0.3s;">Privacy</a>
+        <a href="#" style="color: var(--landing-text-muted); font-size: 14px; text-decoration: none; transition: color 0.3s;">Terms</a>
+        <a href="#" style="color: var(--landing-text-muted); font-size: 14px; text-decoration: none; transition: color 0.3s;">Contact</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Navigation scroll effect
+  const nav = document.getElementById('landing-nav');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 50) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  });
+
+  // Scroll reveal animation
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right').forEach(el => {
+    observer.observe(el);
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const question = item.querySelector('.faq-question');
+    question.addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      
+      // Close all items
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      
+      // Open clicked item if it wasn't open
+      if (!wasOpen) {
+        item.classList.add('open');
+      }
+    });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+});
+</script>
+
+

@@ -1,0 +1,337 @@
+<div class="min-h-screen" style="background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);">
+  <div class="max-w-7xl mx-auto py-8 px-4">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 style="color: white; font-size: 24px; font-weight: bold; letter-spacing: -0.025em;">
+          Developer Leave Calendar
+        </h1>
+        <p style="color: #94a3b8; margin-top: 4px;">
+          Track annual leave for your development team
+        </p>
+      </div>
+      
+      <!-- Month Navigation -->
+      <div class="flex items-center gap-2 rounded-lg p-1" style="background: rgba(51, 65, 85, 0.5); border: 1px solid #475569;">
+        <%= link_to developer_calendar_path(month: @current_date.prev_month.month, year: @current_date.prev_month.year), 
+            class: "p-2 rounded", style: "color: #cbd5e1; cursor: pointer;" do %>
+          <%= inline_svg_tag("heroicons/chevron-left.svg", class: "w-5 h-5") %>
+        <% end %>
+        <% if @current_date.month == Date.today.month && @current_date.year == Date.today.year %>
+          <span class="px-4 py-2 rounded text-sm font-medium" style="color: #cbd5e1;">
+            Today
+          </span>
+        <% else %>
+          <%= link_to developer_calendar_path(month: Date.today.month, year: Date.today.year), 
+              class: "px-4 py-2 rounded text-sm font-medium", style: "color: #cbd5e1; cursor: pointer;" do %>
+            <%= @current_date.strftime("%B") %>
+          <% end %>
+        <% end %>
+        <%= link_to developer_calendar_path(month: @current_date.next_month.month, year: @current_date.next_month.year), 
+            class: "p-2 rounded", style: "color: #cbd5e1; cursor: pointer;" do %>
+          <%= inline_svg_tag("heroicons/chevron-right.svg", class: "w-5 h-5") %>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Current Month Display -->
+    <div class="text-center mb-6">
+      <h2 style="font-size: 30px; font-weight: 300; color: white; letter-spacing: 0.05em;">
+        <%= @current_date.strftime("%B %Y") %>
+      </h2>
+    </div>
+    
+    <!-- Calendar Grid -->
+    <div class="rounded-xl overflow-hidden" style="background: rgba(51, 65, 85, 0.5); border: 1px solid #475569;">
+      
+      <!-- Day Headers -->
+      <div class="grid grid-cols-7" style="border-bottom: 1px solid #475569;">
+        <% %w[Mon Tue Wed Thu Fri Sat Sun].each do |day| %>
+          <div class="py-3 px-2 text-center text-xs font-semibold uppercase tracking-wider"
+               style="color: #94a3b8; <%= day.in?(['Sat', 'Sun']) ? 'background: rgba(30, 41, 59, 0.3);' : '' %>">
+            <%= day %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Calendar Days -->
+      <div class="grid grid-cols-7">
+        <% 
+          # Calculate calendar grid
+          first_day = @current_date.beginning_of_month
+          last_day = @current_date.end_of_month
+          
+          # Adjust for Monday start (Ruby's wday: 0 = Sunday)
+          start_offset = (first_day.wday + 6) % 7
+          
+          # Previous month days
+          prev_month_end = first_day - 1
+          start_offset.times do |i|
+            day = prev_month_end - (start_offset - 1 - i)
+        %>
+          <div style="min-height: 120px; padding: 8px; border-right: 1px solid rgba(71, 85, 105, 0.5); border-bottom: 1px solid rgba(71, 85, 105, 0.5); background: rgba(15, 23, 42, 0.3); opacity: 0.4;">
+            <span style="font-size: 12px; color: #64748b;"><%= day.day %></span>
+          </div>
+        <% end %>
+        
+        <% # Current month days
+           (1..last_day.day).each do |day_num|
+            current_day = Date.new(@current_date.year, @current_date.month, day_num)
+            is_today = current_day == Date.today
+            is_weekend = current_day.saturday? || current_day.sunday?
+            day_leaves = @leaves.select { |l| l.spans_date?(current_day) }
+            
+            cell_bg = is_weekend ? 'background: rgba(30, 41, 59, 0.3);' : 'background: rgba(51, 65, 85, 0.1);'
+            today_ring = is_today ? 'box-shadow: inset 0 0 0 2px rgba(16, 185, 129, 0.5);' : ''
+        %>
+          <div class="relative group cursor-pointer"
+               style="min-height: 120px; padding: 8px; border-right: 1px solid rgba(71, 85, 105, 0.5); border-bottom: 1px solid rgba(71, 85, 105, 0.5); <%= cell_bg %> <%= today_ring %>"
+               onclick="openLeaveModal('<%= current_day %>')">
+            
+            <!-- Day Number -->
+            <div class="flex justify-between items-start mb-2">
+              <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 14px; <%= is_today ? 'background: #10b981; color: white; font-weight: bold;' : 'color: #cbd5e1;' %>">
+                <%= day_num %>
+              </span>
+              
+              <!-- Add Leave Indicator (visible on hover) -->
+              <span class="opacity-0 group-hover:opacity-100 transition-opacity" style="color: #34d399;">
+                <%= inline_svg_tag("heroicons/plus-circle.svg", class: "w-5 h-5") %>
+              </span>
+            </div>
+            
+            <!-- Leave Blocks -->
+            <% day_leaves.each do |leave| %>
+              <% 
+                is_start = leave.start_date == current_day
+                is_end = leave.end_date == current_day
+                is_middle = !is_start && !is_end
+                
+                # Generate a consistent color based on developer id
+                colors = %w[#8b5cf6 #3b82f6 #06b6d4 #14b8a6 #f59e0b #f43f5e #ec4899 #6366f1]
+                bg_color = colors[leave.tonic_developer_id % colors.length]
+                
+                border_radius = ""
+                margin_style = ""
+                if is_start && is_end
+                  border_radius = "border-radius: 6px;"
+                elsif is_start
+                  border_radius = "border-radius: 6px 0 0 6px;"
+                elsif is_end
+                  border_radius = "border-radius: 0 6px 6px 0;"
+                else
+                  margin_style = "margin-left: -8px; margin-right: -8px; padding-left: 16px;"
+                end
+              %>
+              <div style="background-color: <%= bg_color %>; color: white; font-size: 11px; padding: 4px 8px; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; <%= border_radius %> <%= margin_style %>"
+                   title="<%= leave.tonic_developer.name %>: <%= leave.start_date.strftime('%d %b') %> - <%= leave.end_date.strftime('%d %b') %>">
+                <% if is_start || current_day.monday? || current_day.day == 1 %>
+                  <%= leave.tonic_developer.name %>
+                <% else %>
+                  &nbsp;
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <% # Next month days to fill grid
+           total_cells = start_offset + last_day.day
+           remaining = (7 - (total_cells % 7)) % 7
+           remaining.times do |i|
+        %>
+          <div style="min-height: 120px; padding: 8px; border-right: 1px solid rgba(71, 85, 105, 0.5); border-bottom: 1px solid rgba(71, 85, 105, 0.5); background: rgba(15, 23, 42, 0.3); opacity: 0.4;">
+            <span style="font-size: 12px; color: #64748b;"><%= i + 1 %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Legend -->
+    <% if @developers.any? %>
+      <div class="mt-6 flex flex-wrap gap-4 items-center justify-center">
+        <% @developers.each_with_index do |dev, idx| %>
+          <% 
+            colors = %w[#8b5cf6 #3b82f6 #06b6d4 #14b8a6 #f59e0b #f43f5e #ec4899 #6366f1]
+            bg_color = colors[dev.id % colors.length]
+          %>
+          <div class="flex items-center gap-2">
+            <div style="width: 12px; height: 12px; border-radius: 3px; background-color: <%= bg_color %>;"></div>
+            <span style="font-size: 14px; color: #94a3b8;"><%= dev.name %></span>
+            <% if dev.project.present? %>
+              <span style="font-size: 12px; color: #64748b;">(<%= dev.project %>)</span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <!-- Upcoming Leaves List -->
+    <% upcoming_leaves = DeveloperLeave.where("end_date >= ?", Date.today).includes(:tonic_developer).order(:start_date).limit(10) %>
+    <% if upcoming_leaves.any? %>
+      <div class="mt-8">
+        <h3 style="color: white; font-size: 18px; font-weight: 600; margin-bottom: 16px;">Upcoming Leave</h3>
+        <div class="rounded-xl overflow-hidden" style="background: rgba(51, 65, 85, 0.5); border: 1px solid #475569;">
+          <table class="w-full">
+            <thead style="background: rgba(30, 41, 59, 0.5);">
+              <tr>
+                <th style="text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">Developer</th>
+                <th style="text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">Project</th>
+                <th style="text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">Start</th>
+                <th style="text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">End</th>
+                <th style="text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">Duration</th>
+                <th style="text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">Notes</th>
+                <th style="padding: 12px 16px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% upcoming_leaves.each do |leave| %>
+                <tr style="border-top: 1px solid rgba(71, 85, 105, 0.5);">
+                  <td style="padding: 12px 16px; color: #cbd5e1;"><%= leave.tonic_developer.name %></td>
+                  <td style="padding: 12px 16px; color: #94a3b8; font-size: 14px;"><%= leave.tonic_developer.project %></td>
+                  <td style="padding: 12px 16px; color: #cbd5e1;"><%= leave.start_date.strftime('%a, %d %b %Y') %></td>
+                  <td style="padding: 12px 16px; color: #cbd5e1;"><%= leave.end_date.strftime('%a, %d %b %Y') %></td>
+                  <td style="padding: 12px 16px; color: #94a3b8;"><%= leave.duration_days %> day<%= leave.duration_days > 1 ? 's' : '' %></td>
+                  <td style="padding: 12px 16px; color: #94a3b8; font-size: 14px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= leave.notes %></td>
+                  <td style="padding: 12px 16px;">
+                    <%= button_to delete_developer_leave_path(leave, month: @current_date.month, year: @current_date.year), 
+                        method: :delete,
+                        data: { confirm: "Delete this leave entry?" },
+                        style: "color: #fb7185; background: none; border: none; cursor: pointer; padding: 0;" do %>
+                      <%= inline_svg_tag("heroicons/trash.svg", class: "w-4 h-4") %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if @developers.empty? %>
+      <div class="mt-8 text-center py-12 rounded-xl" style="background: rgba(30, 41, 59, 0.3); border: 1px dashed #475569;">
+        <div style="color: #94a3b8; margin-bottom: 16px;">
+          <%= inline_svg_tag("heroicons/user-group.svg", class: "w-12 h-12 mx-auto", style: "opacity: 0.5;") %>
+        </div>
+        <p style="color: #94a3b8; margin-bottom: 8px;">No developers added yet</p>
+        <p style="color: #64748b; font-size: 14px;">Add developers in the admin panel to start tracking leave</p>
+        <%= link_to "Go to Admin Panel", "/admin/tonic_developers", class: "inline-block mt-4 px-4 py-2 rounded-lg font-medium", style: "background: #059669; color: white;" %>
+      </div>
+    <% end %>
+    
+  </div>
+</div>
+
+<!-- Leave Modal -->
+<div id="leave-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;">
+  <!-- Backdrop -->
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);" onclick="closeLeaveModal()"></div>
+  
+  <!-- Modal Content -->
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; padding: 16px;">
+    <div class="w-full max-w-md relative rounded-xl" style="background: #1e293b; border: 1px solid #475569; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+      
+      <!-- Header -->
+      <div class="flex justify-between items-start p-4" style="border-bottom: 1px solid #475569;">
+        <div>
+          <h3 style="color: white; font-size: 18px; font-weight: 600;">Add Developer Leave</h3>
+          <p style="color: #94a3b8; font-size: 14px; margin-top: 4px;" id="modal-date-display">Starting date</p>
+        </div>
+        <button onclick="closeLeaveModal()" class="p-1 rounded-lg" style="color: #94a3b8; cursor: pointer; background: none; border: none;">
+          <%= inline_svg_tag('heroicons/x-mark.svg', class: "w-5 h-5") %>
+        </button>
+      </div>
+      
+      <!-- Form -->
+      <%= form_for DeveloperLeave.new, url: add_developer_leave_path, method: :post, html: { class: "p-4", id: "leave-form" } do |f| %>
+        <input type="hidden" name="date" id="modal-date-input" value="">
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <% if @developers.empty? %>
+            <div class="text-center py-6" style="color: #94a3b8;">
+              <p class="mb-2">No developers available</p>
+              <p style="font-size: 14px; color: #64748b;">Add developers in the admin panel first</p>
+            </div>
+          <% else %>
+            <div>
+              <label for="developer_leave_tonic_developer_id" style="display: block; font-size: 14px; font-weight: 500; color: #cbd5e1; margin-bottom: 4px;">Developer</label>
+              <%= f.select :tonic_developer_id, 
+                  @developers.map { |d| [d.display_name, d.id] },
+                  { prompt: "Select a developer..." },
+                  { required: true, style: "width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; color: #e2e8f0;" } %>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="developer_leave_start_date" style="display: block; font-size: 14px; font-weight: 500; color: #cbd5e1; margin-bottom: 4px;">Start Date</label>
+                <%= f.date_field :start_date, required: true, id: "leave-start-date", style: "width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; color: #e2e8f0;" %>
+              </div>
+              
+              <div>
+                <label for="developer_leave_end_date" style="display: block; font-size: 14px; font-weight: 500; color: #cbd5e1; margin-bottom: 4px;">End Date</label>
+                <%= f.date_field :end_date, required: true, id: "leave-end-date", style: "width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; color: #e2e8f0;" %>
+              </div>
+            </div>
+            
+            <div>
+              <label for="developer_leave_notes" style="display: block; font-size: 14px; font-weight: 500; color: #cbd5e1; margin-bottom: 4px;">Notes (optional)</label>
+              <%= f.text_area :notes, rows: 2, placeholder: "e.g., Annual leave, Conference, etc.", style: "width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; color: #e2e8f0;" %>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 mt-6 pt-4" style="border-top: 1px solid #475569;">
+          <button type="button" onclick="closeLeaveModal()" style="padding: 8px 16px; color: #94a3b8; cursor: pointer; background: none; border: none;">
+            Cancel
+          </button>
+          <% if @developers.any? %>
+            <%= f.button style: "padding: 8px 16px; background: #059669; color: white; border-radius: 8px; font-weight: 500; display: flex; align-items: center; gap: 8px; cursor: pointer; border: none;" do %>
+              Save Leave
+              <%= inline_svg_tag("heroicons/check.svg", class: "w-4 h-4") %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openLeaveModal(date) {
+    const modal = document.getElementById('leave-modal');
+    const dateInput = document.getElementById('modal-date-input');
+    const startDate = document.getElementById('leave-start-date');
+    const endDate = document.getElementById('leave-end-date');
+    const dateDisplay = document.getElementById('modal-date-display');
+    
+    // Set the date values
+    dateInput.value = date;
+    startDate.value = date;
+    endDate.value = date;
+    
+    // Format date for display
+    const dateObj = new Date(date + 'T00:00:00');
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    dateDisplay.textContent = 'Starting ' + dateObj.toLocaleDateString('en-GB', options);
+    
+    // Show modal
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeLeaveModal() {
+    const modal = document.getElementById('leave-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  
+  // Close modal on escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeLeaveModal();
+    }
+  });
+</script>

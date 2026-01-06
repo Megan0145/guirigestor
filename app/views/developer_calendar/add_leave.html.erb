@@ -1,0 +1,78 @@
+<div class="--modal-top-section">
+  <div class="flex justify-between w-full">
+    <div class="ui-titlepair">
+      <div class="--title">
+        Add Developer Leave
+      </div>
+      <div class="--description">
+        Starting <%= @date.strftime('%A, %d %B %Y') %>
+      </div>
+    </div>
+    <div class="ui-button --rounded --minimal" onclick="closeModal('urlcontent')">
+      <%= inline_svg_tag('heroicons/x-mark.svg') %>
+    </div>
+  </div>
+</div>
+
+<%= form_for @developer_leave, url: add_developer_leave_path(date: @date), method: :post, html: { class: "ui-form" } do |f| %>
+  
+  <div class="px-4 py-4 flex flex-col gap-y-4">
+    
+    <% if @developer_leave.errors.any? %>
+      <div class="bg-rose-500/10 border border-rose-500/20 rounded-lg p-4 text-rose-400 text-sm">
+        <% @developer_leave.errors.full_messages.each do |message| %>
+          <p><%= message %></p>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <% if @developers.empty? %>
+      <div class="text-center py-6 text-slate-400">
+        <p class="mb-2">No developers available</p>
+        <p class="text-sm text-slate-500">Add developers in the admin panel first</p>
+      </div>
+    <% else %>
+      <div>
+        <label for="developer_leave_tonic_developer_id">Developer</label>
+        <%= f.select :tonic_developer_id, 
+            @developers.map { |d| [d.display_name, d.id] },
+            { prompt: "Select a developer..." },
+            { required: true } %>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="developer_leave_start_date">Start Date</label>
+          <%= f.date_field :start_date, required: true %>
+        </div>
+        
+        <div>
+          <label for="developer_leave_end_date">End Date</label>
+          <%= f.date_field :end_date, required: true %>
+        </div>
+      </div>
+      
+      <div>
+        <label for="developer_leave_notes">Notes (optional)</label>
+        <%= f.text_area :notes, rows: 2, placeholder: "e.g., Annual leave, Conference, etc." %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="--modal-bottom-section">
+    <div class="flex w-full justify-between">
+      <button type="button" class="ui-button --minimal" onclick="closeModal('urlcontent')">
+        Cancel
+      </button>
+      <% if @developers.any? %>
+        <%= f.button class: "ui-button --solid" do %>
+          Save Leave
+          <%= inline_svg_tag("heroicons/check.svg", class: "hidden-while-loading w-4 h-4") %>
+          <%= inline_svg_tag("misc/spinner.svg", class: "shown-while-loading w-4 h-4") %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  
+<% end %>
+

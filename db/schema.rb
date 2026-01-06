@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_10_21_135303) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_06_000002) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -65,6 +65,42 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_21_135303) do
     t.index ["user_id"], name: "index_autonomo_payments_on_user_id"
   end
 
+  create_table "bank_accounts", force: :cascade do |t|
+    t.integer "bank_connection_id", null: false
+    t.string "account_id"
+    t.string "account_name"
+    t.string "account_type"
+    t.string "currency"
+    t.decimal "balance", precision: 15, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_connection_id"], name: "index_bank_accounts_on_bank_connection_id"
+  end
+
+  create_table "bank_connections", force: :cascade do |t|
+    t.string "provider"
+    t.text "access_token"
+    t.text "refresh_token"
+    t.datetime "expires_at"
+    t.datetime "last_synced_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "bank_transactions", force: :cascade do |t|
+    t.integer "bank_account_id", null: false
+    t.date "date"
+    t.string "description"
+    t.decimal "amount", precision: 15, scale: 2
+    t.string "currency", default: "EUR"
+    t.string "transaction_type"
+    t.string "merchant"
+    t.boolean "work_expense", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_account_id"], name: "index_bank_transactions_on_bank_account_id"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.text "title"
     t.text "description"
@@ -72,6 +108,32 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_21_135303) do
     t.boolean "is_draft"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "developer_leaves", force: :cascade do |t|
+    t.integer "tonic_developer_id", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["start_date", "end_date"], name: "index_developer_leaves_on_start_date_and_end_date"
+    t.index ["tonic_developer_id"], name: "index_developer_leaves_on_tonic_developer_id"
   end
 
   create_table "fiscal_quarters", force: :cascade do |t|
@@ -156,6 +218,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_21_135303) do
     t.index ["user_id"], name: "index_outgoing_receipts_on_user_id"
   end
 
+  create_table "service_accounts", force: :cascade do |t|
+    t.integer "service_id", null: false
+    t.string "login_email"
+    t.string "login_password"
+    t.text "session_cookies"
+    t.datetime "last_authenticated_at"
+    t.string "login_url"
+    t.string "invoice_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["service_id"], name: "index_service_accounts_on_service_id"
+  end
+
   create_table "services", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name"
@@ -167,6 +242,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_21_135303) do
     t.boolean "variable_amount", default: false
     t.boolean "active", default: true
     t.index ["user_id"], name: "index_services_on_user_id"
+  end
+
+  create_table "tonic_developers", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "project"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -194,11 +276,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_10_21_135303) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "autonomo_payments", "fiscal_quarters"
   add_foreign_key "autonomo_payments", "users"
+  add_foreign_key "bank_accounts", "bank_connections"
+  add_foreign_key "bank_transactions", "bank_accounts"
+  add_foreign_key "developer_leaves", "tonic_developers"
   add_foreign_key "fiscal_quarters", "users"
   add_foreign_key "invoice_line_items", "invoices"
   add_foreign_key "invoices", "fiscal_quarters"
   add_foreign_key "invoices", "users"
   add_foreign_key "outgoing_receipts", "fiscal_quarters"
   add_foreign_key "outgoing_receipts", "users"
+  add_foreign_key "service_accounts", "services"
   add_foreign_key "services", "users"
 end
