@@ -1,0 +1,471 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .bty-page {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    background: #1a1a1a;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Animated floating shapes */
+  .bty-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  .bty-shape {
+    position: absolute;
+    background: #f5c6d6;
+    opacity: 0.08;
+    border-radius: 50%;
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  .bty-shape:nth-child(1) {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    right: -100px;
+    animation-delay: 0s;
+  }
+  
+  .bty-shape:nth-child(2) {
+    width: 200px;
+    height: 200px;
+    bottom: 10%;
+    left: 5%;
+    animation-delay: -5s;
+    animation-duration: 15s;
+  }
+  
+  .bty-shape:nth-child(3) {
+    width: 150px;
+    height: 150px;
+    top: 40%;
+    right: 20%;
+    animation-delay: -10s;
+    animation-duration: 25s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+      transform: translate(30px, -30px) rotate(5deg) scale(1.05);
+    }
+    50% {
+      transform: translate(-20px, 20px) rotate(-5deg) scale(0.95);
+    }
+    75% {
+      transform: translate(20px, 10px) rotate(3deg) scale(1.02);
+    }
+  }
+  
+  /* Left panel - Black with text */
+  .bty-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    position: relative;
+    z-index: 10;
+  }
+  
+  .bty-date {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+  }
+  
+  .bty-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 12vw, 120px);
+    font-weight: 400;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin-bottom: 8px;
+  }
+  
+  .bty-title .accent {
+    color: #f5c6d6;
+    display: block;
+  }
+  
+  .bty-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    margin-top: 32px;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Right panel - Pink with buttons */
+  .bty-right {
+    flex: 1;
+    background: #f5c6d6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Animated grid pattern on pink side */
+  .bty-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+  }
+  
+  @keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
+  }
+  
+  .bty-right-content {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+  }
+  
+  .bty-question {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 48px;
+  }
+  
+  .bty-answered-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .bty-answered-badge.yes {
+    background: #1a1a1a;
+    color: #fff;
+  }
+  
+  .bty-answered-badge.no {
+    background: #fff;
+    color: #1a1a1a;
+    border: 2px solid #1a1a1a;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  
+  .bty-change-text {
+    font-size: 12px;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 32px;
+  }
+  
+  .bty-buttons {
+    display: flex;
+    gap: 24px;
+  }
+  
+  .bty-btn {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Ripple effect on hover */
+  .bty-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .bty-btn:hover::before {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .bty-btn:hover {
+    transform: scale(1.08) rotate(3deg);
+  }
+  
+  .bty-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .bty-btn-yes {
+    background: #1a1a1a;
+    border: none;
+    color: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+  
+  .bty-btn-yes:hover {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  
+  .bty-btn-no {
+    background: #fff;
+    border: 3px solid #1a1a1a;
+    color: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  }
+  
+  .bty-btn-no:hover {
+    background: #1a1a1a;
+    color: #fff;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  
+  .bty-btn-no:hover::before {
+    background: rgba(245,198,214,0.5);
+  }
+  
+  .bty-icon {
+    font-size: 32px;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .bty-btn span:last-child {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .bty-link {
+    margin-top: 56px;
+  }
+  
+  .bty-link a {
+    color: #1a1a1a;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: 2px solid transparent;
+    border-radius: 100px;
+  }
+  
+  .bty-link a:hover {
+    border-color: #1a1a1a;
+    background: #1a1a1a;
+    color: #fff;
+  }
+  
+  .bty-link a svg {
+    transition: transform 0.3s;
+  }
+  
+  .bty-link a:hover svg {
+    transform: translateX(4px);
+  }
+  
+  /* Animated corner accent */
+  .bty-corner {
+    position: absolute;
+    bottom: 40px;
+    left: 60px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .bty-corner-line {
+    width: 60px;
+    height: 2px;
+    background: rgba(255,255,255,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bty-corner-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: #f5c6d6;
+    animation: slideLine 3s ease-in-out infinite;
+  }
+  
+  @keyframes slideLine {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+  }
+  
+  .bty-corner-text {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .bty-page {
+      flex-direction: column;
+    }
+    
+    .bty-left {
+      padding: 40px 32px;
+      min-height: 40vh;
+    }
+    
+    .bty-right {
+      padding: 40px 32px;
+      min-height: 60vh;
+    }
+    
+    .bty-title {
+      font-size: 56px;
+    }
+    
+    .bty-btn {
+      width: 120px;
+      height: 120px;
+    }
+    
+    .bty-corner {
+      display: none;
+    }
+  }
+</style>
+
+<div class="bty-page">
+  <!-- Floating shapes background -->
+  <div class="bty-shapes">
+    <div class="bty-shape"></div>
+    <div class="bty-shape"></div>
+    <div class="bty-shape"></div>
+  </div>
+  
+  <!-- Left panel -->
+  <div class="bty-left">
+    <div class="bty-date"><%= @today.strftime('%A, %B %d') %></div>
+    
+    <h1 class="bty-title">
+      Better
+      <span class="accent">Than</span>
+      Yesterday?
+    </h1>
+    
+    <p class="bty-subtitle">One simple question. Every day.</p>
+    
+    <div class="bty-corner">
+      <div class="bty-corner-line"></div>
+      <span class="bty-corner-text">Daily Check-in</span>
+    </div>
+  </div>
+  
+  <!-- Right panel -->
+  <div class="bty-right">
+    <div class="bty-grid"></div>
+    
+    <div class="bty-right-content">
+      <% if @already_answered %>
+        <div class="bty-answered-badge <%= @todays_answer.yes? ? 'yes' : 'no' %>">
+          <span><%= @todays_answer.yes? ? '✓' : '✗' %></span>
+          <span>You answered <%= @todays_answer.yes? ? 'YES' : 'NO' %></span>
+        </div>
+        <p class="bty-change-text">Want to change your answer?</p>
+      <% else %>
+        <p class="bty-question">Were you better?</p>
+      <% end %>
+      
+      <div class="bty-buttons">
+        <%= form_tag nil, method: :post, style: "display: contents;" do %>
+          <input type="hidden" name="value" value="true">
+          <button type="submit" class="bty-btn bty-btn-yes">
+            <span class="bty-icon">↑</span>
+            <span>Yes</span>
+          </button>
+        <% end %>
+        
+        <%= form_tag nil, method: :post, style: "display: contents;" do %>
+          <input type="hidden" name="value" value="false">
+          <button type="submit" class="bty-btn bty-btn-no">
+            <span class="bty-icon">↓</span>
+            <span>No</span>
+          </button>
+        <% end %>
+      </div>
+      
+      <div class="bty-link">
+        <%= link_to bty_metrics_path do %>
+          View Progress
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

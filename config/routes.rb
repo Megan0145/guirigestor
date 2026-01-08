@@ -116,18 +116,21 @@ Rails.application.routes.draw do
     end
   end
 
-
-
   
   # Personal
   # Better than yesterday
   match '/bty',
-    to: 'bty#new',
+    to: 'misc#bty_new',
+    as: 'bty',
     via: [:get, :post]
   
   get '/bty/metrics',
-    to: 'bty#metrics',
+    to: 'misc#bty_metrics',
     as: 'bty_metrics'
+  
+  get '/bty/calendar',
+    to: 'misc#bty_metrics',
+    as: 'bty_calendar'
 
 
   # Misc

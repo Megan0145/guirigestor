@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_06_000002) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_08_105318) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -99,6 +99,14 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_06_000002) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["bank_account_id"], name: "index_bank_transactions_on_bank_account_id"
+  end
+
+  create_table "btys", force: :cascade do |t|
+    t.boolean "value", null: false
+    t.date "date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_btys_on_date", unique: true
   end
 
   create_table "categories", force: :cascade do |t|

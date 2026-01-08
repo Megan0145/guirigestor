@@ -1,0 +1,862 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .bty-metrics {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    background: #1a1a1a;
+    color: #fff;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  /* Animated background gradient */
+  .bty-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(245, 198, 214, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(245, 198, 214, 0.05) 0%, transparent 50%);
+    animation: bgPulse 10s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  
+  @keyframes bgPulse {
+    0% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+  
+  .bty-metrics-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 32px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Header */
+  .bty-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  
+  .bty-header-left h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 72px);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    line-height: 0.9;
+    margin-bottom: 8px;
+  }
+  
+  .bty-header-left h1 .accent {
+    color: #f5c6d6;
+  }
+  
+  .bty-header-left p {
+    color: rgba(255,255,255,0.4);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+  
+  .bty-header-right {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  
+  .bty-year-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    padding: 4px;
+  }
+  
+  .bty-year-nav a, .bty-year-nav span {
+    padding: 12px 20px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.5);
+    transition: all 0.3s;
+  }
+  
+  .bty-year-nav a:hover {
+    color: #fff;
+  }
+  
+  .bty-year-nav .current {
+    background: #f5c6d6;
+    color: #1a1a1a;
+  }
+  
+  .bty-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: #f5c6d6;
+    border-radius: 100px;
+    color: #1a1a1a;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  
+  .bty-back-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(245, 198, 214, 0.3);
+  }
+  
+  /* Growth Panel - Hero style */
+  .bty-growth-panel {
+    background: #f5c6d6;
+    border-radius: 24px;
+    padding: 48px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Animated dots pattern */
+  .bty-growth-dots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(0,0,0,0.08) 1px, transparent 1px);
+    background-size: 16px 16px;
+    animation: dotsMove 30s linear infinite;
+  }
+  
+  @keyframes dotsMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 160px 160px; }
+  }
+  
+  .bty-growth-content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .bty-growth-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .bty-growth-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #1a1a1a;
+  }
+  
+  .bty-growth-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+  
+  .bty-growth-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  
+  .bty-growth-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  
+  .bty-growth-card.highlight {
+    background: #1a1a1a;
+  }
+  
+  .bty-growth-card.highlight .bty-growth-value,
+  .bty-growth-card.highlight .bty-growth-label,
+  .bty-growth-card.highlight .bty-growth-trend {
+    color: #fff !important;
+  }
+  
+  .bty-growth-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+  }
+  
+  .bty-growth-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  
+  .bty-growth-trend {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .bty-growth-trend .arrow {
+    font-size: 16px;
+    animation: bounce 1s ease-in-out infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  
+  /* Stats Row */
+  .bty-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .bty-stat {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  
+  .bty-stat:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+  }
+  
+  .bty-stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  
+  .bty-stat-value.pink { color: #f5c6d6; }
+  
+  .bty-stat-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  /* Section */
+  .bty-section {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bty-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin: 0 0 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #fff;
+  }
+  
+  .bty-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.2), transparent);
+  }
+  
+  /* Contribution Graph */
+  .bty-graph-container {
+    overflow-x: auto;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .bty-graph-wrapper {
+    min-width: 900px; /* Force horizontal scroll on mobile */
+  }
+  
+  .bty-graph {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .bty-graph-week {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 14px;
+    max-width: 20px;
+  }
+  
+  .bty-graph-day {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 4px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .bty-graph-day:hover {
+    transform: scale(1.5);
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(245, 198, 214, 0.5);
+  }
+  
+  .bty-graph-day.empty {
+    background: rgba(255,255,255,0.05);
+  }
+  
+  .bty-graph-day.yes {
+    background: #f5c6d6;
+  }
+  
+  .bty-graph-day.no {
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  
+  .bty-graph-day.future {
+    background: rgba(255,255,255,0.02);
+    border: 1px dashed rgba(255,255,255,0.1);
+  }
+  
+  .bty-graph-months {
+    display: flex;
+    margin-bottom: 12px;
+    justify-content: space-between;
+  }
+  
+  .bty-graph-month {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    flex: 1;
+    text-align: left;
+  }
+  
+  .bty-graph-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    justify-content: center;
+  }
+  
+  .bty-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .bty-legend-square {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+  }
+  
+  .bty-legend-square.yes { background: #f5c6d6; }
+  .bty-legend-square.no { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.3); }
+  .bty-legend-square.empty { background: rgba(255,255,255,0.1); }
+  
+  /* Line Chart */
+  .bty-chart-container {
+    position: relative;
+    height: 300px;
+    margin-top: 24px;
+  }
+  
+  .bty-chart-canvas {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Tooltip */
+  .bty-tooltip {
+    position: fixed;
+    background: #fff;
+    color: #1a1a1a;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  
+  .bty-tooltip.visible {
+    opacity: 1;
+  }
+  
+  /* Empty state */
+  .bty-empty {
+    text-align: center;
+    padding: 60px 24px;
+    color: rgba(255,255,255,0.5);
+  }
+  
+  .bty-empty-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .bty-empty p {
+    margin: 0 0 20px 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .bty-empty a {
+    color: #f5c6d6;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    transition: color 0.3s;
+  }
+  
+  .bty-empty a:hover {
+    color: #fff;
+  }
+  
+  /* Animated accent line */
+  .bty-accent-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #f5c6d6, transparent);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { opacity: 0.3; transform: translateX(-100%); }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; transform: translateX(100%); }
+  }
+  
+  @media (max-width: 768px) {
+    .bty-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .bty-stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .bty-growth-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .bty-growth-panel {
+      padding: 32px 24px;
+    }
+    
+    .bty-section {
+      padding: 32px 24px;
+    }
+    
+    /* Graph scrolls horizontally on mobile - no squashing */
+    .bty-graph-months {
+      min-width: 900px;
+    }
+  }
+</style>
+
+<div class="bty-metrics">
+  <div class="bty-bg"></div>
+  
+  <div class="bty-metrics-container">
+    
+    <!-- Header -->
+    <div class="bty-header">
+      <div class="bty-header-left">
+        <h1>Better <span class="accent">Than</span> Yesterday</h1>
+        <p>Your personal growth journey</p>
+      </div>
+      <div class="bty-header-right">
+        <div class="bty-year-nav">
+          <%= link_to "←", bty_metrics_path(year: @current_year - 1) %>
+          <span class="current"><%= @current_year %></span>
+          <% if @current_year < Date.today.year %>
+            <%= link_to "→", bty_metrics_path(year: @current_year + 1) %>
+          <% else %>
+            <span style="opacity: 0.3;">→</span>
+          <% end %>
+        </div>
+        <%= link_to "/bty", class: "bty-back-link" do %>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Record
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Growth Panel -->
+    <div class="bty-growth-panel">
+      <div class="bty-growth-dots"></div>
+      <div class="bty-growth-content">
+        <div class="bty-growth-header">
+          <h2>Your Growth</h2>
+        </div>
+        
+        <div class="bty-growth-grid">
+          <div class="bty-growth-card">
+            <div class="bty-growth-value">
+              <%= @cumulative_score >= 0 ? '+' : '' %><%= @cumulative_score %>
+            </div>
+            <div class="bty-growth-label">Cumulative Score</div>
+            <div class="bty-growth-trend">
+              <% if @cumulative_score > 0 %>
+                <span class="arrow">↑</span> Growing
+              <% elsif @cumulative_score < 0 %>
+                <span class="arrow">↓</span> Room to grow
+              <% else %>
+                → Fresh start
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="bty-growth-card">
+            <div class="bty-growth-value">
+              <%= @monthly_growth[:current_month][:score] >= 0 ? '+' : '' %><%= @monthly_growth[:current_month][:score] %>
+            </div>
+            <div class="bty-growth-label"><%= @monthly_growth[:current_month][:name] %></div>
+            <div class="bty-growth-trend">
+              <%= @monthly_growth[:current_month][:days] %> days logged
+            </div>
+          </div>
+          
+          <div class="bty-growth-card highlight">
+            <div class="bty-growth-value">
+              <%= @monthly_growth[:delta] >= 0 ? '+' : '' %><%= @monthly_growth[:delta] %>
+            </div>
+            <div class="bty-growth-label">vs <%= @monthly_growth[:previous_month][:name] %></div>
+            <div class="bty-growth-trend">
+              <% case @monthly_growth[:trend] %>
+              <% when :up %>
+                <span class="arrow">↑</span> Growing!
+              <% when :down %>
+                <span class="arrow">↓</span> Keep pushing
+              <% else %>
+                → Steady
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="bty-stats">
+      <div class="bty-stat">
+        <div class="bty-stat-value"><%= @total_days %></div>
+        <div class="bty-stat-label">Days Tracked</div>
+      </div>
+      <div class="bty-stat">
+        <div class="bty-stat-value pink"><%= @yes_days %></div>
+        <div class="bty-stat-label">Better Days</div>
+      </div>
+      <div class="bty-stat">
+        <div class="bty-stat-value"><%= @no_days %></div>
+        <div class="bty-stat-label">Off Days</div>
+      </div>
+      <div class="bty-stat">
+        <div class="bty-stat-value pink"><%= @streak %></div>
+        <div class="bty-stat-label">Current Streak</div>
+      </div>
+    </div>
+    
+    <!-- Contribution Graph -->
+    <div class="bty-section">
+      <div class="bty-accent-line"></div>
+      <h2 class="bty-section-title"><%= @current_year %> Activity</h2>
+      
+      <% if @btys.any? || @current_year == Date.today.year %>
+        <div class="bty-graph-container">
+          <div class="bty-graph-wrapper">
+            <div class="bty-graph-months">
+              <% Date::ABBR_MONTHNAMES.compact.each do |month| %>
+                <span class="bty-graph-month"><%= month %></span>
+              <% end %>
+            </div>
+            
+            <div class="bty-graph" id="contribution-graph">
+              <% 
+                start_date = Date.new(@current_year, 1, 1)
+                year_end = Date.new(@current_year, 12, 31)
+                bty_hash = @btys.index_by(&:date)
+                current = start_date - start_date.wday
+                
+                while current <= year_end || current.wday != 0
+              %>
+                <div class="bty-graph-week">
+                  <% 7.times do |day_of_week| %>
+                    <% 
+                      date = current + day_of_week
+                      in_year = date.year == @current_year
+                      in_future = date > Date.today
+                      bty = bty_hash[date] if in_year && !in_future
+                      
+                      css_class = if !in_year
+                        'empty'
+                      elsif in_future
+                        'future'
+                      elsif bty.nil?
+                        'empty'
+                      elsif bty.yes?
+                        'yes'
+                      else
+                        'no'
+                      end
+                    %>
+                    <div class="bty-graph-day <%= css_class %>" 
+                         data-date="<%= date %>"
+                         data-value="<%= bty&.yes? ? 'yes' : (bty&.no? ? 'no' : 'none') %>"
+                         title="<%= date.strftime('%b %d, %Y') %>">
+                    </div>
+                  <% end %>
+                </div>
+              <% current += 7.days; end %>
+            </div>
+            
+            <div class="bty-graph-legend">
+              <span>Not logged</span>
+              <div class="bty-legend-item"><div class="bty-legend-square empty"></div></div>
+              <div class="bty-legend-item"><div class="bty-legend-square no"></div></div>
+              <span>Off</span>
+              <div class="bty-legend-item"><div class="bty-legend-square yes"></div></div>
+              <span>Better</span>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="bty-empty">
+          <div class="bty-empty-icon">📊</div>
+          <p>No data for <%= @current_year %></p>
+          <% if @current_year == Date.today.year %>
+            <%= link_to "Start tracking →", "/bty" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Line Chart -->
+    <div class="bty-section">
+      <div class="bty-accent-line"></div>
+      <h2 class="bty-section-title">Progress Over Time</h2>
+      
+      <% if @all_btys.count >= 2 %>
+        <div class="bty-chart-container">
+          <canvas id="progress-chart" class="bty-chart-canvas"></canvas>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <script>
+          function initChart() {
+            if (typeof Chart === 'undefined') {
+              setTimeout(initChart, 100);
+              return;
+            }
+            
+            const ctx = document.getElementById('progress-chart').getContext('2d');
+            const data = <%= @all_btys.map { |b| { date: b.date.strftime('%b %d'), value: b.yes? ? 1 : -1 } }.to_json.html_safe %>;
+            
+            let cumulative = 0;
+            const labels = data.map(d => d.date);
+            const scores = data.map(d => {
+              cumulative += d.value;
+              return cumulative;
+            });
+            
+            new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'Growth Score',
+                  data: scores,
+                  borderColor: '#f5c6d6',
+                  backgroundColor: 'rgba(245, 198, 214, 0.1)',
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 6,
+                  pointBackgroundColor: '#f5c6d6',
+                  pointBorderColor: '#1a1a1a',
+                  pointBorderWidth: 2,
+                  pointHoverRadius: 8,
+                  borderWidth: 3,
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                  intersect: false,
+                  mode: 'index'
+                },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    backgroundColor: '#fff',
+                    titleColor: '#1a1a1a',
+                    bodyColor: '#1a1a1a',
+                    titleFont: { family: 'Bebas Neue', size: 14 },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    cornerRadius: 12,
+                    padding: 16,
+                    callbacks: {
+                      label: function(context) {
+                        const score = context.raw;
+                        return 'Score: ' + (score >= 0 ? '+' : '') + score;
+                      }
+                    }
+                  }
+                },
+                scales: {
+                  x: {
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Inter', size: 10 } }
+                  },
+                  y: {
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: {
+                      color: 'rgba(255,255,255,0.4)',
+                      font: { family: 'Inter', size: 10 },
+                      callback: function(value) { return value >= 0 ? '+' + value : value; }
+                    }
+                  }
+                }
+              }
+            });
+          }
+          
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initChart);
+          } else {
+            initChart();
+          }
+        </script>
+      <% else %>
+        <div class="bty-empty">
+          <div class="bty-empty-icon">📈</div>
+          <p>Need 2+ days for chart</p>
+          <%= link_to "Start tracking →", "/bty" %>
+        </div>
+      <% end %>
+    </div>
+    
+  </div>
+</div>
+
+<div class="bty-tooltip" id="graph-tooltip"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tooltip = document.getElementById('graph-tooltip');
+    const days = document.querySelectorAll('.bty-graph-day');
+    
+    days.forEach(day => {
+      day.addEventListener('mouseenter', (e) => {
+        const date = day.dataset.date;
+        const value = day.dataset.value;
+        
+        let text = new Date(date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+        if (value === 'yes') text += '<br><span style="color: #f5c6d6;">✓ Better!</span>';
+        else if (value === 'no') text += '<br>✗ Off day';
+        else text += '<br><span style="opacity: 0.5;">No entry</span>';
+        
+        tooltip.innerHTML = text;
+        tooltip.classList.add('visible');
+        
+        const rect = day.getBoundingClientRect();
+        tooltip.style.left = rect.left + 'px';
+        tooltip.style.top = (rect.top - tooltip.offsetHeight - 8) + 'px';
+      });
+      
+      day.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+      });
+    });
+  });
+</script>
