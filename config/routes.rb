@@ -3,21 +3,6 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   
-  # Developer Calendar
-  get '/developer-calendar',
-    to: 'developer_calendar#index',
-    as: 'developer_calendar'
-  
-  match '/developer-calendar/add-leave',
-    to: 'developer_calendar#add_leave',
-    as: 'add_developer_leave',
-    via: [:get, :post]
-  
-  match '/developer-calendar/leave/:id',
-    to: 'developer_calendar#delete_leave',
-    as: 'delete_developer_leave',
-    via: [:post, :delete]
-  
   # Landing page
   get '/landing', 
     to: 'landing#index', 
@@ -47,10 +32,6 @@ Rails.application.routes.draw do
     registrations:  'users/registrations',
     passwords:      'users/passwords',
   }
-
-  get '/thank-you-jack',
-    to: 'misc#thank_you_jack',
-    as: 'thank_you_jack'
 
   # Fiscal Quarter public view
   get '/:identifier', 
@@ -135,4 +116,37 @@ Rails.application.routes.draw do
     end
   end
 
+
+
+  
+  # Personal
+  # Better than yesterday
+  match '/bty',
+    to: 'bty#new',
+    via: [:get, :post]
+  
+  get '/bty/metrics',
+    to: 'bty#metrics',
+    as: 'bty_metrics'
+
+
+  # Misc
+  get '/thank-you-jack',
+    to: 'misc#thank_you_jack',
+    as: 'thank_you_jack'
+  
+  # Developer Calendar
+  get '/developer-calendar',
+    to: 'misc#developer_calendar',
+    as: 'developer_calendar'
+  
+  match '/developer-calendar/add-leave',
+    to: 'misc#add_developer_leave',
+    as: 'add_developer_leave',
+    via: [:get, :post]
+  
+  match '/developer-calendar/leave/:id',
+    to: 'misc#delete_developer_leave',
+    as: 'delete_developer_leave',
+    via: [:post, :delete]
 end
