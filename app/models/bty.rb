@@ -4,8 +4,8 @@ class Bty < ApplicationRecord
   validates :value, inclusion: { in: [true, false] }
   validates :date, presence: true, uniqueness: true
   
-  scope :for_year, ->(year) { where("strftime('%Y', date) = ?", year.to_s) }
-  scope :for_month, ->(year, month) { where("strftime('%Y', date) = ? AND strftime('%m', date) = ?", year.to_s, month.to_s.rjust(2, '0')) }
+  scope :for_year, ->(year) { where(date: Date.new(year, 1, 1)..Date.new(year, 12, 31)) }
+  scope :for_month, ->(year, month) { where(date: Date.new(year, month, 1)..Date.new(year, month, -1)) }
   scope :ordered, -> { order(date: :asc) }
   
   def yes?
