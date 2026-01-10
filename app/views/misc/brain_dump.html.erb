@@ -1,0 +1,687 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+  
+  .dump-page {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    background: #1a1a1a;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dump-container {
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dump-header {
+    margin-bottom: 32px;
+  }
+  
+  .dump-date {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+  }
+  
+  .dump-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    margin: 0;
+  }
+  
+  .dump-title .accent {
+    color: #f5c6d6;
+  }
+  
+  /* Success State */
+  .dump-success {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .dump-success-icon {
+    font-size: 48px;
+    margin-bottom: 24px;
+  }
+  
+  .dump-success-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #f5c6d6;
+    margin-bottom: 16px;
+  }
+  
+  .dump-success-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 32px;
+  }
+  
+  .dump-links {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .dump-link {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 100px;
+    transition: all 0.2s;
+  }
+  
+  .dump-link.primary {
+    background: #f5c6d6;
+    color: #1a1a1a;
+  }
+  
+  .dump-link.primary:hover {
+    background: #fff;
+  }
+  
+  .dump-link.secondary {
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+  }
+  
+  .dump-link.secondary:hover {
+    border-color: rgba(255,255,255,0.4);
+    color: #fff;
+  }
+  
+  /* Form */
+  .dump-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dump-textarea {
+    flex: 1;
+    min-height: 250px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #fff;
+    resize: none;
+    margin-bottom: 24px;
+  }
+  
+  .dump-textarea::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+  
+  .dump-textarea:focus {
+    outline: none;
+    border-color: rgba(245, 198, 214, 0.4);
+  }
+  
+  /* Tags */
+  .dump-tags-section {
+    margin-bottom: 24px;
+  }
+  
+  .dump-tags-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 12px;
+    display: block;
+  }
+  
+  .dump-tags-input {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #fff;
+  }
+  
+  .dump-tags-input::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+  
+  .dump-tags-input:focus {
+    outline: none;
+    border-color: rgba(245, 198, 214, 0.4);
+  }
+  
+  .dump-existing-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .dump-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .dump-tag:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+  
+  .dump-tag.selected {
+    background: #f5c6d6;
+    border-color: #f5c6d6;
+    color: #1a1a1a;
+  }
+  
+  .dump-tag input {
+    display: none;
+  }
+  
+  /* Submit */
+  .dump-submit {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    align-items: center;
+  }
+  
+  .dump-history-link {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .dump-history-link:hover {
+    color: rgba(255,255,255,0.7);
+  }
+  
+  .dump-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: #f5c6d6;
+    color: #1a1a1a;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .dump-btn:hover {
+    background: #fff;
+  }
+  
+  .dump-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .btn-icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  
+  /* Review State */
+  .dump-review {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dump-review-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  
+  .dump-review-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  
+  .dump-review-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #f5c6d6;
+    margin-bottom: 8px;
+  }
+  
+  .dump-review-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+  }
+  
+  .dump-review-content {
+    margin-bottom: 24px;
+  }
+  
+  .dump-review-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 12px;
+  }
+  
+  .dump-review-text {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .dump-review-tags {
+    margin-bottom: 24px;
+  }
+  
+  .dump-suggested-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  
+  .dump-suggested-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .dump-suggested-tag:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .dump-suggested-tag.selected {
+    background: rgba(245, 198, 214, 0.15);
+    border-color: #f5c6d6;
+    color: #f5c6d6;
+  }
+  
+  .dump-suggested-tag input {
+    display: none;
+  }
+  
+  .dump-suggested-tag .tag-check {
+    display: none;
+  }
+  
+  .dump-suggested-tag.selected .tag-check {
+    display: inline;
+  }
+  
+  .dump-add-tag {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .dump-custom-tag-input {
+    flex: 1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #fff;
+  }
+  
+  .dump-custom-tag-input::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+  
+  .dump-custom-tag-input:focus {
+    outline: none;
+    border-color: rgba(245, 198, 214, 0.4);
+  }
+  
+  .dump-add-tag-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .dump-add-tag-btn:hover {
+    background: #f5c6d6;
+    color: #1a1a1a;
+  }
+  
+  .dump-review-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+  }
+  
+  .dump-review-back {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+  }
+  
+  .dump-review-back:hover {
+    color: rgba(255,255,255,0.7);
+  }
+  
+  .btn-loading {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .btn-loading .spinner {
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+  }
+  
+  .dump-btn.loading .btn-text {
+    display: none !important;
+  }
+  
+  .dump-btn.loading .btn-loading {
+    display: inline-flex !important;
+  }
+  
+  .dump-btn.loading {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* AI Powered info */
+  .dump-ai-info {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: rgba(245, 198, 214, 0.08);
+    border: 1px solid rgba(245, 198, 214, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .dump-ai-info-icon {
+    font-size: 20px;
+  }
+  
+  .dump-ai-info-text {
+    flex: 1;
+  }
+  
+  .dump-ai-info-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #f5c6d6;
+    margin-bottom: 2px;
+  }
+  
+  .dump-ai-info-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  @media (max-width: 600px) {
+    .dump-container {
+      padding: 24px 16px;
+    }
+    
+    .dump-title {
+      font-size: 28px;
+    }
+    
+    .dump-textarea {
+      min-height: 200px;
+    }
+  }
+</style>
+
+<div class="dump-page">
+  <div class="dump-container">
+    <div class="dump-header">
+      <div class="dump-date"><%= @today.strftime('%A, %B %d') %></div>
+      <h1 class="dump-title">Brain <span class="accent">Dump</span></h1>
+    </div>
+    
+    <% if @saved %>
+      <!-- SUCCESS STATE -->
+      <div class="dump-success">
+        <div class="dump-success-icon">✓</div>
+        <div class="dump-success-text">Saved</div>
+        <div class="dump-success-sub">Your thoughts are encrypted & safe</div>
+        <div class="dump-links">
+          <%= link_to "Dump More", brain_dump_path, class: "dump-link primary" %>
+          <%= link_to "View History", brain_dump_history_path, class: "dump-link secondary" %>
+        </div>
+      </div>
+      
+    <% elsif @reviewing %>
+      <!-- REVIEW STATE (after AI processing) -->
+      <div class="dump-review">
+        <div class="dump-review-header">
+          <div class="dump-review-icon"><%= @ai_success ? '✨' : '📝' %></div>
+          <div class="dump-review-title"><%= @ai_success ? 'AI Cleaned Your Thoughts' : 'Ready to Save' %></div>
+          <div class="dump-review-sub"><%= @ai_success ? 'Review the cleaned version and confirm tags' : 'AI processing failed, but you can still save' %></div>
+        </div>
+        
+        <div class="dump-review-content">
+          <div class="dump-review-label">Cleaned Version</div>
+          <div class="dump-review-text"><%= @cleaned_content %></div>
+        </div>
+        
+        <%= form_tag brain_dump_path, method: :post, class: "dump-review-form" do %>
+          <input type="hidden" name="action_type" value="save">
+          <input type="hidden" name="raw_content" value="<%= @raw_content %>">
+          <input type="hidden" name="cleaned_content" value="<%= @cleaned_content %>">
+          
+          <div class="dump-review-tags">
+            <div class="dump-review-label">Suggested Tags <span style="opacity: 0.5;">(click to toggle)</span></div>
+            
+            <div class="dump-suggested-tags" id="suggested-tags">
+              <% if @suggested_tags.any? %>
+                <% @suggested_tags.each do |tag_name| %>
+                  <label class="dump-suggested-tag selected" data-tag="<%= tag_name %>">
+                    <input type="checkbox" name="confirmed_tags[]" value="<%= tag_name %>" checked>
+                    <span class="tag-text"><%= tag_name %></span>
+                    <span class="tag-check">✓</span>
+                  </label>
+                <% end %>
+              <% else %>
+                <div style="color: rgba(255,255,255,0.4); font-size: 12px;">No tags suggested</div>
+              <% end %>
+            </div>
+            
+            <div class="dump-add-tag">
+              <input type="text" id="custom-tag-input" placeholder="Add custom tag..." class="dump-custom-tag-input">
+              <button type="button" onclick="addCustomTag()" class="dump-add-tag-btn">+</button>
+            </div>
+          </div>
+          
+          <div class="dump-review-actions">
+            <%= link_to "← Start Over", brain_dump_path, class: "dump-review-back" %>
+            <button type="submit" class="dump-btn">Confirm & Save</button>
+          </div>
+        <% end %>
+      </div>
+      
+    <% else %>
+      <!-- INITIAL DUMP FORM -->
+      <%= form_tag brain_dump_path, method: :post, class: "dump-form", id: "dump-form" do %>
+        <input type="hidden" name="action_type" value="process">
+        
+        <textarea 
+          name="content" 
+          class="dump-textarea" 
+          placeholder="What's on your mind? Use dictation or type..."
+          autofocus
+          required
+        ></textarea>
+        
+        <div class="dump-submit">
+          <%= link_to "History", brain_dump_history_path, class: "dump-history-link" %>
+          <button type="submit" class="dump-btn" id="submit-btn" onclick="this.classList.add('loading');">
+            <span class="btn-text" style="display: inline-flex; align-items: center; gap: 4px;"><%= inline_svg_tag("heroicons/sparkles.svg", class: "btn-icon") %> Process with AI</span>
+            <span class="btn-loading">
+              <svg class="spinner" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="32" opacity="0.3"/>
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="64"/>
+              </svg>
+              Processing...
+            </span>
+          </button>
+        </div>
+      <% end %>
+      
+      <!-- AI processing info -->
+      <div class="dump-ai-info">
+        <div class="dump-ai-info-icon">✨</div>
+        <div class="dump-ai-info-text">
+          <div class="dump-ai-info-title">AI-Powered</div>
+          <div class="dump-ai-info-sub">Your dictation will be cleaned up & tags auto-suggested. Raw version always preserved.</div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle suggested tag selection
+    document.querySelectorAll('.dump-suggested-tag').forEach(tag => {
+      tag.addEventListener('click', function() {
+        const checkbox = this.querySelector('input[type="checkbox"]');
+        checkbox.checked = !checkbox.checked;
+        this.classList.toggle('selected', checkbox.checked);
+      });
+    });
+    
+    // Show loading state on form submit
+    const form = document.getElementById('dump-form');
+    if (form) {
+      form.addEventListener('submit', function() {
+        const btn = document.getElementById('submit-btn');
+        if (btn) {
+          btn.classList.add('loading');
+        }
+      });
+    }
+  });
+  
+  // Add custom tag
+  function addCustomTag() {
+    const input = document.getElementById('custom-tag-input');
+    const tagName = input.value.trim().toLowerCase();
+    
+    if (!tagName) return;
+    
+    const container = document.getElementById('suggested-tags');
+    
+    // Check if tag already exists
+    const existingTags = Array.from(container.querySelectorAll('.dump-suggested-tag'))
+      .map(t => t.dataset.tag.toLowerCase());
+    
+    if (existingTags.includes(tagName)) {
+      input.value = '';
+      return;
+    }
+    
+    // Create new tag element
+    const label = document.createElement('label');
+    label.className = 'dump-suggested-tag selected';
+    label.dataset.tag = tagName;
+    label.innerHTML = `
+      <input type="checkbox" name="confirmed_tags[]" value="${tagName}" checked>
+      <span class="tag-text">${tagName}</span>
+      <span class="tag-check">✓</span>
+    `;
+    
+    label.addEventListener('click', function() {
+      const checkbox = this.querySelector('input[type="checkbox"]');
+      checkbox.checked = !checkbox.checked;
+      this.classList.toggle('selected', checkbox.checked);
+    });
+    
+    container.appendChild(label);
+    input.value = '';
+    input.focus();
+  }
+  
+  // Allow Enter key to add custom tag
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.target.id === 'custom-tag-input') {
+      e.preventDefault();
+      addCustomTag();
+    }
+  });
+</script>

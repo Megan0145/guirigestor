@@ -48,5 +48,20 @@ module ApplicationHelper
       'bg-gray-100 text-gray-800 border-gray-800'
     end
     "#{base} #{color}"
-  end  
+  end
+  
+  # Highlight search query in text (for brain dump history)
+  def highlight_search(text, query)
+    return text if query.blank?
+    
+    # Escape HTML first, then highlight
+    escaped_text = h(text)
+    escaped_query = Regexp.escape(query)
+    
+    highlighted = escaped_text.gsub(/(#{escaped_query})/i) do |match|
+      "<span class=\"search-highlight\">#{match}</span>"
+    end
+    
+    highlighted.html_safe
+  end
 end

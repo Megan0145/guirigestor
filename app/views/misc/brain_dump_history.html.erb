@@ -1,0 +1,934 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+  
+  .history-page {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    background: #1a1a1a;
+    color: #fff;
+  }
+  
+  .history-container {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+  
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .history-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    margin: 0 0 4px 0;
+  }
+  
+  .history-title .accent {
+    color: #f5c6d6;
+  }
+  
+  .history-subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .history-new-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: #f5c6d6;
+    color: #1a1a1a;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .history-new-btn:hover {
+    background: #fff;
+  }
+  
+  /* Filters */
+  .history-filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  
+  .history-search-row {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .history-search {
+    flex: 1;
+    position: relative;
+  }
+  
+  .history-search-input {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 16px 12px 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #fff;
+  }
+  
+  .history-search-input::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+  
+  .history-search-input:focus {
+    outline: none;
+    border-color: rgba(245, 198, 214, 0.4);
+  }
+  
+  .history-search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.3);
+  }
+  
+  /* Custom Multi-Select Dropdown */
+  .history-multiselect {
+    position: relative;
+    min-width: 200px;
+  }
+  
+  .history-multiselect-trigger {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  
+  .history-multiselect-trigger:hover {
+    border-color: rgba(255,255,255,0.2);
+  }
+  
+  .history-multiselect.open .history-multiselect-trigger {
+    border-color: rgba(245, 198, 214, 0.4);
+  }
+  
+  .history-multiselect-label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .history-multiselect-count {
+    background: #f5c6d6;
+    color: #1a1a1a;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+  
+  .history-multiselect-arrow {
+    width: 16px;
+    height: 16px;
+    fill: rgba(255,255,255,0.4);
+    transition: transform 0.2s;
+  }
+  
+  .history-multiselect.open .history-multiselect-arrow {
+    transform: rotate(180deg);
+  }
+  
+  .history-multiselect-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 8px;
+    background: #2a2a2a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    z-index: 100;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  
+  .history-multiselect.open .history-multiselect-dropdown {
+    display: block;
+  }
+  
+  .history-multiselect-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  
+  .history-multiselect-option:hover {
+    background: rgba(255,255,255,0.05);
+  }
+  
+  .history-multiselect-option:first-child {
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .history-multiselect-option:last-child {
+    border-radius: 0 0 12px 12px;
+  }
+  
+  .history-multiselect-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  
+  .history-multiselect-option.selected .history-multiselect-checkbox {
+    background: #f5c6d6;
+    border-color: #f5c6d6;
+  }
+  
+  .history-multiselect-checkbox svg {
+    width: 12px;
+    height: 12px;
+    fill: #1a1a1a;
+    opacity: 0;
+  }
+  
+  .history-multiselect-option.selected .history-multiselect-checkbox svg {
+    opacity: 1;
+  }
+  
+  .history-multiselect-text {
+    flex: 1;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+  }
+  
+  .history-multiselect-option.selected .history-multiselect-text {
+    color: #fff;
+  }
+  
+  .history-multiselect-badge {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+  }
+  
+  .history-multiselect-apply {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 12px;
+    padding: 10px;
+    background: #f5c6d6;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .history-multiselect-apply:hover {
+    background: #fff;
+  }
+  
+  .history-clear-filters {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+  }
+  
+  .history-clear-filters:hover {
+    color: #f5c6d6;
+  }
+  
+  .history-search-btn {
+    background: #f5c6d6;
+    color: #1a1a1a;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  
+  .history-search-btn:hover {
+    background: #fff;
+  }
+  
+  /* Highlighted search text */
+  .search-highlight {
+    background: rgba(245, 198, 214, 0.4);
+    color: #fff;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+  
+  /* Active filters */
+  .history-active-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .history-active-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: #f5c6d6;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  
+  .history-active-filter a {
+    color: #1a1a1a;
+    text-decoration: none;
+    opacity: 0.6;
+  }
+  
+  .history-active-filter a:hover {
+    opacity: 1;
+  }
+  
+  /* Dump entries */
+  .history-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .history-entry {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.2s;
+  }
+  
+  .history-entry:hover {
+    border-color: rgba(255,255,255,0.15);
+  }
+  
+  .history-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 16px;
+  }
+  
+  .history-entry-meta {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .history-entry-date {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .history-entry-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .history-entry-tag {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    background: rgba(245, 198, 214, 0.15);
+    color: #f5c6d6;
+    border-radius: 100px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  
+  .history-entry-tag:hover {
+    background: rgba(245, 198, 214, 0.25);
+  }
+  
+  .history-tags-more {
+    position: relative;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    border-radius: 100px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .history-tags-more:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+  }
+  
+  .history-tags-tooltip {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    padding: 12px 16px;
+    background: #2a2a2a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    z-index: 100;
+    min-width: 150px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  
+  .history-tags-more:hover .history-tags-tooltip {
+    display: block;
+  }
+  
+  .history-tags-tooltip a {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: #f5c6d6;
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .history-tags-tooltip a:last-child {
+    border-bottom: none;
+  }
+  
+  .history-tags-tooltip a:hover {
+    color: #fff;
+  }
+  
+  .history-entry-content {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  /* Raw/Enriched toggle */
+  .history-entry-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .history-toggle-btn {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .history-toggle-btn:hover {
+    border-color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.7);
+  }
+  
+  .history-toggle-btn.active {
+    background: #f5c6d6;
+    border-color: #f5c6d6;
+    color: #1a1a1a;
+  }
+  
+  .history-toggle-btn.active .sparkle-icon {
+    display: inline-flex;
+  }
+  
+  .sparkle-icon {
+    margin-right: 4px;
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+  }
+  
+  .sparkle-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+  
+  .history-entry-raw {
+    display: none;
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.6);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-top: 12px;
+    padding: 16px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    font-family: monospace;
+  }
+  
+  .history-entry-raw.visible {
+    display: block;
+  }
+  
+  .history-enriched-badge {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    background: rgba(245, 198, 214, 0.15);
+    color: #f5c6d6;
+    border-radius: 4px;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .enriched-badge-icon {
+    width: 10px;
+    height: 10px;
+    fill: currentColor;
+  }
+  
+  /* Empty state */
+  .history-empty {
+    text-align: center;
+    padding: 60px 24px;
+    color: rgba(255,255,255,0.4);
+  }
+  
+  .history-empty-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+  
+  .history-empty p {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+  }
+  
+  .history-empty a {
+    color: #f5c6d6;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .history-empty a:hover {
+    color: #fff;
+  }
+  
+  /* Stats */
+  .history-stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+  }
+  
+  .history-stat {
+    text-align: center;
+  }
+  
+  .history-stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: #f5c6d6;
+  }
+  
+  .history-stat-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 600px) {
+    .history-container {
+      padding: 24px 16px;
+    }
+    
+    .history-header {
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .history-title {
+      font-size: 28px;
+    }
+    
+    .history-new-btn {
+      align-self: flex-start;
+    }
+    
+    .history-filters {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .history-search {
+      min-width: 100%;
+    }
+    
+    .history-search-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+    
+    .history-search-row .history-search {
+      flex: 1;
+    }
+    
+    .history-tag-filter {
+      width: 100%;
+    }
+    
+    .history-stats {
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 16px;
+    }
+    
+    .history-stat {
+      min-width: 80px;
+    }
+    
+    .history-entry {
+      padding: 20px 16px;
+    }
+    
+    .history-entry-header {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .history-entry-content {
+      font-size: 13px;
+    }
+    
+    .history-active-filters {
+      gap: 6px;
+    }
+    
+    .history-active-filter {
+      font-size: 10px;
+      padding: 6px 12px;
+    }
+  }
+</style>
+
+<div class="history-page">
+  <div class="history-container">
+    <div class="history-header">
+      <div>
+        <h1 class="history-title">Thought <span class="accent">History</span></h1>
+        <p class="history-subtitle">Track your thought process over time</p>
+      </div>
+      <%= link_to "New Dump", brain_dump_path, class: "history-new-btn" %>
+    </div>
+    
+    <!-- Stats -->
+    <div class="history-stats">
+      <div class="history-stat">
+        <div class="history-stat-value"><%= BrainDump.count %></div>
+        <div class="history-stat-label">Total Dumps</div>
+      </div>
+      <div class="history-stat">
+        <div class="history-stat-value"><%= BrainDumpTag.with_dumps.count %></div>
+        <div class="history-stat-label">Topics</div>
+      </div>
+      <div class="history-stat">
+        <div class="history-stat-value"><%= BrainDump.select(:date).distinct.count %></div>
+        <div class="history-stat-label">Days Active</div>
+      </div>
+    </div>
+    
+    <!-- Filters -->
+    <%= form_tag brain_dump_history_path, method: :get, class: "history-filters" do %>
+      <div class="history-search-row">
+        <div class="history-search">
+          <svg class="history-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input 
+            type="text" 
+            name="q" 
+            class="history-search-input" 
+            placeholder="Search thoughts..."
+            value="<%= @search_query %>"
+          >
+        </div>
+        <button type="submit" class="history-search-btn">Search</button>
+      </div>
+      
+      <!-- Custom Multi-Select for Topics -->
+      <div class="history-multiselect" id="topic-multiselect">
+        <div class="history-multiselect-trigger" onclick="toggleMultiselect()">
+          <span class="history-multiselect-label">
+            <% if @selected_tag_ids.any? %>
+              <%= @selected_tags.count %> topic<%= @selected_tags.count == 1 ? '' : 's' %> selected
+            <% else %>
+              All Topics
+            <% end %>
+          </span>
+          <% if @selected_tag_ids.any? %>
+            <span class="history-multiselect-count"><%= @selected_tags.count %></span>
+          <% end %>
+          <svg class="history-multiselect-arrow" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        
+        <div class="history-multiselect-dropdown">
+          <% @tags.each do |tag| %>
+            <div class="history-multiselect-option <%= 'selected' if @selected_tag_ids.include?(tag.id) %>" 
+                 data-tag-id="<%= tag.id %>" 
+                 onclick="toggleTagOption(this)">
+              <div class="history-multiselect-checkbox">
+                <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              </div>
+              <span class="history-multiselect-text"><%= tag.name %></span>
+              <span class="history-multiselect-badge"><%= tag.brain_dumps.count %></span>
+            </div>
+          <% end %>
+          
+          <button type="button" class="history-multiselect-apply" onclick="applyTopicFilter()">Apply Filter</button>
+        </div>
+      </div>
+      
+      <% if @selected_tag_ids.any? || @search_query.present? %>
+        <%= link_to "Clear", brain_dump_history_path, class: "history-clear-filters" %>
+      <% end %>
+    <% end %>
+    
+    <!-- Active filters display -->
+    <% if @selected_tag_ids.any? || @search_query.present? %>
+      <div class="history-active-filters">
+        <% @selected_tags.each do |tag| %>
+          <span class="history-active-filter">
+            <%= tag.name %>
+            <%= link_to "×", brain_dump_history_path(q: @search_query, tags: @selected_tag_ids - [tag.id]) %>
+          </span>
+        <% end %>
+        <% if @search_query.present? %>
+          <span class="history-active-filter">
+            Search: "<%= @search_query %>"
+            <%= link_to "×", brain_dump_history_path(tags: @selected_tag_ids) %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+    
+    <!-- Entries -->
+    <% if @dumps.any? %>
+      <div class="history-entries">
+        <% @dumps.each_with_index do |dump, index| %>
+          <div class="history-entry" data-entry-id="<%= index %>">
+            <div class="history-entry-header">
+              <div class="history-entry-meta">
+                <div class="history-entry-date">
+                  <%= dump.date.strftime('%A, %B %d, %Y') %>
+                  <span style="opacity: 0.5;">•</span>
+                  <span style="opacity: 0.5;"><%= dump.created_at.strftime('%H:%M') %></span>
+                  <% if dump.enriched? %>
+                    <span class="history-enriched-badge"><%= inline_svg_tag("heroicons/sparkles.svg", class: "enriched-badge-icon") %> AI Enriched</span>
+                  <% end %>
+                </div>
+              </div>
+              <% if dump.tags.any? %>
+                <div class="history-entry-tags">
+                  <% visible_tags = dump.tags.first(2) %>
+                  <% hidden_tags = dump.tags.drop(2) %>
+                  
+                  <% visible_tags.each do |tag| %>
+                    <%= link_to tag.name, brain_dump_history_path(tag: tag.id), class: "history-entry-tag" %>
+                  <% end %>
+                  
+                  <% if hidden_tags.any? %>
+                    <span class="history-tags-more">
+                      +<%= hidden_tags.count %> more
+                      <div class="history-tags-tooltip">
+                        <% hidden_tags.each do |tag| %>
+                          <%= link_to tag.name, brain_dump_history_path(tag: tag.id) %>
+                        <% end %>
+                      </div>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div class="history-entry-content" data-type="enriched"><%= highlight_search(dump.content, @search_query) %></div>
+            
+            <% if dump.raw_content.present? && dump.enriched? %>
+              <div class="history-entry-raw" data-type="raw"><%= highlight_search(dump.raw_content, @search_query) %></div>
+              
+              <div class="history-entry-toggle">
+                <button type="button" class="history-toggle-btn active" data-show="enriched" onclick="toggleEntryView(<%= index %>, 'enriched')"><span class="sparkle-icon"><%= inline_svg_tag("heroicons/sparkles.svg") %></span>Enriched</button>
+                <button type="button" class="history-toggle-btn" data-show="raw" onclick="toggleEntryView(<%= index %>, 'raw')">Raw</button>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      
+      <script>
+        function toggleEntryView(entryIndex, viewType) {
+          const entry = document.querySelector(`[data-entry-id="${entryIndex}"]`);
+          if (!entry) return;
+          
+          const enrichedContent = entry.querySelector('[data-type="enriched"]');
+          const rawContent = entry.querySelector('[data-type="raw"]');
+          const buttons = entry.querySelectorAll('.history-toggle-btn');
+          
+          if (viewType === 'raw') {
+            enrichedContent.style.display = 'none';
+            rawContent.classList.add('visible');
+          } else {
+            enrichedContent.style.display = 'block';
+            rawContent.classList.remove('visible');
+          }
+          
+          buttons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.show === viewType);
+          });
+        }
+        
+        // Multi-select dropdown
+        function toggleMultiselect() {
+          const multiselect = document.getElementById('topic-multiselect');
+          multiselect.classList.toggle('open');
+        }
+        
+        function toggleTagOption(element) {
+          element.classList.toggle('selected');
+        }
+        
+        function applyTopicFilter() {
+          const selectedOptions = document.querySelectorAll('.history-multiselect-option.selected');
+          const tagIds = Array.from(selectedOptions).map(opt => opt.dataset.tagId);
+          
+          const params = new URLSearchParams(window.location.search);
+          
+          // Remove old tag params
+          params.delete('tag');
+          params.delete('tags[]');
+          
+          // Add new tag params
+          tagIds.forEach(id => {
+            params.append('tags[]', id);
+          });
+          
+          // Navigate with new params
+          window.location.href = window.location.pathname + '?' + params.toString();
+        }
+        
+        // Close multiselect when clicking outside
+        document.addEventListener('click', function(e) {
+          const multiselect = document.getElementById('topic-multiselect');
+          if (multiselect && !multiselect.contains(e.target)) {
+            multiselect.classList.remove('open');
+          }
+        });
+      </script>
+    <% else %>
+      <div class="history-empty">
+        <div class="history-empty-icon">📝</div>
+        <% if @selected_tag_ids.any? || @search_query.present? %>
+          <p>No thoughts found matching your filters</p>
+          <%= link_to "Clear filters →", brain_dump_history_path %>
+        <% else %>
+          <p>No thoughts dumped yet</p>
+          <%= link_to "Start dumping →", brain_dump_path %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

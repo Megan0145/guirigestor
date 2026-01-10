@@ -1,5 +1,6 @@
 class MiscController < ApplicationController
   before_action :set_current_month, only: [:developer_calendar, :add_developer_leave, :delete_developer_leave]
+  before_action :authenticate_megan!, only: [:brain_dump, :brain_dump_history]
   # before_action :authenticate_user_or_admin!, only: [:bty_new, :bty_metrics]
   
   def thank_you_jack
@@ -106,6 +107,107 @@ class MiscController < ApplicationController
     @monthly_growth = calculate_monthly_growth
   end
   
+  # Brain Dump
+  def brain_dump
+    @today = Date.today
+    @tags = BrainDumpTag.ordered
+    @saved = false
+    @reviewing = false
+    @cleaned_content = nil
+    @suggested_tags = []
+    @raw_content = nil
+    
+    if request.post?
+      # Step 1: Process with AI (show review modal)
+      if params[:action_type] == "process"
+        @raw_content = params[:content]
+        existing_tag_names = @tags.pluck(:name)
+        
+        # Process with AI to clean up and get suggested tags
+        processor = BrainDumpProcessor.new
+        result = processor.process(@raw_content, existing_tag_names)
+        
+        if result[:success]
+          @cleaned_content = result[:cleaned_text]
+          @suggested_tags = result[:suggested_tags] || []
+          @ai_success = true
+        else
+          # If AI fails, use raw input as-is
+          @cleaned_content = @raw_content
+          @suggested_tags = []
+          @ai_success = false
+          Rails.logger.warn("[BrainDump] AI processing failed: #{result[:error]}")
+        end
+        
+        @reviewing = true
+        
+      # Step 2: Actually save (after review)
+      elsif params[:action_type] == "save"
+        raw_input = params[:raw_content]
+        cleaned_content = params[:cleaned_content]
+        
+        @brain_dump = BrainDump.new(
+          content: cleaned_content,      # The enriched/cleaned version
+          raw_content: raw_input,         # Preserve the original
+          date: @today
+        )
+        
+        # Handle confirmed tags
+        if params[:confirmed_tags].present?
+          tag_names = params[:confirmed_tags].is_a?(Array) ? params[:confirmed_tags] : params[:confirmed_tags].split(",")
+          tag_names.each do |name|
+            name = name.strip.downcase
+            next if name.blank?
+            tag = BrainDumpTag.find_or_create_by(name: name)
+            @brain_dump.tags << tag unless @brain_dump.tags.include?(tag)
+          end
+        end
+        
+        if @brain_dump.save
+          @saved = true
+          flash.now[:toasts] = [
+            { title: "Saved", message: "Your thoughts are encrypted & safe", disappearing: true }
+          ]
+        else
+          flash.now[:toasts] = [
+            { title: "Error", message: @brain_dump.errors.full_messages.join(", ") }
+          ]
+        end
+      end
+    end
+  end
+  
+  def brain_dump_history
+    @tags = BrainDumpTag.with_dumps.ordered
+    @search_query = params[:q]
+    @show_raw = params[:show_raw] == "true"
+    
+    # Support multiple selected tags
+    @selected_tag_ids = []
+    if params[:tags].present?
+      @selected_tag_ids = Array(params[:tags]).map(&:to_i).reject(&:zero?)
+    elsif params[:tag].present?
+      # Backwards compatibility with single tag
+      @selected_tag_ids = [params[:tag].to_i]
+    end
+    @selected_tags = BrainDumpTag.where(id: @selected_tag_ids)
+    
+    @dumps = BrainDump.ordered.includes(:tags)
+    
+    # Filter by selected tags (OR logic - show if has ANY of the selected tags)
+    if @selected_tag_ids.any?
+      dump_ids = BrainDump.joins(:tags).where(brain_dump_tags: { id: @selected_tag_ids }).distinct.pluck(:id)
+      @dumps = @dumps.where(id: dump_ids)
+    end
+    
+    @dumps = @dumps.to_a # Load into memory for search since content is encrypted
+    
+    # Filter by search query - searches both raw and enriched content
+    if @search_query.present?
+      @dumps = @dumps.select { |d| d.matches_search?(@search_query) }
+    end
+  end
+  
   private
   
   def calculate_current_streak
@@ -188,4 +290,10 @@ class MiscController < ApplicationController
   #     redirect_to root_path, alert: "You must be logged in to access this page"
   #   end
   # end
+  
+  def authenticate_megan!
+    unless admin_user_signed_in? && current_admin_user.email == "meganennis.dev@gmail.com" || user_signed_in? && current_user.email == "megan@guirigestor.com"
+      redirect_to root_path, alert: "Access denied"
+    end
+  end
 end

@@ -131,6 +131,16 @@ Rails.application.routes.draw do
   get '/bty/calendar',
     to: 'misc#bty_metrics',
     as: 'bty_calendar'
+  
+  # Brain dump
+  match '/dump',
+    to: 'misc#brain_dump',
+    as: 'brain_dump',
+    via: [:get, :post]
+  
+  get '/dump/history',
+    to: 'misc#brain_dump_history',
+    as: 'brain_dump_history'
 
 
   # Misc

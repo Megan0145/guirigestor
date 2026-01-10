@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_08_105318) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_10_104443) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -99,6 +99,30 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_08_105318) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["bank_account_id"], name: "index_bank_transactions_on_bank_account_id"
+  end
+
+  create_table "brain_dump_taggings", force: :cascade do |t|
+    t.integer "brain_dump_id", null: false
+    t.integer "brain_dump_tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brain_dump_id"], name: "index_brain_dump_taggings_on_brain_dump_id"
+    t.index ["brain_dump_tag_id"], name: "index_brain_dump_taggings_on_brain_dump_tag_id"
+  end
+
+  create_table "brain_dump_tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_brain_dump_tags_on_name", unique: true
+  end
+
+  create_table "brain_dumps", force: :cascade do |t|
+    t.text "content"
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "raw_content"
   end
 
   create_table "btys", force: :cascade do |t|
@@ -286,6 +310,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_08_105318) do
   add_foreign_key "autonomo_payments", "users"
   add_foreign_key "bank_accounts", "bank_connections"
   add_foreign_key "bank_transactions", "bank_accounts"
+  add_foreign_key "brain_dump_taggings", "brain_dump_tags"
+  add_foreign_key "brain_dump_taggings", "brain_dumps"
   add_foreign_key "developer_leaves", "tonic_developers"
   add_foreign_key "fiscal_quarters", "users"
   add_foreign_key "invoice_line_items", "invoices"
