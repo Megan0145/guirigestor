@@ -657,12 +657,18 @@
     
     .history-search-row {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       width: 100%;
     }
     
     .history-search-row .history-search {
       flex: 1;
+      min-width: 100%;
+    }
+    
+    .history-search-btn {
+      width: 100%;
     }
     
     .history-tag-filter {
@@ -685,7 +691,20 @@
     
     .history-entry-header {
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
+    }
+    
+    .history-entry-date {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    
+    .history-enriched-badge {
+      margin-left: 0;
+    }
+    
+    .history-entry-tags {
+      flex-wrap: wrap;
     }
     
     .history-entry-content {
