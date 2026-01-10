@@ -292,7 +292,7 @@ class MiscController < ApplicationController
   # end
   
   def authenticate_megan!
-    unless admin_user_signed_in? && current_admin_user.email == "meganennis.dev@gmail.com" || user_signed_in? && current_user.email == "megan@guirigestor.com"
+    unless admin_user_signed_in? && current_admin_user.email == "meganennis.dev@gmail.com" || admin_user_signed_in? && current_admin_user.email == "megan@guirigestor.com"
       redirect_to root_path, alert: "Access denied"
     end
   end
