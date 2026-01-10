@@ -462,7 +462,7 @@
 
   /* AI Powered info */
   .dump-ai-info {
-    margin-top: 24px;
+    margin-bottom: 24px;
     padding: 16px 20px;
     background: rgba(245, 198, 214, 0.08);
     border: 1px solid rgba(245, 198, 214, 0.2);
@@ -576,6 +576,15 @@
       </div>
       
     <% else %>
+      <!-- AI processing info -->
+      <div class="dump-ai-info">
+        <div class="dump-ai-info-icon">✨</div>
+        <div class="dump-ai-info-text">
+          <div class="dump-ai-info-title">AI-Powered</div>
+          <div class="dump-ai-info-sub">Your dictation will be cleaned up & tags auto-suggested. Raw version always preserved.</div>
+        </div>
+      </div>
+      
       <!-- INITIAL DUMP FORM -->
       <%= form_tag brain_dump_path, method: :post, class: "dump-form", id: "dump-form" do %>
         <input type="hidden" name="action_type" value="process">
@@ -602,15 +611,6 @@
           </button>
         </div>
       <% end %>
-      
-      <!-- AI processing info -->
-      <div class="dump-ai-info">
-        <div class="dump-ai-info-icon">✨</div>
-        <div class="dump-ai-info-text">
-          <div class="dump-ai-info-title">AI-Powered</div>
-          <div class="dump-ai-info-sub">Your dictation will be cleaned up & tags auto-suggested. Raw version always preserved.</div>
-        </div>
-      </div>
     <% end %>
   </div>
 </div>
