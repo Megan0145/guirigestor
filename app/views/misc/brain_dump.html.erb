@@ -1,8 +1,7 @@
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+  /* Page-specific styles - common styles in /stylesheets/brain_dumps.css */
   
   .dump-page {
-    font-family: 'Inter', sans-serif;
     min-height: 100vh;
     background: #1a1a1a;
     color: #fff;
@@ -33,19 +32,7 @@
     margin-bottom: 12px;
   }
   
-  .dump-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #fff;
-    margin: 0;
-  }
-  
-  .dump-title .accent {
-    color: #f5c6d6;
-  }
+  /* Title styles now in brain_dumps.css */
   
   /* Success State */
   .dump-success {
@@ -215,56 +202,18 @@
     display: none;
   }
   
-  /* Submit */
+  /* Submit - buttons now styled in brain_dumps.css */
   .dump-submit {
     display: flex;
     justify-content: flex-end;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
   }
   
-  .dump-history-link {
-    font-size: 11px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.4);
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .dump-history-link:hover {
-    color: rgba(255,255,255,0.7);
-  }
-  
-  .dump-btn {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    background: #f5c6d6;
-    color: #1a1a1a;
-    border: none;
-    padding: 14px 32px;
-    border-radius: 100px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .dump-btn:hover {
-    background: #fff;
-  }
-  
-  .dump-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .btn-icon {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-    vertical-align: middle;
-    margin-right: 4px;
+  .btn-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   
   /* Review State */
@@ -598,9 +547,12 @@
         ></textarea>
         
         <div class="dump-submit">
-          <%= link_to "History", brain_dump_history_path, class: "dump-history-link" %>
+          <%= link_to brain_dump_history_path, class: "dump-history-link" do %>
+            <%= inline_svg_tag("heroicons/clock.svg") %>
+            History
+          <% end %>
           <button type="submit" class="dump-btn" id="submit-btn" onclick="this.classList.add('loading');">
-            <span class="btn-text" style="display: inline-flex; align-items: center; gap: 4px;"><%= inline_svg_tag("heroicons/sparkles.svg", class: "btn-icon") %> Process with AI</span>
+            <span class="btn-text"><%= inline_svg_tag("heroicons/sparkles.svg", class: "btn-icon") %> Process</span>
             <span class="btn-loading">
               <svg class="spinner" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="32" opacity="0.3"/>
@@ -616,27 +568,35 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Toggle suggested tag selection
-    document.querySelectorAll('.dump-suggested-tag').forEach(tag => {
-      tag.addEventListener('click', function() {
-        const checkbox = this.querySelector('input[type="checkbox"]');
+  // Use event delegation for tag toggling - works for both initial and dynamically added tags
+  // Use capture phase to intercept before label's default behavior
+  if (!window._dumpTagClickHandler) {
+    window._dumpTagClickHandler = function(e) {
+      const tag = e.target.closest('.dump-suggested-tag');
+      if (tag) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        const checkbox = tag.querySelector('input[type="checkbox"]');
         checkbox.checked = !checkbox.checked;
-        this.classList.toggle('selected', checkbox.checked);
-      });
-    });
-    
-    // Show loading state on form submit
-    const form = document.getElementById('dump-form');
-    if (form) {
-      form.addEventListener('submit', function() {
+        tag.classList.toggle('selected', checkbox.checked);
+      }
+    };
+    document.addEventListener('click', window._dumpTagClickHandler, true); // true = capture phase
+  }
+  
+  // Show loading state on form submit
+  if (!window._dumpFormSubmitHandler) {
+    window._dumpFormSubmitHandler = function(e) {
+      if (e.target.id === 'dump-form') {
         const btn = document.getElementById('submit-btn');
         if (btn) {
           btn.classList.add('loading');
         }
-      });
-    }
-  });
+      }
+    };
+    document.addEventListener('submit', window._dumpFormSubmitHandler);
+  }
   
   // Add custom tag
   function addCustomTag() {
@@ -666,12 +626,7 @@
       <span class="tag-check">✓</span>
     `;
     
-    label.addEventListener('click', function() {
-      const checkbox = this.querySelector('input[type="checkbox"]');
-      checkbox.checked = !checkbox.checked;
-      this.classList.toggle('selected', checkbox.checked);
-    });
-    
+    // Event delegation handles click - no need for manual listener
     container.appendChild(label);
     input.value = '';
     input.focus();

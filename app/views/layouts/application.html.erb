@@ -3,7 +3,7 @@
   <head>
     <%= render :partial=> "h1rails/partials/head" %>
   </head>
-  <body class="ui-body h-full" <%= htmx_body_attributes.html_safe %> >
+  <body class="ui-body h-full" <%= htmx_body_attributes.html_safe %> style="<%= @bty_layout ? 'background: #1a1a1a;' : '' %>" >
     <%= render :partial => "h1rails/partials/modals" %>
     <%= render partial: "h1rails/partials/toasts" %>
 

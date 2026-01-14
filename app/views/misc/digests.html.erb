@@ -1,0 +1,270 @@
+<style>
+  /* Page-specific styles - common styles in /stylesheets/brain_dumps.css */
+  
+  /* Hide page until fonts are loaded to prevent FOUT */
+  .digests-page {
+    opacity: 0;
+    transition: opacity 0.1s ease-in;
+  }
+  
+  .digests-page.fonts-loaded {
+    opacity: 1;
+  }
+
+  .digests-page {
+    min-height: 100vh;
+    background: var(--bd-bg);
+    color: var(--bd-text-strong);
+    padding: 40px 20px;
+  }
+
+  .digests-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .digests-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Title styles now in brain_dumps.css */
+
+  .digests-subtitle {
+    color: var(--bd-muted-3);
+    font-size: 14px;
+    margin: 8px 0 0 0;
+  }
+
+  .digests-header-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* Button styles now in brain_dumps.css */
+
+  .digests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .digest-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+    display: block;
+  }
+
+  .digest-card:hover {
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .digest-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 16px;
+  }
+
+  .digest-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin: 0;
+    color: var(--bd-text-strong);
+  }
+
+  .digest-card-type {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    background: rgba(245, 198, 214, 0.15);
+    color: #f5c6d6;
+    border-radius: 100px;
+    flex-shrink: 0;
+  }
+
+  .digest-card-type.custom {
+    background: #f5c6d6;
+    color: #1a1a1a;
+  }
+
+  .digest-card-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--bd-muted-2);
+  }
+
+  .digest-card-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .digest-card-preview {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--bd-muted-3);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .digests-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--bd-surface);
+    border: 1px solid var(--bd-border-strong);
+    border-radius: var(--bd-radius);
+  }
+
+  .digests-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .digests-empty p {
+    color: var(--bd-muted-2);
+    margin: 0 0 20px 0;
+  }
+
+  .digests-empty a {
+    color: var(--bd-accent);
+    text-decoration: none;
+  }
+
+  .digests-empty a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .digests-page {
+      padding: 24px 16px;
+    }
+
+    .digests-title {
+      font-size: 28px;
+    }
+
+    .digests-header {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .digests-header-btns {
+      align-self: flex-start;
+    }
+
+    .digest-card {
+      padding: 20px 16px;
+    }
+
+    .digest-card-header {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+</style>
+
+<div class="digests-page">
+  <div class="digests-container">
+    <div class="digests-header">
+      <div>
+        <h1 class="digests-title">Your <span class="accent">Digests</span></h1>
+        <p class="digests-subtitle">AI-powered summaries of your thought patterns</p>
+      </div>
+      <div class="digests-header-btns">
+        <%= link_to brain_dump_history_path, class: "digests-new-btn secondary" do %>
+          <%= inline_svg_tag("heroicons/clock.svg") %>
+          History
+        <% end %>
+        <%= link_to new_digest_path, class: "digests-new-btn" do %>
+          <%= inline_svg_tag("heroicons/plus.svg") %>
+          New Digest
+        <% end %>
+      </div>
+    </div>
+
+    <% if @digests.any? %>
+      <div class="digests-list">
+        <% @digests.each do |digest| %>
+          <%= link_to digest_path(digest), class: "digest-card" do %>
+            <div class="digest-card-header">
+              <h2 class="digest-card-title"><%= digest.display_title %></h2>
+              <span class="digest-card-type <%= digest.digest_type %>"><%= digest.digest_type %></span>
+            </div>
+            <div class="digest-card-meta">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <%= digest.created_at.strftime('%B %d, %Y') %>
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <%= digest.brain_dumps.count %> brain dumps
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <%= digest.digest_messages.count %> messages
+              </span>
+            </div>
+            <% if digest.content.present? %>
+              <div class="digest-card-preview"><%= truncate(digest.content, length: 200) %></div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="digests-empty">
+        <div class="digests-empty-icon">🧠</div>
+        <p>No digests yet. Create one to analyze your thought patterns!</p>
+        <%= link_to "Create your first digest →", new_digest_path %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  // Detect when fonts are loaded to prevent FOUT
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() {
+      document.querySelector('.digests-page').classList.add('fonts-loaded');
+    });
+  } else {
+    // Fallback for browsers without font loading API
+    document.querySelector('.digests-page').classList.add('fonts-loaded');
+  }
+  
+  // Ensure page shows after brief timeout even if fonts fail
+  setTimeout(function() {
+    const page = document.querySelector('.digests-page');
+    if (page && !page.classList.contains('fonts-loaded')) {
+      page.classList.add('fonts-loaded');
+    }
+  }, 300);
+</script>

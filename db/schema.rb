@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_10_104443) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_10_153829) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -168,6 +168,33 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_10_104443) do
     t.index ["tonic_developer_id"], name: "index_developer_leaves_on_tonic_developer_id"
   end
 
+  create_table "digest_brain_dumps", force: :cascade do |t|
+    t.integer "digest_id", null: false
+    t.integer "brain_dump_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brain_dump_id"], name: "index_digest_brain_dumps_on_brain_dump_id"
+    t.index ["digest_id"], name: "index_digest_brain_dumps_on_digest_id"
+  end
+
+  create_table "digest_messages", force: :cascade do |t|
+    t.integer "digest_id", null: false
+    t.string "role"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["digest_id"], name: "index_digest_messages_on_digest_id"
+  end
+
+  create_table "digests", force: :cascade do |t|
+    t.string "digest_type"
+    t.string "schedule_period"
+    t.string "title"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "fiscal_quarters", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "name"
@@ -313,6 +340,9 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_10_104443) do
   add_foreign_key "brain_dump_taggings", "brain_dump_tags"
   add_foreign_key "brain_dump_taggings", "brain_dumps"
   add_foreign_key "developer_leaves", "tonic_developers"
+  add_foreign_key "digest_brain_dumps", "brain_dumps"
+  add_foreign_key "digest_brain_dumps", "digests"
+  add_foreign_key "digest_messages", "digests"
   add_foreign_key "fiscal_quarters", "users"
   add_foreign_key "invoice_line_items", "invoices"
   add_foreign_key "invoices", "fiscal_quarters"

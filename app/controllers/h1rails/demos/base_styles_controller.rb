@@ -13,7 +13,7 @@ class H1rails::Demos::BaseStylesController < ApplicationController
 
   def get_file 
     doc = params[:file] || "basestyles"
-    url = "https://cdn.base-styles.com/docs/#{doc}.md"
+    url = "https://cdn.html-first.com/docs/#{doc}.md"
     response = HTTParty.get(url)
     @md = response.body
     @content = Utilities.markdown_to_html(@md)

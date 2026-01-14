@@ -1,6 +1,9 @@
 class MiscController < ApplicationController
+  include ActionController::Live
+  
   before_action :set_current_month, only: [:developer_calendar, :add_developer_leave, :delete_developer_leave]
-  before_action :authenticate_megan!, only: [:brain_dump, :brain_dump_history]
+  before_action :authenticate_megan!, only: [:brain_dump, :brain_dump_history, :digests, :new_digest, :create_digest, :show_digest, :digest_message, :digest_stream]
+  before_action :set_dark_layout, only: [:brain_dump, :brain_dump_history, :digests, :new_digest, :show_digest]
   # before_action :authenticate_user_or_admin!, only: [:bty_new, :bty_metrics]
   
   def thank_you_jack
@@ -208,7 +211,145 @@ class MiscController < ApplicationController
     end
   end
   
+  # Digests
+  def digests
+    @digests = BrainDigest.ordered.includes(:brain_dumps)
+  end
+  
+  def new_digest
+    @dumps = BrainDump.ordered.includes(:tags)
+    @tags = BrainDumpTag.with_dumps.ordered
+    
+    # Optional tag filter
+    if params[:tag].present?
+      @selected_tag = BrainDumpTag.find(params[:tag])
+      @dumps = @dumps.joins(:tags).where(brain_dump_tags: { id: params[:tag] }).distinct
+    end
+  end
+  
+  def create_digest
+    brain_dump_ids = params[:brain_dump_ids] || []
+    
+    if brain_dump_ids.empty?
+      flash[:toasts] = [{ title: "Error", message: "Please select at least one brain dump" }]
+      redirect_to new_digest_path and return
+    end
+    
+    brain_dumps = BrainDump.where(id: brain_dump_ids).includes(:tags).order(:date)
+    
+    # Create the digest
+    @digest = BrainDigest.new(
+      digest_type: 'custom',
+      title: params[:title].presence || "Custom Digest - #{Date.today.strftime('%B %d, %Y')}"
+    )
+    
+    if @digest.save
+      # Associate brain dumps
+      brain_dumps.each do |dump|
+        DigestBrainDump.create(digest: @digest, brain_dump: dump)
+      end
+      
+      # Generate the initial prompt
+      prompt = build_initial_digest_prompt(brain_dumps)
+      
+      # Save the user's request as first message
+      DigestMessage.create!(
+        digest: @digest,
+        role: 'user',
+        content: prompt
+      )
+      
+      redirect_to digest_path(@digest)
+    else
+      flash[:toasts] = [{ title: "Error", message: @digest.errors.full_messages.join(", ") }]
+      redirect_to new_digest_path
+    end
+  end
+  
+  def show_digest
+    @digest = BrainDigest.find(params[:id])
+    @messages = @digest.digest_messages.ordered
+    @brain_dumps = @digest.brain_dumps.ordered.includes(:tags)
+    
+    # Check if we need to generate initial AI response
+    @needs_initial_response = @messages.count == 1 && @messages.first.user? && ENV['OPENAI_API_KEY'].present?
+  end
+  
+  def digest_message
+    @digest = BrainDigest.find(params[:id])
+    message_content = params[:message]
+    
+    if message_content.blank?
+      render json: { error: "Message cannot be blank" }, status: :unprocessable_entity and return
+    end
+    
+    # Save user message
+    user_message = DigestMessage.create!(
+      digest: @digest,
+      role: 'user',
+      content: message_content
+    )
+    
+    render json: { 
+      success: true, 
+      message_id: user_message.id,
+      redirect_to: digest_path(@digest)
+    }
+  end
+  
+  # SSE endpoint for streaming AI responses
+  def digest_stream
+    @digest = BrainDigest.find(params[:id])
+    
+    response.headers['Content-Type'] = 'text/event-stream'
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Connection'] = 'keep-alive'
+    response.headers['X-Accel-Buffering'] = 'no'
+    
+    processor = DigestProcessor.new
+    messages = processor.build_conversation_messages(@digest)
+    
+    full_response = ""
+    
+    processor.stream_response(messages) do |chunk|
+      full_response += chunk
+      response.stream.write("data: #{chunk.to_json}\n\n")
+    end
+    
+    # Save the complete response
+    DigestMessage.create!(
+      digest: @digest,
+      role: 'assistant',
+      content: full_response
+    )
+    
+    response.stream.write("data: [DONE]\n\n")
+  rescue => e
+    Rails.logger.error("[DigestStream] Error: #{e.message}")
+    message = if defined?(OpenSSL::SSL::SSLError) && e.is_a?(OpenSSL::SSL::SSLError)
+      "AI connection failed due to SSL certificate verification. Check system certs or set SSL_CERT_FILE."
+    else
+      e.message
+    end
+    response.stream.write("data: #{({ error: message }).to_json}\n\n")
+  ensure
+    response.stream.close
+  end
+  
   private
+  
+  def build_initial_digest_prompt(brain_dumps)
+    prompt = "Please create a digest of these #{brain_dumps.count} brain dumps:\n\n"
+    
+    brain_dumps.each do |dump|
+      tags = dump.tags.any? ? " [#{dump.tags.map(&:name).join(', ')}]" : ""
+      prompt += "**#{dump.date.strftime('%B %d, %Y')}**#{tags}\n"
+      prompt += "#{dump.content.truncate(300)}\n\n"
+    end
+    
+    prompt += "\nPlease analyze my thought patterns, summarize the key themes, and share any observations or questions I should consider."
+    prompt
+  end
   
   def calculate_current_streak
     streak = 0
@@ -295,5 +436,9 @@ class MiscController < ApplicationController
     unless admin_user_signed_in? && current_admin_user.email == "meganennis.dev@gmail.com" || admin_user_signed_in? && current_admin_user.email == "megan@guirigestor.com"
       redirect_to root_path, alert: "Access denied"
     end
+  end
+
+  def set_dark_layout
+    @bty_layout = true
   end
 end

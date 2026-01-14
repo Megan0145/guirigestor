@@ -1,8 +1,17 @@
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+  /* Page-specific styles - common styles in /stylesheets/brain_dumps.css */
+  
+  /* Hide page until fonts are loaded to prevent FOUT */
+  .history-page {
+    opacity: 0;
+    transition: opacity 0.1s ease-in;
+  }
+  
+  .history-page.fonts-loaded {
+    opacity: 1;
+  }
   
   .history-page {
-    font-family: 'Inter', sans-serif;
     min-height: 100vh;
     background: #1a1a1a;
     color: #fff;
@@ -45,23 +54,7 @@
     letter-spacing: 2px;
   }
   
-  .history-new-btn {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    background: #f5c6d6;
-    color: #1a1a1a;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 100px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  
-  .history-new-btn:hover {
-    background: #fff;
-  }
+  /* Button styles now in brain_dumps.css */
   
   /* Filters */
   .history-filters {
@@ -400,22 +393,7 @@
     flex-shrink: 0;
   }
   
-  .history-entry-tag {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 4px 10px;
-    background: rgba(245, 198, 214, 0.15);
-    color: #f5c6d6;
-    border-radius: 100px;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  
-  .history-entry-tag:hover {
-    background: rgba(245, 198, 214, 0.25);
-  }
+  /* Tag styles now in brain_dumps.css */
   
   .history-tags-more {
     position: relative;
@@ -489,48 +467,10 @@
     border-top: 1px solid rgba(255,255,255,0.05);
   }
   
-  .history-toggle-btn {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 6px 12px;
-    border-radius: 100px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: transparent;
-    color: rgba(255,255,255,0.4);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .history-toggle-btn:hover {
-    border-color: rgba(255,255,255,0.3);
-    color: rgba(255,255,255,0.7);
-  }
-  
-  .history-toggle-btn.active {
-    background: #f5c6d6;
-    border-color: #f5c6d6;
-    color: #1a1a1a;
-  }
+  /* Toggle button & icon styles now in brain_dumps.css */
   
   .history-toggle-btn.active .sparkle-icon {
     display: inline-flex;
-  }
-  
-  .sparkle-icon {
-    margin-right: 4px;
-    width: 14px;
-    height: 14px;
-    display: inline-flex;
-    align-items: center;
-    vertical-align: middle;
-  }
-  
-  .sparkle-icon svg {
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
   }
   
   .history-entry-raw {
@@ -729,7 +669,16 @@
         <h1 class="history-title">Thought <span class="accent">History</span></h1>
         <p class="history-subtitle">Track your thought process over time</p>
       </div>
-      <%= link_to "New Dump", brain_dump_path, class: "history-new-btn" %>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <%= link_to digests_path, class: "history-new-btn secondary" do %>
+          <%= inline_svg_tag("heroicons/rectangle-stack.svg") %>
+          Digests
+        <% end %>
+        <%= link_to brain_dump_path, class: "history-new-btn" do %>
+          <%= inline_svg_tag("heroicons/plus.svg") %>
+          New Dump
+        <% end %>
+      </div>
     </div>
     
     <!-- Stats -->
@@ -951,3 +900,22 @@
   </div>
 </div>
 
+<script>
+  // Detect when fonts are loaded to prevent FOUT
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() {
+      document.querySelector('.history-page').classList.add('fonts-loaded');
+    });
+  } else {
+    // Fallback for browsers without font loading API
+    document.querySelector('.history-page').classList.add('fonts-loaded');
+  }
+  
+  // Ensure page shows after brief timeout even if fonts fail
+  setTimeout(function() {
+    const page = document.querySelector('.history-page');
+    if (page && !page.classList.contains('fonts-loaded')) {
+      page.classList.add('fonts-loaded');
+    }
+  }, 300);
+</script>

@@ -1,0 +1,419 @@
+<style>
+  /* Page-specific styles - common styles in /stylesheets/brain_dumps.css */
+  
+  .digest-page {
+    min-height: 100vh;
+    background: var(--bd-bg);
+    color: var(--bd-text-strong);
+    padding: 40px 20px;
+  }
+
+  .digest-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .digest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Title styles now in brain_dumps.css */
+  .digest-title {
+    margin: 0 0 8px 0;
+  }
+
+  .digest-subtitle {
+    color: var(--bd-muted-3);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .digest-header-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* Button styles now in brain_dumps.css */
+
+  .digest-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .digest-filter-btn {
+    background: var(--bd-surface);
+    border: 1px solid #333;
+    color: var(--bd-muted-3);
+    padding: 8px 16px;
+    border-radius: var(--bd-radius-pill);
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .digest-filter-btn:hover,
+  .digest-filter-btn.active {
+    background: var(--bd-accent);
+    color: #1a1a1a;
+    border-color: var(--bd-accent);
+  }
+
+  .digest-form {
+    background: var(--bd-surface);
+    border: 1px solid #222;
+    border-radius: var(--bd-radius);
+    overflow: hidden;
+  }
+
+  .digest-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #222;
+    background: var(--bd-surface-2);
+  }
+
+  .digest-selected-count {
+    font-size: 13px;
+    color: var(--bd-muted-3);
+  }
+
+  .digest-selected-count strong {
+    color: var(--bd-accent);
+  }
+
+  .digest-title-input {
+    background: var(--bd-bg);
+    border: 1px solid #333;
+    color: var(--bd-text-strong);
+    padding: 8px 14px;
+    border-radius: var(--bd-radius);
+    font-size: 13px;
+    width: 250px;
+  }
+
+  .digest-title-input::placeholder {
+    color: var(--bd-muted-2);
+  }
+
+  .digest-table {
+    width: 100%;
+  }
+
+  .digest-row {
+    border-bottom: 1px solid #1a1a1a;
+    transition: background 0.15s;
+  }
+
+  .digest-row:hover {
+    background: var(--bd-surface-3);
+  }
+
+  .digest-row-header {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 20px;
+    cursor: pointer;
+    gap: 16px;
+  }
+
+  .digest-checkbox {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--bd-accent);
+    cursor: pointer;
+    margin-top: 2px;
+  }
+
+  .digest-row-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .digest-row-date {
+    font-size: 12px;
+    color: var(--bd-muted-3);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .digest-row-preview {
+    font-size: 14px;
+    color: var(--bd-text-strong);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .digest-row-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Tag styles now in brain_dumps.css */
+
+  .digest-row-expand {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bd-muted-2);
+    transition: transform 0.2s;
+  }
+
+  .digest-row.expanded .digest-row-expand {
+    transform: rotate(180deg);
+  }
+
+  .digest-row-content {
+    display: none;
+    padding: 0 20px 20px 56px;
+  }
+
+  .digest-row.expanded .digest-row-content {
+    display: block;
+  }
+
+  .digest-row-full {
+    font-size: 14px;
+    color: var(--bd-muted-2);
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  .digest-row-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  /* Toggle button & icon styles now in brain_dumps.css */
+
+  .digest-form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--bd-surface-2);
+    border-top: 1px solid #222;
+  }
+
+  /* Submit button styles now in brain_dumps.css */
+
+  .digest-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--bd-muted-2);
+  }
+
+  .digest-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .digest-page {
+      padding: 24px 16px;
+    }
+
+    .digest-title {
+      font-size: 36px;
+    }
+
+    .digest-form-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .digest-title-input {
+      width: 100%;
+    }
+
+    .digest-row-header {
+      padding: 14px 16px;
+    }
+
+    .digest-row-content {
+      padding-left: 52px;
+    }
+
+    .digest-form-footer {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .digest-submit-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<div class="digest-page">
+  <div class="digest-container">
+    <div class="digest-header">
+      <div>
+        <h1 class="digest-title">New <span class="accent">Digest</span></h1>
+        <p class="digest-subtitle">Select brain dumps to analyze and get insights on your thought patterns</p>
+      </div>
+      <div class="digest-header-btns">
+        <%= link_to digests_path, class: "digest-header-btn" do %>
+          <%= inline_svg_tag("heroicons/rectangle-stack.svg") %>
+          Digests
+        <% end %>
+        <%= link_to brain_dump_history_path, class: "digest-header-btn" do %>
+          <%= inline_svg_tag("heroicons/clock.svg") %>
+          History
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Tag filters -->
+    <div class="digest-filters">
+      <%= link_to "All", new_digest_path, class: "digest-filter-btn #{'active' unless @selected_tag}" %>
+      <% @tags.each do |tag| %>
+        <%= link_to "#{tag.name} (#{tag.brain_dumps.count})", new_digest_path(tag: tag.id), class: "digest-filter-btn #{'active' if @selected_tag&.id == tag.id}" %>
+      <% end %>
+    </div>
+
+    <% if @dumps.any? %>
+      <%= form_tag create_digest_path, method: :post, class: "digest-form", id: "digest-form" do %>
+        <div class="digest-form-header">
+          <div class="digest-selected-count">
+            <strong id="selected-count">0</strong> brain dumps selected
+          </div>
+          <input type="text" name="title" class="digest-title-input" placeholder="Digest title (optional)">
+        </div>
+
+        <div class="digest-table">
+          <% @dumps.each_with_index do |dump, index| %>
+            <div class="digest-row" data-index="<%= index %>">
+              <div class="digest-row-header" onclick="toggleRow(<%= index %>)">
+                <input 
+                  type="checkbox" 
+                  name="brain_dump_ids[]" 
+                  value="<%= dump.id %>" 
+                  class="digest-checkbox"
+                  onclick="event.stopPropagation(); updateSelectedCount();"
+                >
+                <div class="digest-row-info">
+                  <div class="digest-row-date"><%= dump.date.strftime('%A, %B %d, %Y') %></div>
+                  <div class="digest-row-preview"><%= truncate(dump.content, length: 150) %></div>
+                  <% if dump.tags.any? %>
+                    <div class="digest-row-tags">
+                      <% dump.tags.first(3).each do |tag| %>
+                        <span class="digest-row-tag"><%= tag.name %></span>
+                      <% end %>
+                      <% if dump.tags.count > 3 %>
+                        <span class="digest-row-tag">+<%= dump.tags.count - 3 %> more</span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="digest-row-expand">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="digest-row-content">
+                <% if dump.enriched? %>
+                  <div class="digest-row-toggle">
+                    <button type="button" class="digest-toggle-btn active" data-type="enriched" onclick="toggleContent(<%= index %>, 'enriched')">
+                      <span class="sparkle-icon"><%= inline_svg_tag("heroicons/sparkles.svg") %></span>
+                      Enriched
+                    </button>
+                    <button type="button" class="digest-toggle-btn" data-type="raw" onclick="toggleContent(<%= index %>, 'raw')">
+                      Raw
+                    </button>
+                  </div>
+                <% end %>
+                <div class="digest-row-full" data-content-type="enriched"><%= dump.content %></div>
+                <% if dump.raw_content.present? %>
+                  <div class="digest-row-full" data-content-type="raw" style="display: none;"><%= dump.raw_content %></div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="digest-form-footer">
+          <div></div>
+          <button type="submit" class="digest-submit-btn" id="submit-btn" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Create Digest
+          </button>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="digest-form">
+        <div class="digest-empty">
+          <div class="digest-empty-icon">📝</div>
+          <p>No brain dumps found</p>
+          <%= link_to "Start dumping →", brain_dump_path %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  function toggleRow(index) {
+    const row = document.querySelector(`[data-index="${index}"]`);
+    row.classList.toggle('expanded');
+  }
+
+  function toggleContent(index, type) {
+    const row = document.querySelector(`[data-index="${index}"]`);
+    const enrichedContent = row.querySelector('[data-content-type="enriched"]');
+    const rawContent = row.querySelector('[data-content-type="raw"]');
+    const buttons = row.querySelectorAll('.digest-toggle-btn');
+
+    buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.type === type));
+
+    if (type === 'raw' && rawContent) {
+      enrichedContent.style.display = 'none';
+      rawContent.style.display = 'block';
+    } else {
+      if (enrichedContent) enrichedContent.style.display = 'block';
+      if (rawContent) rawContent.style.display = 'none';
+    }
+  }
+
+  function updateSelectedCount() {
+    const checkboxes = document.querySelectorAll('.digest-checkbox:checked');
+    const count = checkboxes.length;
+    document.getElementById('selected-count').textContent = count;
+    document.getElementById('submit-btn').disabled = count === 0;
+  }
+
+  // Select/deselect all by clicking row (but not checkbox)
+  document.querySelectorAll('.digest-row-header').forEach((header, index) => {
+    header.addEventListener('click', (e) => {
+      // Don't toggle checkbox if user is explicitly clicking the checkbox
+      if (e.target.classList.contains('digest-checkbox')) return;
+    });
+  });
+</script>

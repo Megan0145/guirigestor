@@ -141,6 +141,31 @@ Rails.application.routes.draw do
   get '/dump/history',
     to: 'misc#brain_dump_history',
     as: 'brain_dump_history'
+  
+  # Digests
+  get '/dump/digests',
+    to: 'misc#digests',
+    as: 'digests'
+  
+  get '/dump/digests/new',
+    to: 'misc#new_digest',
+    as: 'new_digest'
+  
+  post '/dump/digests',
+    to: 'misc#create_digest',
+    as: 'create_digest'
+  
+  get '/dump/digests/:id',
+    to: 'misc#show_digest',
+    as: 'digest'
+  
+  post '/dump/digests/:id/messages',
+    to: 'misc#digest_message',
+    as: 'digest_message'
+  
+  get '/dump/digests/:id/stream',
+    to: 'misc#digest_stream',
+    as: 'digest_stream'
 
 
   # Misc

@@ -1,0 +1,317 @@
+/* ===================================
+   CSS VARIABLES & BASE STYLES
+   =================================== */
+
+:root {
+  --bd-bg: #1a1a1a;
+  --bd-surface: rgba(255,255,255,0.03);
+  --bd-surface-2: #0f0f0f;
+  --bd-surface-3: rgba(255,255,255,0.05);
+  --bd-accent: #f5c6d6;
+  --bd-accent-soft: rgba(245, 198, 214, 0.15);
+  --bd-accent-soft-2: #fff;
+  --bd-border-strong: rgba(255,255,255,0.1);
+  --bd-text-strong: #fff;
+  --bd-muted-2: rgba(255,255,255,0.6);
+  --bd-muted-3: rgba(255,255,255,0.4);
+  --bd-radius: 12px;
+  --bd-radius-lg: 16px;
+  --bd-radius-pill: 100px;
+}
+
+/* ===================================
+   FONTS
+   =================================== */
+
+.dump-page,
+.history-page,
+.digest-page,
+.digests-page,
+.chat-page {
+  font-family: 'Inter', sans-serif;
+}
+
+/* ===================================
+   TYPOGRAPHY
+   =================================== */
+
+.dump-title,
+.history-title,
+.digest-title,
+.digests-title,
+.chat-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+  color: #fff;
+}
+
+.chat-modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.dump-title .accent,
+.history-title .accent,
+.digest-title .accent,
+.digests-title .accent,
+.chat-title .accent {
+  color: var(--bd-accent);
+}
+
+/* ===================================
+   BUTTONS - SHARED BASE
+   =================================== */
+
+.history-new-btn,
+.digests-new-btn,
+.dump-btn,
+.digest-submit-btn,
+.digest-header-btn,
+.dump-history-link {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.history-new-btn svg,
+.digests-new-btn svg,
+.dump-btn svg,
+.digest-submit-btn svg,
+.digest-header-btn svg,
+.dump-history-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ===================================
+   BUTTONS - PRIMARY PATTERN
+   =================================== */
+
+.history-new-btn,
+.digests-new-btn,
+.dump-btn,
+.digest-submit-btn {
+  background: #f5c6d6;
+  color: #1a1a1a;
+}
+
+.history-new-btn:hover,
+.digests-new-btn:hover,
+.dump-btn:hover,
+.digest-submit-btn:hover {
+  background: #fff;
+}
+
+/* ===================================
+   BUTTONS - SECONDARY PATTERN
+   =================================== */
+
+.history-new-btn.secondary,
+.digests-new-btn.secondary,
+.digest-header-btn,
+.dump-history-link {
+  background: #1a1a1a;
+  color: #f5b5c8;
+  border: 1px solid #333;
+}
+
+.history-new-btn.secondary:hover,
+.digests-new-btn.secondary:hover,
+.digest-header-btn:hover,
+.dump-history-link:hover {
+  background: #111;
+}
+
+/* ===================================
+   BUTTONS - DISABLED STATE
+   =================================== */
+
+.dump-btn:disabled,
+.digest-submit-btn:disabled {
+  background: #333;
+  color: rgba(255,255,255,0.3);
+  cursor: not-allowed;
+}
+
+/* ===================================
+   TOGGLE BUTTONS PATTERN
+   =================================== */
+
+.history-toggle-btn,
+.digest-toggle-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-toggle-btn:hover,
+.digest-toggle-btn:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
+}
+
+.history-toggle-btn.active,
+.digest-toggle-btn.active {
+  background: #f5c6d6;
+  border-color: #f5c6d6;
+  color: #1a1a1a;
+}
+
+/* ===================================
+   TAG STYLES
+   =================================== */
+
+.history-entry-tag,
+.digest-row-tag {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  background: rgba(245, 198, 214, 0.15);
+  color: #f5c6d6;
+  border-radius: 100px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.history-entry-tag:hover {
+  background: rgba(245, 198, 214, 0.25);
+}
+
+/* ===================================
+   MODAL STYLES
+   =================================== */
+
+.chat-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 300;
+}
+
+.chat-modal.open {
+  display: flex;
+}
+
+.chat-modal-content {
+  background: var(--bd-surface-2);
+  border: 1px solid var(--bd-border-strong);
+  border-radius: var(--bd-radius-lg);
+  width: min(900px, 100%);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--bd-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+  font-size: 20px;
+  margin: 0;
+  color: var(--bd-text-strong);
+}
+
+.chat-modal-close {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.4);
+  border-radius: 100px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chat-modal-close:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
+}
+
+.chat-modal-body {
+  padding: 18px 20px 20px;
+  overflow-y: auto;
+}
+
+.chat-modal-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chat-modal-text {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  color: var(--bd-text-strong);
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .chat-modal {
+    padding: 16px;
+  }
+
+  .chat-modal-content {
+    max-height: 90vh;
+  }
+}
+
+/* ===================================
+   ICON PATTERNS
+   =================================== */
+
+.sparkle-icon {
+  margin-right: 4px;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.sparkle-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
