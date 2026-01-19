@@ -4,8 +4,9 @@ class ChangeBtyValueToInteger < ActiveRecord::Migration[7.0]
     add_column :btys, :value_int, :integer
     
     # Migrate existing data: true -> 1, false -> -1
+    # Use proper boolean comparison for PostgreSQL compatibility
     execute <<-SQL
-      UPDATE btys SET value_int = CASE WHEN value = 1 THEN 1 ELSE -1 END
+      UPDATE btys SET value_int = CASE WHEN value = true THEN 1 ELSE -1 END
     SQL
     
     # Remove old column and rename new one
@@ -21,8 +22,9 @@ class ChangeBtyValueToInteger < ActiveRecord::Migration[7.0]
     add_column :btys, :value_bool, :boolean
     
     # Migrate data back: 1 -> true, -1/0 -> false
+    # Use proper boolean values for PostgreSQL compatibility
     execute <<-SQL
-      UPDATE btys SET value_bool = CASE WHEN value = 1 THEN 1 ELSE 0 END
+      UPDATE btys SET value_bool = CASE WHEN value = 1 THEN true ELSE false END
     SQL
     
     # Remove integer column and rename boolean
