@@ -249,7 +249,7 @@
   /* Stats Row */
   .bty-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
     margin-bottom: 32px;
   }
@@ -368,6 +368,11 @@
     background: #f5c6d6;
   }
   
+  .bty-graph-day.same {
+    background: rgba(245, 198, 214, 0.4);
+    border: 1px solid rgba(245, 198, 214, 0.5);
+  }
+  
   .bty-graph-day.no {
     background: #1a1a1a;
     border: 1px solid rgba(255,255,255,0.2);
@@ -420,6 +425,7 @@
   }
   
   .bty-legend-square.yes { background: #f5c6d6; }
+  .bty-legend-square.same { background: rgba(245, 198, 214, 0.4); border: 1px solid rgba(245, 198, 214, 0.5); }
   .bty-legend-square.no { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.3); }
   .bty-legend-square.empty { background: rgba(255,255,255,0.1); }
   
@@ -518,7 +524,7 @@
     }
     
     .bty-stats {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
     
     .bty-growth-grid {
@@ -636,6 +642,10 @@
         <div class="bty-stat-label">Better Days</div>
       </div>
       <div class="bty-stat">
+        <div class="bty-stat-value"><%= @same_days %></div>
+        <div class="bty-stat-label">Same Days</div>
+      </div>
+      <div class="bty-stat">
         <div class="bty-stat-value"><%= @no_days %></div>
         <div class="bty-stat-label">Off Days</div>
       </div>
@@ -684,13 +694,25 @@
                         'empty'
                       elsif bty.yes?
                         'yes'
+                      elsif bty.same?
+                        'same'
                       else
                         'no'
+                      end
+                      
+                      data_value = if bty&.yes?
+                        'yes'
+                      elsif bty&.same?
+                        'same'
+                      elsif bty&.no?
+                        'no'
+                      else
+                        'none'
                       end
                     %>
                     <div class="bty-graph-day <%= css_class %>" 
                          data-date="<%= date %>"
-                         data-value="<%= bty&.yes? ? 'yes' : (bty&.no? ? 'no' : 'none') %>"
+                         data-value="<%= data_value %>"
                          title="<%= date.strftime('%b %d, %Y') %>">
                     </div>
                   <% end %>
@@ -703,6 +725,8 @@
               <span>Not logged</span>
               <div class="bty-legend-item"><div class="bty-legend-square no"></div></div>
               <span>Off</span>
+              <div class="bty-legend-item"><div class="bty-legend-square same"></div></div>
+              <span>Same</span>
               <div class="bty-legend-item"><div class="bty-legend-square yes"></div></div>
               <span>Better</span>
             </div>
@@ -738,7 +762,7 @@
             }
             
             const ctx = document.getElementById('progress-chart').getContext('2d');
-            const data = <%= @all_btys.map { |b| { date: b.date.strftime('%b %d'), value: b.yes? ? 1 : -1 } }.to_json.html_safe %>;
+            const data = <%= @all_btys.map { |b| { date: b.date.strftime('%b %d'), value: b.score } }.to_json.html_safe %>;
             
             let cumulative = 0;
             const labels = data.map(d => d.date);
@@ -841,6 +865,7 @@
         
         let text = new Date(date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
         if (value === 'yes') text += '<br><span style="color: #f5c6d6;">✓ Better!</span>';
+        else if (value === 'same') text += '<br><span style="color: rgba(245, 198, 214, 0.8);">= Same</span>';
         else if (value === 'no') text += '<br>✗ Off day';
         else text += '<br><span style="opacity: 0.5;">No entry</span>';
         

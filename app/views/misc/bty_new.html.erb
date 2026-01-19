@@ -183,6 +183,11 @@
     color: #fff;
   }
   
+  .bty-answered-badge.same {
+    background: rgba(26, 26, 26, 0.7);
+    color: #fff;
+  }
+  
   .bty-answered-badge.no {
     background: #fff;
     color: #1a1a1a;
@@ -202,12 +207,12 @@
   
   .bty-buttons {
     display: flex;
-    gap: 24px;
+    gap: 16px;
   }
   
   .bty-btn {
-    width: 140px;
-    height: 140px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 24px;
@@ -276,6 +281,23 @@
   
   .bty-btn-no:hover::before {
     background: rgba(245,198,214,0.5);
+  }
+  
+  .bty-btn-same {
+    background: transparent;
+    border: 3px solid rgba(26, 26, 26, 0.5);
+    color: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  }
+  
+  .bty-btn-same:hover {
+    background: rgba(26, 26, 26, 0.15);
+    border-color: #1a1a1a;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  
+  .bty-btn-same:hover::before {
+    background: rgba(26, 26, 26, 0.1);
   }
   
   .bty-icon {
@@ -387,8 +409,17 @@
     }
     
     .bty-btn {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
+      font-size: 18px;
+    }
+    
+    .bty-buttons {
+      gap: 12px;
+    }
+    
+    .bty-icon {
+      font-size: 24px;
     }
     
     .bty-corner {
@@ -429,9 +460,14 @@
     
     <div class="bty-right-content">
       <% if @already_answered %>
-        <div class="bty-answered-badge <%= @todays_answer.yes? ? 'yes' : 'no' %>">
-          <span><%= @todays_answer.yes? ? '✓' : '✗' %></span>
-          <span>You answered <%= @todays_answer.yes? ? 'YES' : 'NO' %></span>
+        <% 
+          badge_class = @todays_answer.yes? ? 'yes' : (@todays_answer.same? ? 'same' : 'no')
+          badge_icon = @todays_answer.yes? ? '✓' : (@todays_answer.same? ? '=' : '✗')
+          badge_text = @todays_answer.yes? ? 'YES' : (@todays_answer.same? ? 'SAME' : 'NO')
+        %>
+        <div class="bty-answered-badge <%= badge_class %>">
+          <span><%= badge_icon %></span>
+          <span>You answered <%= badge_text %></span>
         </div>
         <p class="bty-change-text">Want to change your answer?</p>
       <% else %>
@@ -440,7 +476,7 @@
       
       <div class="bty-buttons">
         <%= form_tag nil, method: :post, style: "display: contents;" do %>
-          <input type="hidden" name="value" value="true">
+          <input type="hidden" name="value" value="1">
           <button type="submit" class="bty-btn bty-btn-yes">
             <span class="bty-icon">↑</span>
             <span>Yes</span>
@@ -448,7 +484,15 @@
         <% end %>
         
         <%= form_tag nil, method: :post, style: "display: contents;" do %>
-          <input type="hidden" name="value" value="false">
+          <input type="hidden" name="value" value="0">
+          <button type="submit" class="bty-btn bty-btn-same">
+            <span class="bty-icon">=</span>
+            <span>Same</span>
+          </button>
+        <% end %>
+        
+        <%= form_tag nil, method: :post, style: "display: contents;" do %>
+          <input type="hidden" name="value" value="-1">
           <button type="submit" class="bty-btn bty-btn-no">
             <span class="bty-icon">↓</span>
             <span>No</span>

@@ -73,18 +73,29 @@ class MiscController < ApplicationController
     @todays_answer = Bty.find_by(date: @today) if @already_answered
     
     if request.post?
+      # Parse value: 1 = Yes, 0 = Same, -1 = No
+      value = params[:value].to_i
+      
+      # Determine toast message based on value
+      message = case value
+        when Bty::YES then "Keep pushing! 💪"
+        when Bty::SAME then "Consistency counts! ⚡"
+        when Bty::NO then "Tomorrow is a new day 🌅"
+        else "Recorded!"
+      end
+      
       # Check if already answered today
       existing = Bty.find_by(date: @today)
       if existing
-        existing.update(value: params[:value] == 'true')
+        existing.update(value: value)
         flash[:toasts] = [
           { title: "Updated!", message: "Your answer has been updated", disappearing: true }
         ]
       else
-        @bty = Bty.new(value: params[:value] == 'true', date: @today)
+        @bty = Bty.new(value: value, date: @today)
         if @bty.save
           flash[:toasts] = [
-            { title: "Recorded!", message: params[:value] == 'true' ? "Keep pushing! 💪" : "Tomorrow is a new day 🌅", disappearing: true }
+            { title: "Recorded!", message: message, disappearing: true }
           ]
         end
       end
@@ -99,8 +110,9 @@ class MiscController < ApplicationController
     
     # Calculate stats
     @total_days = @btys.count
-    @yes_days = @btys.where(value: true).count
-    @no_days = @btys.where(value: false).count
+    @yes_days = @btys.where(value: Bty::YES).count
+    @same_days = @btys.where(value: Bty::SAME).count
+    @no_days = @btys.where(value: Bty::NO).count
     @streak = calculate_current_streak
     
     # Calculate cumulative score (running total)
@@ -357,7 +369,8 @@ class MiscController < ApplicationController
     
     loop do
       bty = Bty.find_by(date: date)
-      break if bty.nil? || !bty.yes?
+      # Streak continues for Yes or Same days
+      break if bty.nil? || bty.no?
       streak += 1
       date -= 1.day
     end
@@ -366,7 +379,8 @@ class MiscController < ApplicationController
   end
   
   def calculate_cumulative_score(btys)
-    btys.sum { |b| b.yes? ? 1 : -1 }
+    # Yes = +1, Same = 0, No = -1
+    btys.sum { |b| b.score }
   end
   
   def calculate_monthly_growth
@@ -375,14 +389,14 @@ class MiscController < ApplicationController
     # Current month
     current_month_start = today.beginning_of_month
     current_month_btys = Bty.where(date: current_month_start..today)
-    current_month_score = current_month_btys.sum { |b| b.yes? ? 1 : -1 }
+    current_month_score = current_month_btys.sum { |b| b.score }
     current_month_days = current_month_btys.count
     
     # Previous month
     prev_month_start = (today - 1.month).beginning_of_month
     prev_month_end = (today - 1.month).end_of_month
     prev_month_btys = Bty.where(date: prev_month_start..prev_month_end)
-    prev_month_score = prev_month_btys.sum { |b| b.yes? ? 1 : -1 }
+    prev_month_score = prev_month_btys.sum { |b| b.score }
     prev_month_days = prev_month_btys.count
     
     # Calculate cumulative scores up to end of each month
