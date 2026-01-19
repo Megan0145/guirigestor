@@ -48,6 +48,14 @@ ActiveAdmin.register Service do
       row :currency
       row :active
       row :variable_amount
+      panel "Outgoing Receipts" do
+        table_for service.outgoing_receipts.order(:month) do
+          column :month
+          column :year
+          column :amount
+          column :currency
+        end
+      end
     end
   end
 end
