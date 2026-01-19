@@ -5,7 +5,7 @@ class FiscalQuartersController < ApplicationController
   def show
     @invoices = @fiscal_quarter.invoices.includes(:invoice_line_items).order(invoice_number: :asc)
     @autonomo_payments = @fiscal_quarter.autonomo_payments
-    @outgoing_receipts = @fiscal_quarter.outgoing_receipts.order(:created_at)
+    @outgoing_receipts = @fiscal_quarter.outgoing_receipts.order(:month)
   end
 
   def verify_passcode
