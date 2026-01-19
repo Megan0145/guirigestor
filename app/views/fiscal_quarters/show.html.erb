@@ -391,23 +391,75 @@
           </button>
         <% end %>
       </div>
+      
+      <% if @outgoing_receipts.any? %>
+        <!-- Filters -->
+        <div class="px-6 py-3 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center gap-4">
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <%= t('fiscal_quarter.table_headers.filter_by') %>
+            </label>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="filter-service" onchange="applyFilters()" class="text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 bg-white">
+              <option value="">
+                <%= t('fiscal_quarter.table_headers.all_services') %>
+              </option>
+              <% @outgoing_services.each do |service| %>
+                <option value="<%= service.name %>"><%= service.name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="filter-month" onchange="applyFilters()" class="text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 bg-white">
+              <option value="">
+                <%= t('fiscal_quarter.table_headers.all_months') %>
+              </option>
+              <% @outgoing_months.each do |month| %>
+                <option value="<%= month %>"><%= Date::MONTHNAMES[month] %></option>
+              <% end %>
+            </select>
+          </div>
+          <button onclick="clearFilters()" class="text-xs text-gray-500 hover:text-gray-700 underline cursor-pointer">
+            <%= t('fiscal_quarter.table_headers.clear_filters') %>
+          </button>
+          <div class="ml-auto text-xs text-gray-500">
+            <span id="visible-count"><%= @outgoing_receipts.count %></span> <%= t('fiscal_quarter.table_headers.of') %> <%= @outgoing_receipts.count %> <%= t('fiscal_quarter.table_headers.receipts') %>
+          </div>
+        </div>
+      <% end %>
+      
       <div class="overflow-x-auto">
         <% if @outgoing_receipts.any? %>
-          <table class="min-w-full divide-y divide-gray-200">
+          <table class="min-w-full divide-y divide-gray-200" id="outgoing-receipts-table">
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12"></th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.status') %></th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.service') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none sortable-header" data-sort="service" onclick="toggleSort('service')">
+                  <div class="flex items-center gap-1">
+                    <%= t('fiscal_quarter.table_headers.service') %>
+                    <span class="sort-icon text-gray-400" data-column="service">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                    </span>
+                  </div>
+                </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.amount') %></th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.date') %></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none sortable-header" data-sort="date" onclick="toggleSort('date')">
+                  <div class="flex items-center gap-1">
+                    <%= t('fiscal_quarter.table_headers.date') %>
+                    <span class="sort-icon text-gray-400" data-column="date">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                    </span>
+                  </div>
+                </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.notes') %></th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('fiscal_quarter.table_headers.actions') %></th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200" id="outgoing-receipts-tbody">
               <% @outgoing_receipts.each do |receipt| %>
-                <tr class="hover:bg-gray-50">
+                <tr class="hover:bg-gray-50 receipt-row" data-service="<%= receipt.service&.name || '' %>" data-month="<%= receipt.month %>" data-date="<%= receipt.month.to_i * 100 + (receipt.year || 0) %>" data-amount="<%= receipt.amount || 0 %>">
                   <td class="px-6 py-4 whitespace-nowrap text-center">
                     <% if receipt.receipt_file.attached? %>
                       <input type="checkbox" 
@@ -472,7 +524,7 @@
                   </td>
                 </tr>
               <% end %>
-              <tr class="bg-gray-50 border-t-2 border-gray-300">
+              <tr class="bg-gray-50 border-t-2 border-gray-300 totals-row">
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
@@ -482,7 +534,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right">
                   <span class="text-sm font-semibold text-gray-700">Total:</span>
-                  <span class="text-sm font-bold text-gray-900">€<%= number_with_precision(@fiscal_quarter.total_amount_outgoing_receipts, precision: 2, delimiter: ',') %></span>
+                  <span class="text-sm font-bold text-gray-900">€<span id="filtered-total"><%= number_with_precision(@fiscal_quarter.total_amount_outgoing_receipts, precision: 2, delimiter: ',') %></span></span>
                 </td>
               </tr>
             </tbody>
@@ -502,7 +554,16 @@
 </div>
 
 <style>
- 
+  /* Sortable header styles */
+  .sortable-header {
+    transition: background-color 0.15s ease;
+  }
+  .sortable-header:hover {
+    background-color: #f3f4f6;
+  }
+  .sort-icon {
+    transition: color 0.15s ease;
+  }
 </style>
 
 <script>
@@ -735,5 +796,138 @@ function downloadSelectedReceipts() {
   document.body.appendChild(form);
   form.submit();
   document.body.removeChild(form);
+}
+
+// ========================================
+// Outgoing Receipts Sorting & Filtering
+// ========================================
+
+// Track current sort state: { column: 'service'|'date'|null, direction: 'asc'|'desc'|null }
+let currentSort = { column: null, direction: null };
+
+// SVG icons for sort states
+const sortIcons = {
+  none: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>',
+  asc: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>',
+  desc: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>'
+};
+
+function toggleSort(column) {
+  // Cycle: none -> asc -> desc -> none
+  if (currentSort.column !== column) {
+    // Different column clicked, start with asc
+    currentSort = { column: column, direction: 'asc' };
+  } else if (currentSort.direction === 'asc') {
+    currentSort.direction = 'desc';
+  } else if (currentSort.direction === 'desc') {
+    currentSort = { column: null, direction: null };
+  } else {
+    currentSort = { column: column, direction: 'asc' };
+  }
+  
+  updateSortIcons();
+  applyFilters();
+}
+
+function updateSortIcons() {
+  // Reset all icons
+  document.querySelectorAll('.sort-icon').forEach(icon => {
+    icon.innerHTML = sortIcons.none;
+    icon.classList.remove('text-blue-600');
+    icon.classList.add('text-gray-400');
+  });
+  
+  // Update active icon
+  if (currentSort.column && currentSort.direction) {
+    const activeIcon = document.querySelector(`.sort-icon[data-column="${currentSort.column}"]`);
+    if (activeIcon) {
+      activeIcon.innerHTML = sortIcons[currentSort.direction];
+      activeIcon.classList.remove('text-gray-400');
+      activeIcon.classList.add('text-blue-600');
+    }
+  }
+}
+
+function applyFilters() {
+  const serviceFilter = document.getElementById('filter-service')?.value || '';
+  const monthFilter = document.getElementById('filter-month')?.value || '';
+  const tbody = document.getElementById('outgoing-receipts-tbody');
+  const rows = Array.from(tbody.querySelectorAll('.receipt-row'));
+  
+  // Get the totals row
+  const totalsRow = tbody.querySelector('.totals-row');
+  
+  // Filter rows
+  let visibleRows = [];
+  rows.forEach(row => {
+    const service = row.dataset.service || '';
+    const month = row.dataset.month || '';
+    
+    const serviceMatch = !serviceFilter || service === serviceFilter;
+    const monthMatch = !monthFilter || month === monthFilter;
+    
+    if (serviceMatch && monthMatch) {
+      row.style.display = '';
+      visibleRows.push(row);
+    } else {
+      row.style.display = 'none';
+    }
+  });
+  
+  // Sort visible rows
+  if (currentSort.column && currentSort.direction) {
+    visibleRows.sort((a, b) => {
+      let aVal, bVal;
+      
+      if (currentSort.column === 'service') {
+        aVal = (a.dataset.service || '').toLowerCase();
+        bVal = (b.dataset.service || '').toLowerCase();
+      } else if (currentSort.column === 'date') {
+        aVal = parseInt(a.dataset.date) || 0;
+        bVal = parseInt(b.dataset.date) || 0;
+      }
+      
+      let comparison = 0;
+      if (aVal < bVal) comparison = -1;
+      if (aVal > bVal) comparison = 1;
+      
+      return currentSort.direction === 'desc' ? -comparison : comparison;
+    });
+    
+    // Reorder DOM
+    visibleRows.forEach(row => tbody.appendChild(row));
+    
+    // Move totals row back to end
+    if (totalsRow) tbody.appendChild(totalsRow);
+  }
+  
+  // Update visible count
+  const visibleCount = document.getElementById('visible-count');
+  if (visibleCount) {
+    visibleCount.textContent = visibleRows.length;
+  }
+  
+  // Update filtered total
+  const filteredTotal = document.getElementById('filtered-total');
+  if (filteredTotal) {
+    const total = visibleRows.reduce((sum, row) => {
+      return sum + (parseFloat(row.dataset.amount) || 0);
+    }, 0);
+    filteredTotal.textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+}
+
+function clearFilters() {
+  const serviceFilter = document.getElementById('filter-service');
+  const monthFilter = document.getElementById('filter-month');
+  
+  if (serviceFilter) serviceFilter.value = '';
+  if (monthFilter) monthFilter.value = '';
+  
+  // Reset sort
+  currentSort = { column: null, direction: null };
+  updateSortIcons();
+  
+  applyFilters();
 }
 </script>

@@ -68,6 +68,12 @@ es:
       uploaded: "Subido"
       notes: "Notas"
       date: "Fecha"
+      filter_by: "Filtrar por:"
+      all_services: "Todos los Servicios"
+      all_months: "Todos los Meses"
+      clear_filters: "Limpiar filtros"
+      of: "de"
+      receipts: "recibos"
     actions:
       download_pdf: "Descargar PDF"
       download: "Descargar"
@@ -101,3 +107,4 @@ es:
       pending: "Pendiente"
       unsubmitted: "No Enviado"
       rejected: "Rechazado"
+    

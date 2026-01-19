@@ -5,7 +5,11 @@ class FiscalQuartersController < ApplicationController
   def show
     @invoices = @fiscal_quarter.invoices.includes(:invoice_line_items).order(invoice_number: :asc)
     @autonomo_payments = @fiscal_quarter.autonomo_payments
-    @outgoing_receipts = @fiscal_quarter.outgoing_receipts.order(:month)
+    @outgoing_receipts = @fiscal_quarter.outgoing_receipts.includes(:service).order(:month)
+    
+    # For filters
+    @outgoing_services = @outgoing_receipts.map(&:service).compact.uniq.sort_by(&:name)
+    @outgoing_months = @outgoing_receipts.pluck(:month).compact.uniq.sort
   end
 
   def verify_passcode

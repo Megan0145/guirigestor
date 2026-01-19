@@ -95,6 +95,12 @@ en:
       uploaded: "Uploaded"
       notes: "Notes"
       date: "Date"
+      filter_by: "Filter by:"
+      all_services: "All Services"
+      all_months: "All Months"
+      clear_filters: "Clear filters"
+      of: "of"
+      receipts: "receipts"
     actions:
       download_pdf: "Download PDF"
       download: "Download"
