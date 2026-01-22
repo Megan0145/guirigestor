@@ -33,11 +33,19 @@ ActiveAdmin.register TonicDeveloper do
     
     panel "Upcoming Leaves" do
       table_for resource.developer_leaves.where("end_date >= ?", Date.today).order(:start_date) do
-        column :start_date
-        column :end_date
+        column "Start Date" do |leave|
+          text = leave.start_date.strftime('%a, %d %b %Y')
+          text += " (PM)" if leave.start_half_day?
+          text
+        end
+        column "End Date" do |leave|
+          text = leave.end_date.strftime('%a, %d %b %Y')
+          text += " (AM)" if leave.end_half_day?
+          text
+        end
         column :notes
         column "Duration" do |leave|
-          "#{leave.duration_days} day(s)"
+          leave.duration_display
         end
       end
     end

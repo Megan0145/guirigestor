@@ -124,6 +124,7 @@
                 is_start = leave.start_date == current_day
                 is_end = leave.end_date == current_day
                 is_middle = !is_start && !is_end
+                is_half_day = leave.half_day_on?(current_day)
                 
                 # Generate a consistent color based on developer id
                 colors = %w[#8b5cf6 #3b82f6 #06b6d4 #14b8a6 #f59e0b #f43f5e #ec4899 #6366f1]
@@ -140,12 +141,29 @@
                 else
                   margin_style = "margin-left: -8px; margin-right: -8px; padding-left: 16px;"
                 end
+                
+                # Half day styling - diagonal stripes pattern
+                half_day_style = if is_half_day
+                  "background: repeating-linear-gradient(135deg, #{bg_color}, #{bg_color} 3px, rgba(255,255,255,0.3) 3px, rgba(255,255,255,0.3) 6px);"
+                else
+                  "background-color: #{bg_color};"
+                end
+                
+                # Build tooltip
+                half_day_text = ""
+                if is_start && leave.start_half_day?
+                  half_day_text = " (PM)"
+                elsif is_end && leave.end_half_day?
+                  half_day_text = " (AM)"
+                end
+                tooltip = "#{leave.tonic_developer.name}: #{leave.start_date.strftime('%d %b')} - #{leave.end_date.strftime('%d %b')} (#{leave.duration_display})#{half_day_text}"
               %>
-              <div style="background-color: <%= bg_color %>; color: white; font-size: 11px; padding: 4px 8px; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; <%= border_radius %> <%= margin_style %>"
-                   title="<%= leave.tonic_developer.name %>: <%= leave.start_date.strftime('%d %b') %> - <%= leave.end_date.strftime('%d %b') %>">
+              <div style="<%= half_day_style %> color: white; font-size: 11px; padding: 4px 8px; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; <%= border_radius %> <%= margin_style %>"
+                   title="<%= tooltip %>">
                 <% if is_start || current_day.monday? || current_day.day == 1 %>
-                  <%= leave.tonic_developer.name %>
+                  <%= leave.tonic_developer.name %><%= "½" if is_half_day %>
                 <% else %>
+                  <%= "½" if is_half_day %>
                   &nbsp;
                 <% end %>
               </div>
@@ -181,6 +199,11 @@
             <% end %>
           </div>
         <% end %>
+        <!-- Half day indicator -->
+        <div class="flex items-center gap-2" style="margin-left: 12px; padding-left: 12px; border-left: 1px solid #475569;">
+          <div style="width: 12px; height: 12px; border-radius: 3px; background: repeating-linear-gradient(135deg, #64748b, #64748b 2px, rgba(255,255,255,0.3) 2px, rgba(255,255,255,0.3) 4px);"></div>
+          <span style="font-size: 14px; color: #94a3b8;">½ = Half day</span>
+        </div>
       </div>
     <% end %>
     
@@ -214,9 +237,19 @@
                 <tr style="border-top: 1px solid rgba(71, 85, 105, 0.5);">
                   <td style="padding: 12px 16px; color: #cbd5e1;"><%= leave.tonic_developer.name %></td>
                   <td style="padding: 12px 16px; color: #94a3b8; font-size: 14px;"><%= leave.tonic_developer.project %></td>
-                  <td style="padding: 12px 16px; color: #cbd5e1;"><%= leave.start_date.strftime('%a, %d %b %Y') %></td>
-                  <td style="padding: 12px 16px; color: #cbd5e1;"><%= leave.end_date.strftime('%a, %d %b %Y') %></td>
-                  <td style="padding: 12px 16px; color: #94a3b8;"><%= leave.duration_days %> day<%= leave.duration_days > 1 ? 's' : '' %></td>
+                  <td style="padding: 12px 16px; color: #cbd5e1;">
+                    <%= leave.start_date.strftime('%a, %d %b %Y') %>
+                    <% if leave.start_half_day? %>
+                      <span style="font-size: 11px; color: #34d399; margin-left: 4px;">(PM)</span>
+                    <% end %>
+                  </td>
+                  <td style="padding: 12px 16px; color: #cbd5e1;">
+                    <%= leave.end_date.strftime('%a, %d %b %Y') %>
+                    <% if leave.end_half_day? %>
+                      <span style="font-size: 11px; color: #34d399; margin-left: 4px;">(AM)</span>
+                    <% end %>
+                  </td>
+                  <td style="padding: 12px 16px; color: #94a3b8;"><%= leave.duration_display %></td>
                   <td style="padding: 12px 16px; color: #94a3b8; font-size: 14px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= leave.notes %></td>
                   <td style="padding: 12px 16px;">
                     <%= button_to delete_developer_leave_path(leave, month: @current_date.month, year: @current_date.year), 
@@ -291,11 +324,19 @@
               <div>
                 <label for="developer_leave_start_date" style="display: block; font-size: 14px; font-weight: 500; color: #cbd5e1; margin-bottom: 4px;">Start Date</label>
                 <%= f.date_field :start_date, required: true, id: "leave-start-date", style: "width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; color: #e2e8f0;" %>
+                <label class="flex items-center gap-2 mt-2" style="cursor: pointer;">
+                  <%= f.check_box :start_half_day, id: "leave-start-half-day", style: "width: 16px; height: 16px; accent-color: #10b981; cursor: pointer;" %>
+                  <span style="font-size: 13px; color: #94a3b8;">Half day (PM only)</span>
+                </label>
               </div>
               
               <div>
                 <label for="developer_leave_end_date" style="display: block; font-size: 14px; font-weight: 500; color: #cbd5e1; margin-bottom: 4px;">End Date</label>
                 <%= f.date_field :end_date, required: true, id: "leave-end-date", style: "width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; color: #e2e8f0;" %>
+                <label class="flex items-center gap-2 mt-2" style="cursor: pointer;">
+                  <%= f.check_box :end_half_day, id: "leave-end-half-day", style: "width: 16px; height: 16px; accent-color: #10b981; cursor: pointer;" %>
+                  <span style="font-size: 13px; color: #94a3b8;">Half day (AM only)</span>
+                </label>
               </div>
             </div>
             
@@ -330,11 +371,17 @@
     const startDate = document.getElementById('leave-start-date');
     const endDate = document.getElementById('leave-end-date');
     const dateDisplay = document.getElementById('modal-date-display');
+    const startHalfDay = document.getElementById('leave-start-half-day');
+    const endHalfDay = document.getElementById('leave-end-half-day');
     
     // Set the date values
     dateInput.value = date;
     startDate.value = date;
     endDate.value = date;
+    
+    // Reset half-day checkboxes
+    if (startHalfDay) startHalfDay.checked = false;
+    if (endHalfDay) endHalfDay.checked = false;
     
     // Format date for display
     const dateObj = new Date(date + 'T00:00:00');

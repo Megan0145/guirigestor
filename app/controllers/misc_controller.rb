@@ -436,7 +436,7 @@ class MiscController < ApplicationController
   end
   
   def leave_params
-    params.require(:developer_leave).permit(:tonic_developer_id, :start_date, :end_date, :notes)
+    params.require(:developer_leave).permit(:tonic_developer_id, :start_date, :end_date, :notes, :start_half_day, :end_half_day)
   end
   
   # Uncomment and adjust as needed for BTY authentication
