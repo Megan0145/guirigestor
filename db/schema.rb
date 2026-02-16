@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2026_01_10_153829) do
+ActiveRecord::Schema[7.0].define(version: 2026_02_16_000001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -126,10 +126,10 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_10_153829) do
   end
 
   create_table "btys", force: :cascade do |t|
-    t.boolean "value", null: false
     t.date "date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "value", null: false
     t.index ["date"], name: "index_btys_on_date", unique: true
   end
 
@@ -164,6 +164,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_10_153829) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "start_half_day", default: false, null: false
+    t.boolean "end_half_day", default: false, null: false
     t.index ["start_date", "end_date"], name: "index_developer_leaves_on_start_date_and_end_date"
     t.index ["tonic_developer_id"], name: "index_developer_leaves_on_tonic_developer_id"
   end
@@ -191,6 +193,15 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_10_153829) do
     t.string "schedule_period"
     t.string "title"
     t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "dingle_expenses", force: :cascade do |t|
+    t.string "payer", null: false
+    t.string "description"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.date "expense_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -3,6 +3,19 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   
+  # Dingle Trip Expense Tracker
+  get '/dingle',
+    to: 'dingle#index',
+    as: 'dingle'
+  
+  post '/dingle/expenses',
+    to: 'dingle#create',
+    as: 'dingle_create_expense'
+  
+  delete '/dingle/expenses/:id',
+    to: 'dingle#destroy',
+    as: 'dingle_delete_expense'
+  
   # Landing page
   get '/landing', 
     to: 'landing#index', 

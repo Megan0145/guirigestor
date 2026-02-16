@@ -1,0 +1,580 @@
+<style>
+  .dingle-page {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 0;
+  }
+  
+  .dingle-header {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    padding: 32px 20px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .dingle-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  
+  @keyframes shimmer {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, 10px); }
+  }
+  
+  .dingle-header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 4px;
+    position: relative;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  
+  .dingle-header p {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.8);
+    margin: 0;
+    position: relative;
+  }
+  
+  .dingle-container {
+    max-width: 480px;
+    margin: -24px auto 0;
+    padding: 0 16px 32px;
+    position: relative;
+  }
+  
+  /* Add Expense Card */
+  .dingle-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  
+  .dingle-card-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .dingle-card-title svg {
+    width: 16px;
+    height: 16px;
+    color: #059669;
+  }
+  
+  .dingle-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .dingle-input-row {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .dingle-input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .dingle-input-group label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+  }
+  
+  .dingle-input-group input,
+  .dingle-input-group select {
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #f8fafc;
+    transition: all 0.2s;
+    -webkit-appearance: none;
+  }
+  
+  .dingle-input-group input:focus,
+  .dingle-input-group select:focus {
+    outline: none;
+    border-color: #059669;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+  }
+  
+  .dingle-input-group select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+  }
+  
+  .dingle-input-group.amount input {
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  
+  .dingle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+  }
+  
+  .dingle-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+  }
+  
+  .dingle-btn:active {
+    transform: translateY(0);
+  }
+  
+  .dingle-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Settlement Card */
+  .dingle-settlement {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .dingle-settlement-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .dingle-settlement-title svg {
+    width: 16px;
+    height: 16px;
+    color: #10b981;
+  }
+  
+  .dingle-totals {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .dingle-total-item {
+    text-align: center;
+    padding: 12px 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+  }
+  
+  .dingle-total-name {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 4px;
+  }
+  
+  .dingle-total-amount {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  
+  .dingle-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 16px 0;
+  }
+  
+  .dingle-settlement-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .dingle-settlement-item:last-child {
+    border-bottom: none;
+  }
+  
+  .dingle-settlement-text {
+    font-size: 0.9375rem;
+    color: #fff;
+  }
+  
+  .dingle-settlement-text strong {
+    color: #10b981;
+  }
+  
+  .dingle-settlement-amount {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fbbf24;
+  }
+  
+  .dingle-all-settled {
+    text-align: center;
+    padding: 16px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.875rem;
+  }
+  
+  .dingle-fair-share {
+    text-align: center;
+    padding: 8px 16px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  
+  .dingle-fair-share-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 2px;
+  }
+  
+  .dingle-fair-share-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #10b981;
+  }
+  
+  /* Day Section */
+  .dingle-day {
+    margin-bottom: 16px;
+  }
+  
+  .dingle-day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px 12px 0 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .dingle-day-header svg {
+    width: 18px;
+    height: 18px;
+    color: #10b981;
+  }
+  
+  .dingle-day-date {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  
+  .dingle-day-total {
+    margin-left: auto;
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.6);
+  }
+  
+  .dingle-expenses-list {
+    background: rgba(255,255,255,0.03);
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+  }
+  
+  .dingle-expense-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    gap: 12px;
+  }
+  
+  .dingle-expense-item:last-child {
+    border-bottom: none;
+  }
+  
+  .dingle-expense-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  
+  .dingle-expense-avatar.megan { background: linear-gradient(135deg, #ec4899, #f472b6); }
+  .dingle-expense-avatar.thibaut { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+  .dingle-expense-avatar.jordan { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+  
+  .dingle-expense-details {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .dingle-expense-payer {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  
+  .dingle-expense-desc {
+    font-size: 0.8125rem;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .dingle-expense-amount {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #10b981;
+    flex-shrink: 0;
+  }
+  
+  .dingle-expense-delete {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 68, 68, 0.1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  
+  .dingle-expense-delete svg {
+    width: 16px;
+    height: 16px;
+    color: #ef4444;
+  }
+  
+  .dingle-expense-delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+  }
+  
+  /* Empty State */
+  .dingle-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: rgba(255,255,255,0.5);
+  }
+  
+  .dingle-empty svg {
+    width: 48px;
+    height: 48px;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 16px;
+  }
+  
+  .dingle-empty p {
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+  
+  /* Grand Total */
+  .dingle-grand-total {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  
+  .dingle-grand-total-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  
+  .dingle-grand-total-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #10b981;
+  }
+</style>
+
+<div class="dingle-page">
+  <div class="dingle-header">
+    <h1>Dingle Trip</h1>
+    <p>Feb 20-22, 2026 • Megan, Thibaut & Jordan</p>
+  </div>
+  
+  <div class="dingle-container">
+    <!-- Add Expense Form -->
+    <div class="dingle-card">
+      <div class="dingle-card-title">
+        <%= inline_svg_tag("heroicons/plus-circle.svg") %>
+        Add Expense
+      </div>
+      
+      <%= form_for @expense, url: dingle_create_expense_path, method: :post, html: { class: "dingle-form" } do |f| %>
+        <div class="dingle-input-row">
+          <div class="dingle-input-group">
+            <label for="dingle_expense_payer">Who paid?</label>
+            <%= f.select :payer, DingleExpense::GUESTS, { prompt: "Select..." }, { required: true } %>
+          </div>
+          
+          <div class="dingle-input-group amount">
+            <label for="dingle_expense_amount">Amount (€)</label>
+            <%= f.number_field :amount, step: 0.01, min: 0.01, placeholder: "0.00", required: true %>
+          </div>
+        </div>
+        
+        <div class="dingle-input-row">
+          <div class="dingle-input-group">
+            <label for="dingle_expense_description">Description (optional)</label>
+            <%= f.text_field :description, placeholder: "e.g. Dinner at the pub" %>
+          </div>
+          
+          <div class="dingle-input-group" style="max-width: 140px;">
+            <label for="dingle_expense_expense_date">Date</label>
+            <%= f.date_field :expense_date, value: Date.today %>
+          </div>
+        </div>
+        
+        <button type="submit" class="dingle-btn">
+          <%= inline_svg_tag("heroicons/plus.svg", class: "hidden-while-loading") %>
+          <%= inline_svg_tag("misc/spinner.svg", class: "shown-while-loading") %>
+          Add Expense
+        </button>
+      <% end %>
+    </div>
+    
+    <% if @expenses.any? %>
+      <!-- Grand Total -->
+      <div class="dingle-grand-total">
+        <div class="dingle-grand-total-label">Total Trip Spend</div>
+        <div class="dingle-grand-total-value">€<%= number_with_precision(@settlements[:grand_total], precision: 2) %></div>
+      </div>
+      
+      <!-- Settlement Card -->
+      <div class="dingle-settlement">
+        <div class="dingle-settlement-title">
+          <%= inline_svg_tag("heroicons/arrows-right-left.svg") %>
+          Who Owes What
+        </div>
+        
+        <div class="dingle-totals">
+          <% DingleExpense::GUESTS.each do |guest| %>
+            <div class="dingle-total-item">
+              <div class="dingle-total-name"><%= guest %></div>
+              <div class="dingle-total-amount">€<%= number_with_precision(@settlements[:totals][guest], precision: 2) %></div>
+            </div>
+          <% end %>
+        </div>
+        
+        <div class="dingle-fair-share">
+          <div class="dingle-fair-share-label">Fair share per person</div>
+          <div class="dingle-fair-share-value">€<%= number_with_precision(@settlements[:fair_share], precision: 2) %></div>
+        </div>
+        
+        <div class="dingle-divider"></div>
+        
+        <% if @settlements[:settlements].any? %>
+          <% @settlements[:settlements].each do |settlement| %>
+            <div class="dingle-settlement-item">
+              <span class="dingle-settlement-text">
+                <strong><%= settlement[:from] %></strong> owes <strong><%= settlement[:to] %></strong>
+              </span>
+              <span class="dingle-settlement-amount">€<%= number_with_precision(settlement[:amount], precision: 2) %></span>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="dingle-all-settled">Everyone is all settled up! ✨</div>
+        <% end %>
+      </div>
+      
+      <!-- Expenses by Day -->
+      <% @expenses_by_date.keys.sort.reverse.each do |date| %>
+        <% day_expenses = @expenses_by_date[date] %>
+        <% day_total = day_expenses.sum(&:amount) %>
+        
+        <div class="dingle-day">
+          <div class="dingle-day-header">
+            <%= inline_svg_tag("heroicons/calendar-days.svg") %>
+            <span class="dingle-day-date"><%= date.strftime("%A, %b %d") %></span>
+            <span class="dingle-day-total">€<%= number_with_precision(day_total, precision: 2) %></span>
+          </div>
+          
+          <div class="dingle-expenses-list">
+            <% day_expenses.each do |expense| %>
+              <div class="dingle-expense-item">
+                <div class="dingle-expense-avatar <%= expense.payer.downcase %>">
+                  <%= expense.payer[0] %>
+                </div>
+                <div class="dingle-expense-details">
+                  <div class="dingle-expense-payer"><%= expense.payer %></div>
+                  <% if expense.description.present? %>
+                    <div class="dingle-expense-desc"><%= expense.description %></div>
+                  <% end %>
+                </div>
+                <div class="dingle-expense-amount">€<%= number_with_precision(expense.amount, precision: 2) %></div>
+                <%= button_to dingle_delete_expense_path(expense), method: :delete, class: "dingle-expense-delete", data: { confirm: "Delete this expense?" } do %>
+                  <%= inline_svg_tag("heroicons/trash.svg") %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Empty State -->
+      <div class="dingle-empty">
+        <%= inline_svg_tag("heroicons/banknotes.svg") %>
+        <p>No expenses yet.<br>Add your first one above!</p>
+      </div>
+    <% end %>
+  </div>
+</div>
