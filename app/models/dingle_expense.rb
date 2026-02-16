@@ -1,5 +1,5 @@
 class DingleExpense < ApplicationRecord
-  GUESTS = %w[Megan Thibaut Jordan].freeze
+  GUESTS = %w[Megan Thibault Jordan].freeze
   
   validates :payer, presence: true, inclusion: { in: GUESTS }
   validates :amount, presence: true, numericality: { greater_than: 0 }

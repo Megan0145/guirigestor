@@ -204,7 +204,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_02_16_000002) do
     t.date "expense_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "split_between", default: "Megan,Thibaut,Jordan"
+    t.string "split_between", default: "Megan,Thibault,Jordan"
   end
 
   create_table "fiscal_quarters", force: :cascade do |t|
