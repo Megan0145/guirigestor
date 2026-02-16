@@ -38,6 +38,13 @@ class DingleController < ApplicationController
   private
   
   def expense_params
-    params.require(:dingle_expense).permit(:payer, :description, :amount, :expense_date)
+    permitted = params.require(:dingle_expense).permit(:payer, :description, :amount, :expense_date, split_between: [])
+    
+    # Convert split_between array to comma-separated string
+    if permitted[:split_between].is_a?(Array)
+      permitted[:split_between] = permitted[:split_between].reject(&:blank?).join(',')
+    end
+    
+    permitted
   end
 end
