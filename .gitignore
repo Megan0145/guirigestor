@@ -32,6 +32,9 @@
 
 /storage/*
 
+# node modles
+node_modules/
+
 .DS_Store
 db/development.sqlite3
 
