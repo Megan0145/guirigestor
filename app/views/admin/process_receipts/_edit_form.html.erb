@@ -125,7 +125,7 @@
     <div class="form-group">
       <label for="notes">Notes</label>
       <textarea name="outgoing_receipt[notes]" id="notes" rows="3" 
-                placeholder="Add any notes about this receipt..."><%= @receipt.notes %></textarea>
+                placeholder="Add any notes about this receipt..."><%= @receipt.notes.to_s.gsub(/\A\s*\[AI:\s*[^\]]+\]\s*/, '') %></textarea>
     </div>
 
     <div style="display: flex; gap: 0.5rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0;">
